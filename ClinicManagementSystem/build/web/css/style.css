@@ -476,6 +476,14 @@ textarea:focus {
   letter-spacing: -0.025em;
 }
 
+/* Sidebar Divider */
+.sidebar-divider {
+  height: 2.5px;
+  background-color: var(--primary-dark);
+  margin: var(--spacing-sm) var(--spacing-md);
+  opacity: 0.5;
+}
+
 /* Sidebar Styles */
 #sidebar {
   width: 260px;
