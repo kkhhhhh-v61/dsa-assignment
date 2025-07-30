@@ -186,8 +186,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const itemId = item.closest('[data-item-id]')?.dataset.itemId;
     if (itemId) {
       item.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+        // Only prevent default if it's a hash link
+        if (item.getAttribute('href') === '#') {
+          e.preventDefault();
+        }
+        // Don't stop propagation to allow navigation
         setActiveItem(itemId);
       });
     }
@@ -201,8 +204,11 @@ document.addEventListener("DOMContentLoaded", function () {
     
     if (parentId && subItemId) {
       item.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+        // Only prevent default if it's a hash link
+        if (item.getAttribute('href') === '#') {
+          e.preventDefault();
+        }
+        // Don't stop propagation to allow navigation
         setActiveItem(parentId, subItemId);
       });
     }
