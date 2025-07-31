@@ -1,0 +1,21 @@
+{
+  "index.jsp": {
+    "title": "Dashboard",
+    "breadcrumb": [{ "text": "Home", "url": "index.jsp" }]
+  },
+  "medical-treatment.jsp": {
+    "title": "Medical Treatment",
+    "breadcrumb": [
+      { "text": "Home", "url": "index.jsp" },
+      { "text": "Medical Treatment", "url": "#" }
+    ]
+  },
+  "patient-diagnosis.jsp": {
+    "title": "Patient Diagnosis",
+    "breadcrumb": [
+      { "text": "Home", "url": "index.jsp" },
+      { "text": "Medical Treatment", "url": "medical-treatment.jsp" },
+      { "text": "Patient Diagnosis", "url": "#" }
+    ]
+  }
+}
