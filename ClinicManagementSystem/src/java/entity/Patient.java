@@ -4,10 +4,10 @@ import adt.ArrayList;
 import utility.Enum.Gender;
 
 public class Patient extends Person {
-  private int lastID = 1000;
-
   private String patientID;
   private ArrayList<String> allergies;
+
+  private int lastID = 1000;
 
   public Patient() {
   }
@@ -22,6 +22,7 @@ public class Patient extends Person {
     return patientID;
   }
 
+  // not recommended to use, included just in case
   public void setPatientID(String patientID) {
     this.patientID = patientID;
   }

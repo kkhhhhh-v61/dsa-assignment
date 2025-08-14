@@ -5,6 +5,10 @@ public class Enum {
     Male, Female
   }
 
+  public enum DayOfWeek {
+    Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+  }
+
   public enum Specialisation {
     General, Cardiology, Dental, Neurology, Surgery
   }
