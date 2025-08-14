@@ -3,9 +3,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const currentPage = window.location.pathname.split("/").pop() || "index.jsp";
   const STORAGE_KEY = "sidebarActiveItem";
 
-  // Initialize active state from localStorage or set default
+  // Initialize active state from sessionStorage or set default
   function initActiveState() {
-    const storedState = localStorage.getItem(STORAGE_KEY);
+    const storedState = sessionStorage.getItem(STORAGE_KEY);
     const defaultActiveItem = currentPage === "index.jsp" ? "dashboard" : "";
     
     try {
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
           const parentItem = parentSection.querySelector('.nav-item');
           if (parentItem) parentItem.classList.add("active");
           // Store both parent and subitem in localStorage
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
             item: parentSection.dataset.itemId,
             subItem: subItemId
           }));
@@ -90,8 +90,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const navItem = targetSection.querySelector('.nav-item');
       if (navItem) {
         navItem.classList.add("active");
-        // Store only the main item in localStorage
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        // Store only the main item in sessionStorage
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
           item: itemId,
           subItem: null
         }));

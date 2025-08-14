@@ -7,7 +7,8 @@
     <title>Loading... | Clinic Management System</title> <%-- Update --%>
     <link rel="stylesheet" href="css/style.css">
     <script src="js/script.js" defer></script>
-    <script src="js/page-header.js" defer></script>
+    <script src="js/page-header.js" defer></script> <%-- Update --%>
+    <script src="js/datetime.js" defer></script> <%-- Update --%>
   </head>
   <body>
     <%@ include file="include/header.html" %>
