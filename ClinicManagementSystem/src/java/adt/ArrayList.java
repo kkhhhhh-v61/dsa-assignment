@@ -124,10 +124,10 @@ public class ArrayList<T> implements ListInterface<T> {
   }
 
   public String toString() {
-    String result = "";
+    String str = "";
     for (int i = 0; i < numberOfEntries; i++) {
-      result += array[i] + (i == numberOfEntries - 1 ? "" : ", ");
+      str += array[i] + (i == numberOfEntries - 1 ? "" : ", ");
     }
-    return result;
+    return str;
   }
 }

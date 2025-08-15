@@ -1,32 +1,52 @@
 package entity;
 
-import java.time.LocalDate;
 import utility.Enum.Gender;
-import utility.Format;
+import java.time.LocalDate;
 
 public class Person {
+  protected String icNumber;
   protected String name;
   protected Gender gender;
-  protected String dateOfBirth;
-  protected String icNumber;
+  protected LocalDate birthDate;
+  protected int age;
   protected String contactNumber;
+  protected String email;
   protected String address;
-  protected String dateRegistered;
+  protected LocalDate registrationDate;
 
   public Person() {
-    this.dateRegistered = Format.formatDate(LocalDate.now());
+    this.icNumber = "";
+    this.name = "";
+    this.gender = Gender.Unknown;
+    this.birthDate = LocalDate.now();
+    this.age = calculateAge();
+    this.contactNumber = "";
+    this.email = "";
+    this.address = "";
+    this.registrationDate = LocalDate.now();
   }
 
-  public Person(String name, Gender gender, String dateOfBirth, String icNumber, String contactNumber, String address) {
-    this();
+  public Person(String icNumber, String name, Gender gender, LocalDate birthDate, String contactNumber, String email,
+      String address, LocalDate registrationDate) {
+    this.icNumber = icNumber;
     this.name = name;
     this.gender = gender;
-    this.dateOfBirth = dateOfBirth;
-    this.icNumber = icNumber;
+    this.birthDate = birthDate;
+    this.age = calculateAge();
     this.contactNumber = contactNumber;
+    this.email = email;
     this.address = address;
+    this.registrationDate = registrationDate == null ? LocalDate.now() : registrationDate;
   }
-  
+
+  public String getIcNumber() {
+    return icNumber;
+  }
+
+  public void setIcNumber(String icNumber) {
+    this.icNumber = icNumber;
+  }
+
   public String getName() {
     return name;
   }
@@ -43,24 +63,30 @@ public class Person {
     this.gender = gender;
   }
 
-  public String getDateOfBirth() {
-    return dateOfBirth;
+  public LocalDate getBirthDate() {
+    return birthDate;
   }
 
-  public void setDateOfBirth(String dateOfBirth) {
-    this.dateOfBirth = dateOfBirth;
+  public void setBirthDate(LocalDate birthDate) {
+    this.birthDate = birthDate;
   }
 
   public int getAge() {
-    return Format.getDifferenceInYears(LocalDate.now(), Format.parseDate(dateOfBirth));
+    return age;
   }
 
-  public String getIcNumber() {
-    return icNumber;
+  public void setAge(int age) {
+    this.age = age;
   }
-
-  public void setIcNumber(String icNumber) {
-    this.icNumber = icNumber;
+  
+  public int calculateAge() {
+    int age = LocalDate.now().getYear() - this.birthDate.getYear();
+    if (LocalDate.now().getMonthValue() <= this.birthDate.getMonthValue()) {
+      if (LocalDate.now().getDayOfMonth() < this.birthDate.getDayOfMonth()) {
+        age--;
+      }
+    }
+    return age;
   }
 
   public String getContactNumber() {
@@ -71,6 +97,14 @@ public class Person {
     this.contactNumber = contactNumber;
   }
 
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
   public String getAddress() {
     return address;
   }
@@ -79,11 +113,19 @@ public class Person {
     this.address = address;
   }
 
-  public String getDateRegistered() {
-    return dateRegistered;
+  public LocalDate getRegistrationDate() {
+    return registrationDate;
   }
 
-  public void setDateRegistered(String dateRegistered) {
-    this.dateRegistered = dateRegistered;
+  public void setRegistrationDate(LocalDate registrationDate) {
+    this.registrationDate = registrationDate;
+  }
+
+  public String toString() {
+    return "IC Number: " + icNumber + "\nName: " + name + "\nGender: " + gender + "\nBirth Date: " + birthDate + "\nAge: " + age + "\nContact Number: " + contactNumber + "\nEmail: " + email + "\nAddress: " + address + "\nRegistration Date: " + registrationDate;
+  }
+  
+  public String toFileString() {
+    return icNumber + "|" + name + "|" + gender + "|" + birthDate + "|" + age + "|" + contactNumber + "|" + email + "|" + address + "|" + registrationDate;
   }
 }

@@ -1,80 +1,63 @@
 package entity;
 
+import utility.Enum.Status;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import utility.Format;
-import utility.Enum.AppointmentStatus;
-
 
 public class Appointment {
-  private int lastID = 1000;
+  private static int lastId = 0000;
 
-  private String appointmentID;
-  private String patientID;
-  private String doctorID;
-  private String reason;
-  private String remark;
+  private String appointmentId;
+  private String patientId;
+  private String doctorId;
   private LocalDate appointmentDate;
   private LocalTime appointmentTime;
-  private LocalDate registeredDate;
-  private LocalTime registeredTime;
-  private AppointmentStatus status;
+  private String reason;
+  private Status status;
 
   public Appointment() {
+    this.appointmentId = "A" + String.format("%04d", ++lastId);
+    this.patientId = "";
+    this.doctorId = "";
+    this.appointmentDate = LocalDate.now();
+    this.appointmentTime = LocalTime.now();
+    this.reason = "";
+    this.status = Status.Unknown;
   }
 
-  public Appointment(String patientID, String doctorID, String reason, String remark, LocalDate appointmentDate, LocalTime appointmentTime) {
-    this.appointmentID = "A" + ++lastID;
-    this.patientID = patientID;
-    this.doctorID = doctorID;
-    this.reason = reason;
-    this.remark = remark;
+  public Appointment(String patientId, String doctorId, LocalDate appointmentDate, LocalTime appointmentTime,
+      String reason, Status status) {
+    this.appointmentId = "A" + String.format("%04d", ++lastId);
+    this.patientId = patientId;
+    this.doctorId = doctorId;
     this.appointmentDate = appointmentDate;
     this.appointmentTime = appointmentTime;
-    this.registeredDate = LocalDate.now();
-    this.registeredTime = LocalTime.now();
-    this.status = AppointmentStatus.Pending;
+    this.reason = reason;
+    this.status = status;
   }
   
-  public String getAppointmentID() {
-    return appointmentID;
+  public String getAppointmentId() {
+    return appointmentId;
   }
 
-  // not recommended to use, included just in case
-  public void setAppointmentID(String appointmentID) {
-    this.appointmentID = appointmentID;
+  public void setAppointmentId(String appointmentId) { /* Not recommended for use */
+    this.appointmentId = appointmentId;
   }
 
-  public String getPatientID() {
-    return patientID;
+  public String getPatientId() {
+    return patientId;
   }
 
-  public void setPatientID(String patientID) {
-    this.patientID = patientID;
+  public void setPatientId(String patientId) {
+    this.patientId = patientId;
   }
 
-  public String getDoctorID() {
-    return doctorID;
+  public String getDoctorId() {
+    return doctorId;
   }
 
-  public void setDoctorID(String doctorID) {
-    this.doctorID = doctorID;
-  }
-
-  public String getReason() {
-    return reason;
-  }
-
-  public void setReason(String reason) {
-    this.reason = reason;
-  }
-
-  public String getRemark() {
-    return remark;
-  }
-
-  public void setRemark(String remark) {
-    this.remark = remark;
+  public void setDoctorId(String doctorId) {
+    this.doctorId = doctorId;
   }
 
   public LocalDate getAppointmentDate() {
@@ -93,32 +76,27 @@ public class Appointment {
     this.appointmentTime = appointmentTime;
   }
 
-  public LocalDate getRegisteredDate() {
-    return registeredDate;
+  public String getReason() {
+    return reason;
   }
 
-  public void setRegisteredDate(LocalDate registeredDate) {
-    this.registeredDate = registeredDate;
+  public void setReason(String reason) {
+    this.reason = reason;
   }
 
-  public LocalTime getRegisteredTime() {
-    return registeredTime;
-  }
-
-  public void setRegisteredTime(LocalTime registeredTime) {
-    this.registeredTime = registeredTime;
-  }
-
-  public AppointmentStatus getStatus() {
+  public Status getStatus() {
     return status;
   }
 
-  public void setStatus(AppointmentStatus status) {
+  public void setStatus(Status status) {
     this.status = status;
   }
 
   public String toString() {
-    return String.format("Appointment ID: %s\nPatient ID: %s\nDoctor ID: %s\nReason: %s\nRemark: %s\nAppointment Date: %s\nAppointment Time: %s\nRegistered Date: %s\nRegistered Time: %s\nStatus: %s",
-        appointmentID, patientID, doctorID, reason, remark, Format.formatDate(appointmentDate), Format.formatTime(appointmentTime), Format.formatDate(registeredDate), Format.formatTime(registeredTime), status);
+    return "Appointment ID: " + appointmentId + "\nPatient ID: " + patientId + "\nDoctor ID: " + doctorId + "\nAppointment Date: " + appointmentDate + "\nAppointment Time: " + appointmentTime + "\nReason: " + reason + "\nStatus: " + status;
+  }
+
+  public String toFileString() {
+    return appointmentId + "|" + patientId + "|" + doctorId + "|" + appointmentDate + "|" + appointmentTime + "|" + reason + "|" + status;
   }
 }

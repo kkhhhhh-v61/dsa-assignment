@@ -1,60 +1,70 @@
 package entity;
 
+import adt.ArrayList;
+import utility.Enum.Status;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import adt.ArrayList;
-
 public class Consultation {
-  private int lastID = 1000;
+  private static int lastId = 0000;
 
-  private String consultationID;
-  private String patientID;
-  private String doctorID;
+  private String consultationId;
+  private String patientId;
+  private String doctorId;
   private LocalDate consultationDate;
   private LocalTime consultationTime;
   private ArrayList<String> symptoms;
   private ArrayList<String> diagnosis;
-  private String remark;
+  private String notes;
+  private Status status;
 
   public Consultation() {
+    this.consultationId = "C" + String.format("%04d", ++lastId);
+    this.patientId = "";
+    this.doctorId = "";
+    this.consultationDate = LocalDate.now();
+    this.consultationTime = LocalTime.now();
+    this.symptoms = new ArrayList<>();
+    this.diagnosis = new ArrayList<>();
+    this.notes = "";
+    this.status = Status.Unknown;
   }
 
-  public Consultation(String patientID, String doctorID, LocalDate consultationDate, LocalTime consultationTime,
-      ArrayList<String> symptoms, ArrayList<String> diagnosis, String remark) {
-    this.consultationID = "C" + ++lastID;
-    this.patientID = patientID;
-    this.doctorID = doctorID;
+  public Consultation(String doctorId, String patientId, LocalDate consultationDate, LocalTime consultationTime,
+      ArrayList<String> symptoms, ArrayList<String> diagnosis, String notes, Status status) {
+    this.consultationId = "C" + String.format("%04d", ++lastId);
+    this.patientId = patientId;
+    this.doctorId = doctorId;
     this.consultationDate = consultationDate;
     this.consultationTime = consultationTime;
     this.symptoms = symptoms;
     this.diagnosis = diagnosis;
-    this.remark = remark;
+    this.notes = notes;
+    this.status = status;
   }
 
-  public String getConsultationID() {
-    return consultationID;
+  public String getConsultationId() {
+    return consultationId;
   }
 
-  // not recommended to use, included just in case
-  public void setConsultationID(String consultationID) {
-    this.consultationID = consultationID;
+  public void setConsultationId(String consultationId) { /* Not recommended for use */
+    this.consultationId = consultationId;
   }
 
-  public String getPatientID() {
-    return patientID;
+  public String getPatientId() {
+    return patientId;
   }
 
-  public void setPatientID(String patientID) {
-    this.patientID = patientID;
+  public void setPatientId(String patientId) {
+    this.patientId = patientId;
   }
 
-  public String getDoctorID() {
-    return doctorID;
+  public String getDoctorId() {
+    return doctorId;
   }
 
-  public void setDoctorID(String doctorID) {
-    this.doctorID = doctorID;
+  public void setDoctorId(String doctorId) {
+    this.doctorId = doctorId;
   }
 
   public LocalDate getConsultationDate() {
@@ -65,7 +75,7 @@ public class Consultation {
     this.consultationDate = consultationDate;
   }
 
-  public LocalTime getConsultationTime() {
+  public LocalTime getConsuLocalTime() {
     return consultationTime;
   }
 
@@ -89,17 +99,27 @@ public class Consultation {
     this.diagnosis = diagnosis;
   }
 
-  public String getRemark() {
-    return remark;
+  public String getNotes() {
+    return notes;
   }
 
-  public void setRemark(String remark) {
-    this.remark = remark;
+  public void setNotes(String notes) {
+    this.notes = notes;
+  }
+
+  public Status getStatus() {
+    return status;
+  }
+
+  public void setStatus(Status status) {
+    this.status = status;
   }
 
   public String toString() {
-    return String.format("Consultation ID: %s\nPatient ID: %s\nDoctor ID: %s\nConsultation Date: %s\nConsultation Time: %s\nSymptoms: %s\nDiagnosis: %s\nRemark: %s",
-        consultationID, patientID, doctorID, consultationDate, consultationTime, symptoms, diagnosis, remark);
+    return "Consultation ID: " + consultationId + "\nPatient ID: " + patientId + "\nDoctor ID: " + doctorId + "\nConsultation Date: " + consultationDate + "\nConsultation Time: " + consultationTime + "\nSymptoms: " + symptoms + "\nDiagnosis: " + diagnosis + "\nNotes: " + notes + "\nStatus: " + status;
+  }
+
+  public String toFileString() {
+    return consultationId + "|" + patientId + "|" + doctorId + "|" + consultationDate + "|" + consultationTime + "|" + symptoms + "|" + diagnosis + "|" + notes + "|" + status;
   }
 }
-

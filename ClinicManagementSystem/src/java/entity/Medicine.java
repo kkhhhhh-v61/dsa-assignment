@@ -3,34 +3,43 @@ package entity;
 import utility.Enum.MedicineCategory;
 
 public class Medicine {
-  private int lastID = 1000;
+  private static int lastId = 0000;
 
-  private String medicineID;
+  private String medicineId;
   private String name;
+  private String description;
   private MedicineCategory category;
-  private String dosage;
+  private double price;
   private int stockQuantity;
   private int reorderLevel;
 
   public Medicine() {
+    this.medicineId = "M" + String.format("%04d", ++lastId);
+    this.name = "";
+    this.description = "";
+    this.category = MedicineCategory.Unknown;
+    this.price = 0.0;
+    this.stockQuantity = 0;
+    this.reorderLevel = 0;
   }
 
-  public Medicine(String name, MedicineCategory category, String dosage, int stockQuantity, int reorderLevel) {
-    this.medicineID = "M" + ++lastID;
+  public Medicine(String name, String description, MedicineCategory category, double price, int stockQuantity,
+      int reorderLevel) {
+    this.medicineId = "M" + String.format("%04d", ++lastId);
     this.name = name;
+    this.description = description;
     this.category = category;
-    this.dosage = dosage;
+    this.price = price;
     this.stockQuantity = stockQuantity;
     this.reorderLevel = reorderLevel;
   }
-
-  public String getMedicineID() {
-    return medicineID;
+  
+  public String getMedicineId() {
+    return medicineId;
   }
-
-  // not recommended to use, included just in case
-  public void setMedicineID(String medicineID) {
-    this.medicineID = medicineID;
+  
+  public void setMedicineId(String medicineId) { /* Not recommended for use */
+    this.medicineId = medicineId;
   }
 
   public String getName() {
@@ -41,20 +50,28 @@ public class Medicine {
     this.name = name;
   }
 
-  public MedicineCategory getMedicineCategory() {
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public MedicineCategory getCategory() {
     return category;
   }
 
-  public void setMedicineCategory(MedicineCategory category) {
+  public void setCategory(MedicineCategory category) {
     this.category = category;
   }
 
-  public String getDosage() {
-    return dosage;
+  public double getPrice() {
+    return price;
   }
 
-  public void setDosage(String dosage) {
-    this.dosage = dosage;
+  public void setPrice(double price) {
+    this.price = price;
   }
 
   public int getStockQuantity() {
@@ -74,7 +91,10 @@ public class Medicine {
   }
 
   public String toString() {
-    return String.format("Medicine ID: %s\nName: %s\nCategory: %s\nDosage: %s\nStock Quantity: %s\nReorder Level: %s",
-        medicineID, name, category, dosage, stockQuantity, reorderLevel);
+    return "Medicine ID: " + medicineId + "\nName: " + name + "\nDescription: " + description + "\nCategory: " + category + "\nPrice: " + price + "\nStock Quantity: " + stockQuantity + "\nReorder Level: " + reorderLevel;
+  }
+
+  public String toFileString() {
+    return medicineId + "|" + name + "|" + description + "|" + category + "|" + price + "|" + stockQuantity + "|" + reorderLevel;
   }
 }
