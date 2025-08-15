@@ -2,6 +2,7 @@ package entity;
 
 import java.time.LocalTime;
 import utility.Enum.DayOfWeek;
+import utility.Format;
 
 public class Schedule {
   private DayOfWeek dayOfWeek;
@@ -54,8 +55,8 @@ public class Schedule {
   public String toString() {
     return String.format("\n[%s | %s - %s | %s]",
       dayOfWeek,
-      startTime,
-      endTime,
+      Format.formatTime(startTime),
+      Format.formatTime(endTime),
       onShift ? "ON" : "OFF"
     );
   }

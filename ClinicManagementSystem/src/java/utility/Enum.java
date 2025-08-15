@@ -12,4 +12,12 @@ public class Enum {
   public enum Specialisation {
     General, Cardiology, Dental, Neurology, Surgery
   }
+
+  public enum AppointmentStatus {
+    Pending, Approved, Rejected
+  }
+
+  public enum MedicineCategory {
+    Tablet, Liquid, Capsule, Syringe
+  }
 }
