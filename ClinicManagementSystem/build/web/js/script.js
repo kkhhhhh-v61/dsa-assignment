@@ -1,4 +1,106 @@
+// Function to handle user logout
+function handleLogout() {
+  // Clear all session storage
+  sessionStorage.clear();
+  
+  // Redirect to index.jsp
+  window.location.href = 'index.jsp';
+}
+
 document.addEventListener("DOMContentLoaded", function () {
+  // Client Type Selection Logic
+  const CLIENT_TYPE_KEY = 'clientType';
+  const clientTypeOverlay = document.getElementById('client-type-overlay');
+  const clientTypeCards = document.querySelectorAll('.client-card');
+  
+  // Check if client type is already set in sessionStorage
+  const currentClientType = sessionStorage.getItem(CLIENT_TYPE_KEY);
+  
+  // Show overlay if client type is not set
+  if (!currentClientType || !['student', 'clinic'].includes(currentClientType)) {
+    // Show the overlay
+    clientTypeOverlay.classList.add('show');
+    
+    // Make the page unscrollable when overlay is shown
+    document.body.style.overflow = 'hidden';
+  }
+  
+  // Handle client type selection
+  function handleClientTypeSelection(clientType) {
+    // Store the selected client type in sessionStorage
+    sessionStorage.setItem(CLIENT_TYPE_KEY, clientType);
+    
+    // Hide the overlay
+    clientTypeOverlay.classList.remove('show');
+    
+    // Re-enable scrolling
+    document.body.style.overflow = '';
+    
+    // Set client type as data attribute on body
+    document.body.setAttribute('data-client-type', clientType);
+    
+    // Update the sidebar based on client type
+    updateSidebarForClientType(clientType);
+  }
+  
+  // Update sidebar based on client type
+  function updateSidebarForClientType(clientType) {
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
+    
+    // Hide all client-specific sections first
+    const allSections = sidebar.querySelectorAll('[data-client]');
+    allSections.forEach(section => {
+      section.style.display = 'none';
+    });
+    
+    // Show sections for the current client type
+    const clientSections = sidebar.querySelectorAll(`[data-client="${clientType}"]`);
+    clientSections.forEach(section => {
+      section.style.display = '';
+    });
+    
+    // Show common sections (without data-client attribute)
+    const commonSections = sidebar.querySelectorAll(':not([data-client])');
+    commonSections.forEach(section => {
+      // Only show if it's a direct child of the sidebar nav
+      if (section.closest('.sidebar-nav') === sidebar.querySelector('.sidebar-nav')) {
+        section.style.display = '';
+      }
+    });
+  }
+  
+  // Add click event listeners to client type cards
+  clientTypeCards.forEach(card => {
+    const clientType = card.dataset.clientType;
+    
+    // Make the entire card clickable
+    card.addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleClientTypeSelection(clientType);
+    });
+    
+    // Add keyboard accessibility
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', `Select ${clientType} client type`);
+    
+    // Handle keyboard events
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleClientTypeSelection(clientType);
+      }
+    });
+  });
+  
+  // Update sidebar on initial load if client type is already set
+  if (currentClientType && ['student', 'clinic'].includes(currentClientType)) {
+    document.body.setAttribute('data-client-type', currentClientType);
+    updateSidebarForClientType(currentClientType);
+  }
+  
+  // Main Application Logic
   const sidebar = document.getElementById("sidebar");
   const currentPage = window.location.pathname.split("/").pop() || "index.jsp";
   const STORAGE_KEY = "sidebarActiveItem";
@@ -294,6 +396,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Re-initialize submenus after a short delay to ensure all elements are rendered
   setTimeout(initializeSubmenus, 100);
+  
+  // Add event listener for logout button
+  const logoutButton = document.getElementById('logout-button');
+  if (logoutButton) {
+    logoutButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      handleLogout();
+    });
+    
+    // Add keyboard accessibility for logout button
+    logoutButton.setAttribute('role', 'button');
+    logoutButton.setAttribute('tabindex', '0');
+    logoutButton.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleLogout();
+      }
+    });
+  }
 
   // Close sidebar when clicking outside on mobile
   document.addEventListener("click", function (e) {

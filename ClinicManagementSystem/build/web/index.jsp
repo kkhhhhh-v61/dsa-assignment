@@ -11,6 +11,7 @@
     <script src="js/datetime.js" defer></script>
   </head>
   <body>
+    <%@ include file="include/client-selection.html" %>
     <%@ include file="include/header.html" %>
     <div id="main-container">
       <%@ include file="include/sidebar.html" %>
