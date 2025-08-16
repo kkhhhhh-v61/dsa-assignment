@@ -3,6 +3,7 @@ package utility;
 import java.util.Scanner;
 
 public class UtilityUI {
+  MessageUI messageUI = new MessageUI();
   Scanner scanner = new Scanner(System.in);
 
   public void clearScreen() {
@@ -34,5 +35,15 @@ public class UtilityUI {
 
   public void flushScanner() {
     scanner.nextLine();
+  }
+
+  public char checkInputOptionsError(char[] inputOptions, char input) {
+    for (char option : inputOptions) {
+      if (option == input) {
+        return input;
+      }
+    }
+    messageUI.displayInputErrorMessage(inputOptions);
+    return input;
   }
 }
