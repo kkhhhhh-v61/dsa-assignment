@@ -82,7 +82,7 @@ public class Schedule {
 
   public String toString() {
     return "Schedule ID: " + scheduleId + "\nDoctor ID: " + doctorId + "\nDay: " + day
-        + "\nStart Time: " + startTime + "\nEnd Time: " + endTime + "\nIs Available: " + isAvailable;
+        + "\nStart Time: " + startTime + "\nEnd Time: " + endTime + "\nIs Available: " + isAvailable + "\n-------------------------------------\n";
   }
   
   public String toFileString() {

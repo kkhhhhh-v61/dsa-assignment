@@ -4,9 +4,10 @@ import adt.ArrayList;
 import utility.Enum.Gender;
 import utility.Enum.Specialization;
 import java.time.LocalDate;
+import java.time.Period;
 
 public class Doctor extends Person {
-  private static int lastId = 0000;
+  private static int lastId = 0;
 
   private String doctorId;
   private Specialization specialization;
@@ -17,13 +18,14 @@ public class Doctor extends Person {
   private ArrayList<String> treatmentRecords;
 
   public Doctor() {
+    super();
     this.doctorId = "D" + String.format("%04d", ++lastId);
     this.specialization = Specialization.Unknown;
-    this.yearsOfExperience = calculateYearsOfExperience();
     this.dutySchedule = new ArrayList<>();
     this.appointmentRecords = new ArrayList<>();
     this.consultationRecords = new ArrayList<>();
     this.treatmentRecords = new ArrayList<>();
+    this.yearsOfExperience = calculateYearsOfExperience();
   }
   
   public Doctor(String icNumber, String name, Gender gender, LocalDate birthDate, String contactNumber, String email,
@@ -31,19 +33,16 @@ public class Doctor extends Person {
     super(icNumber, name, gender, birthDate, contactNumber, email, address, registrationDate);
     this.doctorId = "D" + String.format("%04d", ++lastId);
     this.specialization = specialization;
-    this.yearsOfExperience = calculateYearsOfExperience();
     this.dutySchedule = dutySchedule;
     this.appointmentRecords = appointmentRecords;
     this.consultationRecords = consultationRecords;
     this.treatmentRecords = treatmentRecords;
+    this.yearsOfExperience = calculateYearsOfExperience();
   }
-  
+
+  // --- Getters and Setters ---
   public String getDoctorId() {
     return doctorId;
-  }
-  
-  public void setDoctorId(String doctorId) { /* Not recommended for use */
-    this.doctorId = doctorId;
   }
 
   public Specialization getSpecialization() {
@@ -55,21 +54,15 @@ public class Doctor extends Person {
   }
 
   public int getYearsOfExperience() {
-    return yearsOfExperience;
+    // Always return the current calculated experience
+    return calculateYearsOfExperience();
   }
-
-  public void setYearsOfExperience(int yearsOfExperience) {
-    this.yearsOfExperience = yearsOfExperience;
-  }
-
+  
   public int calculateYearsOfExperience() {
-    int years = LocalDate.now().getYear() - this.registrationDate.getYear();
-    if (LocalDate.now().getMonthValue() <= this.registrationDate.getMonthValue()) {
-      if (LocalDate.now().getDayOfMonth() < this.registrationDate.getDayOfMonth()) {
-        years--;
+      if (super.registrationDate == null) {
+          return 0;
       }
-    }
-    return years;
+      return Period.between(super.registrationDate, LocalDate.now()).getYears();
   }
 
   public ArrayList<String> getDutySchedule() {
@@ -104,19 +97,21 @@ public class Doctor extends Person {
     this.treatmentRecords = treatmentRecords;
   }
 
+  @Override
   public String toString() {
-    return "Doctor ID: " + doctorId + "\nSpecialization: " + specialization + "\nYears of Experience: " + yearsOfExperience + "\nDuty Schedule: " + dutySchedule + "\nAppointment Records: " + appointmentRecords + "\nConsultation Records: " + consultationRecords + "\nTreatment Records: " + treatmentRecords;
+    return "Doctor ID: " + doctorId + "\nSpecialization: " + specialization + "\nYears of Experience: " + getYearsOfExperience();
   }
 
+  /**
+   * Corrected toFileString to only include Doctor-specific fields for saving.
+   * It should NOT include the ArrayLists for this simple save format.
+   */
   public String toFileString() {
-    return doctorId + "|" + specialization + "|" + yearsOfExperience + "|" + dutySchedule + "|" + appointmentRecords + "|" + consultationRecords + "|" + treatmentRecords;
+    // This method is now designed to be combined with the Person's toFileString
+    return doctorId + "|" + super.toFileString() + "|" + specialization;
   }
 
   public String toStringComplete() {
-    return "Doctor ID: " + doctorId + "\n" + super.toString() + "\nSpecialization: " + specialization + "\nYears of Experience: " + yearsOfExperience + "\nDuty Schedule: " + dutySchedule + "\nAppointment Records: " + appointmentRecords + "\nConsultation Records: " + consultationRecords + "\nTreatment Records: " + treatmentRecords;
-  }
-
-  public String toFileStringComplete() {
-    return doctorId + "|" + super.toFileString() + "|" + specialization + "|" + yearsOfExperience + "|" + dutySchedule + "|" + appointmentRecords + "|" + consultationRecords + "|" + treatmentRecords;
+    return "Doctor ID: " + doctorId + "\n" + super.toString() + "\nSpecialization: " + specialization + "\nYears of Experience: " + getYearsOfExperience();
   }
 }

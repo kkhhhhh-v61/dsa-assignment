@@ -2,6 +2,7 @@ package entity;
 
 import utility.Enum.Gender;
 import java.time.LocalDate;
+import java.time.Period;
 
 public class Person {
   protected String icNumber;
@@ -19,11 +20,11 @@ public class Person {
     this.name = "";
     this.gender = Gender.Unknown;
     this.birthDate = LocalDate.now();
-    this.age = calculateAge();
     this.contactNumber = "";
     this.email = "";
     this.address = "";
     this.registrationDate = LocalDate.now();
+    this.age = calculateAge();
   }
 
   public Person(String icNumber, String name, Gender gender, LocalDate birthDate, String contactNumber, String email,
@@ -32,13 +33,14 @@ public class Person {
     this.name = name;
     this.gender = gender;
     this.birthDate = birthDate;
-    this.age = calculateAge();
     this.contactNumber = contactNumber;
     this.email = email;
     this.address = address;
     this.registrationDate = registrationDate == null ? LocalDate.now() : registrationDate;
+    this.age = calculateAge();
   }
 
+  // --- Getters and Setters ---
   public String getIcNumber() {
     return icNumber;
   }
@@ -69,24 +71,19 @@ public class Person {
 
   public void setBirthDate(LocalDate birthDate) {
     this.birthDate = birthDate;
+    this.age = calculateAge();
   }
 
   public int getAge() {
-    return age;
-  }
-
-  public void setAge(int age) {
-    this.age = age;
+    // Always return the current calculated age
+    return calculateAge();
   }
   
   public int calculateAge() {
-    int age = LocalDate.now().getYear() - this.birthDate.getYear();
-    if (LocalDate.now().getMonthValue() <= this.birthDate.getMonthValue()) {
-      if (LocalDate.now().getDayOfMonth() < this.birthDate.getDayOfMonth()) {
-        age--;
-      }
+    if (this.birthDate == null) {
+      return 0;
     }
-    return age;
+    return Period.between(this.birthDate, LocalDate.now()).getYears();
   }
 
   public String getContactNumber() {
@@ -121,11 +118,15 @@ public class Person {
     this.registrationDate = registrationDate;
   }
 
+  @Override
   public String toString() {
-    return "IC Number: " + icNumber + "\nName: " + name + "\nGender: " + gender + "\nBirth Date: " + birthDate + "\nAge: " + age + "\nContact Number: " + contactNumber + "\nEmail: " + email + "\nAddress: " + address + "\nRegistration Date: " + registrationDate;
+    return "IC Number: " + icNumber + "\nName: " + name + "\nGender: " + gender + "\nBirth Date: " + birthDate + "\nAge: " + getAge() + "\nContact Number: " + contactNumber + "\nEmail: " + email + "\nAddress: " + address + "\nRegistration Date: " + registrationDate;
   }
   
+  /**
+   * Corrected toFileString to only include Person fields for saving.
+   */
   public String toFileString() {
-    return icNumber + "|" + name + "|" + gender + "|" + birthDate + "|" + age + "|" + contactNumber + "|" + email + "|" + address + "|" + registrationDate;
+    return icNumber + "|" + name + "|" + gender + "|" + birthDate + "|" + contactNumber + "|" + email + "|" + address + "|" + registrationDate;
   }
 }
