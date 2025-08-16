@@ -108,12 +108,12 @@ public class TestDriver {
 
 
     /* Appointment */
-    Appointment appointment = new Appointment("D0001", "P0001", LocalDate.of(2023, 6, 1), LocalTime.of(12, 0), "Notes", Status.Completed);
+    Appointment appointment = new Appointment(patient, doctor, LocalDate.of(2023, 6, 1), LocalTime.of(12, 0), "Notes", Status.Completed);
     System.out.println(appointment.toString() + "\n");
     System.out.println(appointment.toFileString() + "\n");
 
     /* Consultation */
-    Consultation consultation = new Consultation("D0001", "P0001", LocalDate.of(2023, 6, 1), LocalTime.of(12, 0), symptoms, diagnosis, "Notes", Status.Completed);
+    Consultation consultation = new Consultation(doctor, patient, LocalDate.of(2023, 6, 1), LocalTime.of(12, 0), symptoms, diagnosis, "Notes", Status.Completed);
     System.out.println(consultation.toString() + "\n");
     System.out.println(consultation.toFileString() + "\n");
 

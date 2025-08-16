@@ -8,8 +8,8 @@ public class Appointment {
   private static int lastId = 0000;
 
   private String appointmentId;
-  private String patientId;
-  private String doctorId;
+  private Patient patient;
+  private Doctor doctor;
   private LocalDate appointmentDate;
   private LocalTime appointmentTime;
   private String reason;
@@ -17,19 +17,19 @@ public class Appointment {
 
   public Appointment() {
     this.appointmentId = "A" + String.format("%04d", ++lastId);
-    this.patientId = "";
-    this.doctorId = "";
+    this.patient = null;
+    this.doctor = null;
     this.appointmentDate = LocalDate.now();
     this.appointmentTime = LocalTime.now();
     this.reason = "";
     this.status = Status.Unknown;
   }
 
-  public Appointment(String patientId, String doctorId, LocalDate appointmentDate, LocalTime appointmentTime,
+  public Appointment(Patient patient, Doctor doctor, LocalDate appointmentDate, LocalTime appointmentTime,
       String reason, Status status) {
     this.appointmentId = "A" + String.format("%04d", ++lastId);
-    this.patientId = patientId;
-    this.doctorId = doctorId;
+    this.patient = patient;
+    this.doctor = doctor;
     this.appointmentDate = appointmentDate;
     this.appointmentTime = appointmentTime;
     this.reason = reason;
@@ -44,20 +44,20 @@ public class Appointment {
     this.appointmentId = appointmentId;
   }
 
-  public String getPatientId() {
-    return patientId;
+  public Patient getPatient() {
+    return patient;
   }
 
-  public void setPatientId(String patientId) {
-    this.patientId = patientId;
+  public void setPatient(Patient patient) {
+    this.patient = patient;
   }
 
-  public String getDoctorId() {
-    return doctorId;
+  public Doctor getDoctor() {
+    return doctor;
   }
 
-  public void setDoctorId(String doctorId) {
-    this.doctorId = doctorId;
+  public void setDoctor(Doctor doctor) {
+    this.doctor = doctor;
   }
 
   public LocalDate getAppointmentDate() {
@@ -93,10 +93,10 @@ public class Appointment {
   }
 
   public String toString() {
-    return "Appointment ID: " + appointmentId + "\nPatient ID: " + patientId + "\nDoctor ID: " + doctorId + "\nAppointment Date: " + appointmentDate + "\nAppointment Time: " + appointmentTime + "\nReason: " + reason + "\nStatus: " + status;
+    return "Appointment ID: " + appointmentId + "\nPatient ID: " + patient.getPatientId() + "\nDoctor ID: " + doctor.getDoctorId() + "\nAppointment Date: " + appointmentDate + "\nAppointment Time: " + appointmentTime + "\nReason: " + reason + "\nStatus: " + status;
   }
 
   public String toFileString() {
-    return appointmentId + "|" + patientId + "|" + doctorId + "|" + appointmentDate + "|" + appointmentTime + "|" + reason + "|" + status;
+    return appointmentId + "|" + patient.getPatientId() + "|" + doctor.getDoctorId() + "|" + appointmentDate + "|" + appointmentTime + "|" + reason + "|" + status;
   }
 }

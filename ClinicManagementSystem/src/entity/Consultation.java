@@ -9,8 +9,8 @@ public class Consultation {
   private static int lastId = 0000;
 
   private String consultationId;
-  private String patientId;
-  private String doctorId;
+  private Patient patient;
+  private Doctor doctor;
   private LocalDate consultationDate;
   private LocalTime consultationTime;
   private ArrayList<String> symptoms;
@@ -20,8 +20,8 @@ public class Consultation {
 
   public Consultation() {
     this.consultationId = "C" + String.format("%04d", ++lastId);
-    this.patientId = "";
-    this.doctorId = "";
+    this.patient = null;
+    this.doctor = null;
     this.consultationDate = LocalDate.now();
     this.consultationTime = LocalTime.now();
     this.symptoms = new ArrayList<>();
@@ -30,11 +30,11 @@ public class Consultation {
     this.status = Status.Unknown;
   }
 
-  public Consultation(String doctorId, String patientId, LocalDate consultationDate, LocalTime consultationTime,
+  public Consultation(Doctor doctor, Patient patient, LocalDate consultationDate, LocalTime consultationTime,
       ArrayList<String> symptoms, ArrayList<String> diagnosis, String notes, Status status) {
     this.consultationId = "C" + String.format("%04d", ++lastId);
-    this.patientId = patientId;
-    this.doctorId = doctorId;
+    this.patient = patient;
+    this.doctor = doctor;
     this.consultationDate = consultationDate;
     this.consultationTime = consultationTime;
     this.symptoms = symptoms;
@@ -51,20 +51,20 @@ public class Consultation {
     this.consultationId = consultationId;
   }
 
-  public String getPatientId() {
-    return patientId;
+  public Patient getPatient() {
+    return patient;
   }
 
-  public void setPatientId(String patientId) {
-    this.patientId = patientId;
+  public void setPatient(Patient patient) {
+    this.patient = patient;
   }
 
-  public String getDoctorId() {
-    return doctorId;
+  public Doctor getDoctor() {
+    return doctor;
   }
 
-  public void setDoctorId(String doctorId) {
-    this.doctorId = doctorId;
+  public void setDoctor(Doctor doctor) {
+    this.doctor = doctor;
   }
 
   public LocalDate getConsultationDate() {
@@ -116,10 +116,10 @@ public class Consultation {
   }
 
   public String toString() {
-    return "Consultation ID: " + consultationId + "\nPatient ID: " + patientId + "\nDoctor ID: " + doctorId + "\nConsultation Date: " + consultationDate + "\nConsultation Time: " + consultationTime + "\nSymptoms: " + symptoms + "\nDiagnosis: " + diagnosis + "\nNotes: " + notes + "\nStatus: " + status;
+    return "Consultation ID: " + consultationId + "\nPatient ID: " + patient.getPatientId() + "\nDoctor ID: " + doctor.getDoctorId() + "\nConsultation Date: " + consultationDate + "\nConsultation Time: " + consultationTime + "\nSymptoms: " + symptoms + "\nDiagnosis: " + diagnosis + "\nNotes: " + notes + "\nStatus: " + status;
   }
 
   public String toFileString() {
-    return consultationId + "|" + patientId + "|" + doctorId + "|" + consultationDate + "|" + consultationTime + "|" + symptoms + "|" + diagnosis + "|" + notes + "|" + status;
+    return consultationId + "|" + patient.getPatientId() + "|" + doctor.getDoctorId() + "|" + consultationDate + "|" + consultationTime + "|" + symptoms + "|" + diagnosis + "|" + notes + "|" + status;
   }
 }
