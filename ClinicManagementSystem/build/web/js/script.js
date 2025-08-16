@@ -7,22 +7,24 @@ document.addEventListener("DOMContentLoaded", function () {
   function initActiveState() {
     const storedState = sessionStorage.getItem(STORAGE_KEY);
     const defaultActiveItem = currentPage === "index.jsp" ? "dashboard" : "";
-    
+
     try {
       if (storedState) {
         const { item, subItem } = JSON.parse(storedState);
         // First set the active item
         setActiveItem(item, subItem);
-        
+
         // If it's not the dashboard, ensure the submenu is expanded
-        if (item !== 'dashboard') {
-          const activeSection = document.querySelector(`[data-item-id="${item}"]`);
+        if (item !== "dashboard") {
+          const activeSection = document.querySelector(
+            `[data-item-id="${item}"]`
+          );
           if (activeSection) {
-            const toggleBtn = activeSection.querySelector('.nav-item-toggle');
-            const submenu = activeSection.querySelector('.nav-submenu');
+            const toggleBtn = activeSection.querySelector(".nav-item-toggle");
+            const submenu = activeSection.querySelector(".nav-submenu");
             if (toggleBtn && submenu) {
               // Force open the submenu
-              toggleBtn.classList.add('active');
+              toggleBtn.classList.add("active");
               submenu.style.maxHeight = submenu.scrollHeight + "px";
               submenu.style.opacity = "1";
               submenu.style.padding = "var(--spacing-xs) 0 var(--spacing-sm) 0";
@@ -34,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
         setActiveItem(defaultActiveItem);
       }
     } catch (e) {
-      console.error('Error initializing active state:', e);
+      console.error("Error initializing active state:", e);
       if (defaultActiveItem) {
         setActiveItem(defaultActiveItem);
       }
@@ -44,12 +46,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // Set active item and store in localStorage
   function setActiveItem(itemId, subItemId = null) {
     // If clicking dashboard, collapse all other submenus
-    if (itemId === 'dashboard') {
-      document.querySelectorAll(".nav-item-toggle.active").forEach(toggle => {
+    if (itemId === "dashboard") {
+      document.querySelectorAll(".nav-item-toggle.active").forEach((toggle) => {
         if (!toggle.closest('[data-item-id="dashboard"]')) {
           const submenu = toggle.nextElementSibling;
-          if (submenu && submenu.classList.contains('nav-submenu')) {
-            toggle.classList.remove('active');
+          if (submenu && submenu.classList.contains("nav-submenu")) {
+            toggle.classList.remove("active");
             submenu.style.maxHeight = "0";
             submenu.style.opacity = "0";
             submenu.style.padding = "0";
@@ -66,19 +68,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // If we have a subitem, activate both parent and subitem
     if (subItemId) {
-      const subItem = document.querySelector(`[data-subitem-id="${subItemId}"]`);
+      const subItem = document.querySelector(
+        `[data-subitem-id="${subItemId}"]`
+      );
       if (subItem) {
         subItem.classList.add("active");
         // Also activate the parent menu item
-        const parentSection = subItem.closest('.nav-section');
+        const parentSection = subItem.closest(".nav-section");
         if (parentSection) {
-          const parentItem = parentSection.querySelector('.nav-item');
+          const parentItem = parentSection.querySelector(".nav-item");
           if (parentItem) parentItem.classList.add("active");
           // Store both parent and subitem in localStorage
-          sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
-            item: parentSection.dataset.itemId,
-            subItem: subItemId
-          }));
+          sessionStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify({
+              item: parentSection.dataset.itemId,
+              subItem: subItemId,
+            })
+          );
           return;
         }
       }
@@ -87,14 +94,17 @@ document.addEventListener("DOMContentLoaded", function () {
     // Handle regular menu items
     const targetSection = document.querySelector(`[data-item-id="${itemId}"]`);
     if (targetSection) {
-      const navItem = targetSection.querySelector('.nav-item');
+      const navItem = targetSection.querySelector(".nav-item");
       if (navItem) {
         navItem.classList.add("active");
         // Store only the main item in sessionStorage
-        sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
-          item: itemId,
-          subItem: null
-        }));
+        sessionStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({
+            item: itemId,
+            subItem: null,
+          })
+        );
       }
     }
   }
@@ -103,13 +113,13 @@ document.addEventListener("DOMContentLoaded", function () {
   function toggleSubmenu(toggleBtn, itemId) {
     const submenu = toggleBtn.nextElementSibling;
     const isExpanding = !toggleBtn.classList.contains("active");
-    
+
     // If we're expanding, close all other submenus first
     if (isExpanding) {
-      document.querySelectorAll('.nav-item-toggle.active').forEach(btn => {
+      document.querySelectorAll(".nav-item-toggle.active").forEach((btn) => {
         if (btn !== toggleBtn) {
           const otherSubmenu = btn.nextElementSibling;
-          btn.classList.remove('active');
+          btn.classList.remove("active");
           otherSubmenu.style.maxHeight = "0";
           otherSubmenu.style.opacity = "0";
           otherSubmenu.style.padding = "0";
@@ -120,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Toggle the clicked menu
     toggleBtn.classList.toggle("active", isExpanding);
-    
+
     // Toggle submenu with animation
     if (isExpanding) {
       // Open submenu
@@ -128,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
       submenu.style.opacity = "1";
       submenu.style.padding = "var(--spacing-xs) 0 var(--spacing-sm) 0";
       submenu.style.visibility = "visible";
-      
+
       // Set this as active item if it's a direct nav item
       if (itemId) {
         setActiveItem(itemId);
@@ -140,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
       submenu.style.padding = "0";
       // Only hide after transition completes
       setTimeout(() => {
-        if (!toggleBtn.classList.contains('active')) {
+        if (!toggleBtn.classList.contains("active")) {
           submenu.style.visibility = "hidden";
         }
       }, 200); // Match this with your CSS transition duration
@@ -151,10 +161,10 @@ document.addEventListener("DOMContentLoaded", function () {
   function initializeSubmenus() {
     document.querySelectorAll(".nav-item-toggle").forEach((toggle) => {
       const submenu = toggle.nextElementSibling;
-      if (!submenu || !submenu.classList.contains('nav-submenu')) return;
-      
+      if (!submenu || !submenu.classList.contains("nav-submenu")) return;
+
       // Only initialize if not already initialized
-      if (toggle.classList.contains('active')) {
+      if (toggle.classList.contains("active")) {
         submenu.style.maxHeight = submenu.scrollHeight + "px";
         submenu.style.opacity = "1";
         submenu.style.padding = "var(--spacing-xs) 0 var(--spacing-sm) 0";
@@ -175,41 +185,54 @@ document.addEventListener("DOMContentLoaded", function () {
       (toggle.closest(".nav-section:first-child") ? "dashboard" : null);
 
     toggle.addEventListener("click", function (e) {
-      e.preventDefault();
+      // e.preventDefault();
       e.stopPropagation();
       toggleSubmenu(this, itemId);
     });
   });
 
   // Handle direct link clicks for main menu items
-  document.querySelectorAll(".nav-item:not(.nav-item-toggle)").forEach((item) => {
-    const itemId = item.closest('[data-item-id]')?.dataset.itemId;
+  document.querySelectorAll(".nav-item").forEach((item) => {
+    // Skip items that are toggles (they have the nav-item-toggle class)
+    if (item.classList.contains("nav-item-toggle")) return;
+
+    const itemId = item.closest("[data-item-id]")?.dataset.itemId;
     if (itemId) {
       item.addEventListener("click", (e) => {
-        // Only prevent default if it's a hash link
-        if (item.getAttribute('href') === '#') {
+        const href = item.getAttribute("href");
+
+        // Only prevent default if it's a hash link, empty, or javascript
+        if (!href || href === "#" || href.startsWith("javascript:")) {
           e.preventDefault();
+          return;
         }
-        // Don't stop propagation to allow navigation
+
+        // For valid links, set the active state and let the default navigation proceed
         setActiveItem(itemId);
+        // The default navigation will proceed automatically
       });
     }
   });
-  
+
   // Handle submenu item clicks
   document.querySelectorAll(".nav-subitem").forEach((item) => {
-    const parentSection = item.closest('.nav-section');
+    const parentSection = item.closest(".nav-section");
     const parentId = parentSection?.dataset.itemId;
     const subItemId = item.dataset.subitemId;
-    
+
     if (parentId && subItemId) {
       item.addEventListener("click", (e) => {
-        // Only prevent default if it's a hash link
-        if (item.getAttribute('href') === '#') {
+        const href = item.getAttribute("href");
+
+        // Only prevent default if it's a hash link, empty, or javascript
+        if (!href || href === "#" || href.startsWith("javascript:")) {
           e.preventDefault();
+          return;
         }
-        // Don't stop propagation to allow navigation
+
+        // For valid links, set the active state and let the default navigation proceed
         setActiveItem(parentId, subItemId);
+        // The default navigation will proceed automatically
       });
     }
   });
@@ -218,18 +241,23 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("click", function (e) {
     const clickedElement = e.target;
     const isClickInsideSidebar = clickedElement.closest(".sidebar-nav");
-    const isClickOnActiveItem = clickedElement.closest(".nav-item.active, .nav-subitem.active");
-    const activeSubmenuItem = document.querySelector('.nav-subitem.active');
-    
+    const isClickOnActiveItem = clickedElement.closest(
+      ".nav-item.active, .nav-subitem.active"
+    );
+    const activeSubmenuItem = document.querySelector(".nav-subitem.active");
+
     // Only proceed if we're not clicking on the sidebar or any of its children
     // or if we're clicking on an already active item
     if (!isClickInsideSidebar && !isClickOnActiveItem) {
       document.querySelectorAll(".nav-item-toggle.active").forEach((toggle) => {
         const submenu = toggle.nextElementSibling;
-        const parentSection = toggle.closest('.nav-section');
-        const isActiveSection = parentSection && parentSection.querySelector('.nav-item.active, .nav-subitem.active');
-        const hasActiveSubmenuItem = parentSection && parentSection.querySelector('.nav-subitem.active');
-        
+        const parentSection = toggle.closest(".nav-section");
+        const isActiveSection =
+          parentSection &&
+          parentSection.querySelector(".nav-item.active, .nav-subitem.active");
+        const hasActiveSubmenuItem =
+          parentSection && parentSection.querySelector(".nav-subitem.active");
+
         // Only close the submenu if it's not the active section and doesn't have an active subitem
         if (submenu && !isActiveSection && !hasActiveSubmenuItem) {
           toggle.classList.remove("active");
@@ -238,7 +266,7 @@ document.addEventListener("DOMContentLoaded", function () {
           submenu.style.padding = "0";
           // Only hide after transition completes
           setTimeout(() => {
-            if (!toggle.classList.contains('active')) {
+            if (!toggle.classList.contains("active")) {
               submenu.style.visibility = "hidden";
             }
           }, 200);
@@ -263,7 +291,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initialize active state and submenus
   initActiveState();
   initializeSubmenus();
-  
+
   // Re-initialize submenus after a short delay to ensure all elements are rendered
   setTimeout(initializeSubmenus, 100);
 

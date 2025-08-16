@@ -2,5 +2,12 @@
   "index.jsp": {
     "title": "Dashboard",
     "breadcrumb": [{ "text": "Dashboard", "url": "index.jsp" }]
+  },
+  "patient-management.jsp": {
+    "title": "Patient Management",
+    "breadcrumb": [
+      { "text": "Dashboard", "url": "index.jsp" },
+      { "text": "Patient Management", "url": "patient-management.jsp" }
+    ]
   }
 }
