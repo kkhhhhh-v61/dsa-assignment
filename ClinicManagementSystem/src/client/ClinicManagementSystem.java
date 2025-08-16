@@ -7,9 +7,8 @@ import boundary.ConsultationUI;
 
 public class ClinicManagementSystem {
   public static void main(String[] args) {
-    // Initialize ADT and data
-    ListInterface<Consultation> consultationList = new ArrayList<>();
-    // You can populate this list with initial data from a file or hardcode it here
+    // Load data from file
+    ListInterface<Consultation> consultationList = utility.DataManager.loadConsultations();
     
     // Initialize the manager
     ConsultationManager consultationManager = new ConsultationManager(consultationList);

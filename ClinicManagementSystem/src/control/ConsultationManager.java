@@ -24,6 +24,7 @@ public class ConsultationManager {
 
     public void addConsultation(Consultation consultation) {
         consultationList.add(consultation);
+        saveData();
     }
 
     public Consultation getConsultationById(String consultationId) {
@@ -59,6 +60,7 @@ public class ConsultationManager {
         for (int i = 1; i <= consultationList.size(); i++) {
             if (consultationList.getEntry(i).getConsultationId().equals(consultation.getConsultationId())) {
                 consultationList.replace(i, consultation);
+                saveData();
                 break;
             }
         }
@@ -68,6 +70,7 @@ public class ConsultationManager {
         for (int i = 1; i <= consultationList.size(); i++) {
             if (consultationList.getEntry(i).getConsultationId().equals(consultationId)) {
                 consultationList.remove(i);
+                saveData();
                 break;
             }
         }
@@ -132,5 +135,9 @@ public class ConsultationManager {
         // This requires a more complex data structure to do properly, like a HashMap to count symptoms.
         // For now, this is a placeholder implementation.
         return "Common Symptoms Report: Not yet implemented.";
+    }
+
+    private void saveData() {
+        utility.DataManager.saveConsultations(consultationList);
     }
 }

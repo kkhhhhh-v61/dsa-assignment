@@ -75,22 +75,18 @@ public class ConsultationUI {
 
     private void addConsultation() {
         System.out.println("\n--- Add New Consultation ---");
-        // For simplicity, we'll use hardcoded Patient and Doctor objects.
-        // In a real application, you would search for existing patients/doctors.
-        System.out.print("Enter Patient IC Number (e.g., 990101-10-1234): ");
-        String patientIc = scanner.nextLine();
-        Patient patient = new Patient();
-        patient.setIcNumber(patientIc);
-        patient.setName("Dummy Patient");
-        patient.setGender(Gender.Male);
+        // In a real application, you would use these IDs to find existing patients/doctors.
+        System.out.print("Enter Patient ID (e.g., P0001): ");
+        String patientId = scanner.nextLine();
+        Patient patient = new Patient(); // In a real system, you'd fetch this patient
+        patient.setPatientId(patientId);
+        patient.setName("Dummy Patient Name"); // This would be populated from the fetched record
 
-
-        System.out.print("Enter Doctor IC Number (e.g., 800202-10-5678): ");
-        String doctorIc = scanner.nextLine();
-        Doctor doctor = new Doctor();
-        doctor.setIcNumber(doctorIc);
-        doctor.setName("Dummy Doctor");
-        doctor.setGender(Gender.Female);
+        System.out.print("Enter Doctor ID (e.g., D0001): ");
+        String doctorId = scanner.nextLine();
+        Doctor doctor = new Doctor(); // In a real system, you'd fetch this doctor
+        doctor.setDoctorId(doctorId);
+        doctor.setName("Dummy Doctor Name"); // This would be populated from the fetched record
 
         System.out.print("Enter Symptoms (comma-separated): ");
         String[] symptomsArr = scanner.nextLine().split(",");
@@ -131,7 +127,14 @@ public class ConsultationUI {
         System.out.println("2. Patient ID");
         System.out.println("3. Doctor ID");
         System.out.print("Enter your choice: ");
-        int choice = scanner.nextInt();
+        int choice = -1;
+        try {
+            choice = scanner.nextInt();
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a number.");
+            scanner.nextLine(); // Clear the invalid input
+            return;
+        }
         scanner.nextLine(); // Consume newline
 
         switch (choice) {
