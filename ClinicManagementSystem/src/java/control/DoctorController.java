@@ -12,6 +12,7 @@ import utility.Enum.DayOfWeek;
 import utility.Enum.Gender;
 import utility.Enum.Specialization;
 import utility.FileHandler;
+import utility.DoctorValidator;
 
 public class DoctorController {
 
@@ -78,9 +79,13 @@ public class DoctorController {
     // ==================================================================
     // Doctor CRUD Operations (with saveData calls)
     // ==================================================================
-    public void addDoctor(Doctor newDoctor) {
-        doctorList.add(newDoctor);
-        saveData();
+    public ListInterface<String> addDoctor(Doctor newDoctor) {
+        ListInterface<String> errors = DoctorValidator.validateDoctor(newDoctor, doctorList);
+        if (errors.isEmpty()) {
+            doctorList.add(newDoctor);
+            saveData();
+        }
+        return errors;
     }
 
     public ListInterface<Doctor> getAllDoctors() {
@@ -96,14 +101,18 @@ public class DoctorController {
         return null;
     }
 
-    public void updateDoctor(Doctor updatedDoctor) {
-        for (int i = 0; i < doctorList.size(); i++) {
-            if (doctorList.getEntry(i).getDoctorId().equals(updatedDoctor.getDoctorId())) {
-                doctorList.replace(i, updatedDoctor);
-                saveData();
-                break;
+    public ListInterface<String> updateDoctor(Doctor updatedDoctor) {
+        ListInterface<String> errors = DoctorValidator.validateDoctor(updatedDoctor, doctorList);
+        if (errors.isEmpty()) {
+            for (int i = 0; i < doctorList.size(); i++) {
+                if (doctorList.getEntry(i).getDoctorId().equals(updatedDoctor.getDoctorId())) {
+                    doctorList.replace(i, updatedDoctor);
+                    saveData();
+                    break;
+                }
             }
         }
+        return errors;
     }
 
     public void deleteDoctor(String doctorId) {
@@ -111,6 +120,7 @@ public class DoctorController {
             if (doctorList.getEntry(i).getDoctorId().equals(doctorId)) {
                 doctorList.remove(i);
                 deleteSchedulesForDoctor(doctorId);
+                saveData();
                 break;
             }
         }
@@ -119,9 +129,15 @@ public class DoctorController {
     // ==================================================================
     // Schedule CRUD and Availability Tracking (with saveData calls)
     // ==================================================================
-    public void addSchedule(Schedule newSchedule) {
-        scheduleList.add(newSchedule);
-        saveData();
+    public ListInterface<String> addSchedule(Schedule newSchedule) {
+        ListInterface<Schedule> existingSchedules = getSchedulesForDoctor(newSchedule.doctorId());
+        ListInterface<String> errors = DoctorValidator.validateSchedule(newSchedule, existingSchedules);
+        
+        if (errors.isEmpty()) {
+            scheduleList.add(newSchedule);
+            saveData();
+        }
+        return errors;
     }
 
     public ListInterface<Schedule> getSchedulesForDoctor(String doctorId) {

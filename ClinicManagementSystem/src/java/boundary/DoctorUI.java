@@ -14,6 +14,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+import utility.DoctorValidator;
 import utility.Enum.DayOfWeek;
 import utility.Enum.Gender;
 import utility.Enum.Specialization;
@@ -80,27 +81,142 @@ public class DoctorUI {
     }
 
     private void addDoctorUI() {
-        System.out.println("\n--- Add New Doctor ---");
-        System.out.print("Enter IC Number (e.g., 901231-14-1234): ");
-        String ic = scanner.nextLine();
-        System.out.print("Enter Name: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter Gender (Male/Female): ");
-        Gender gender = Gender.valueOf(scanner.nextLine());
-        System.out.print("Enter Birth Date (YYYY-MM-DD): ");
-        LocalDate birthDate = LocalDate.parse(scanner.nextLine(), dateFormatter);
-        System.out.print("Enter Contact Number: ");
-        String contact = scanner.nextLine();
-        System.out.print("Enter Email: ");
-        String email = scanner.nextLine();
-        System.out.print("Enter Address: ");
-        String address = scanner.nextLine();
-        System.out.print("Enter Specialization (Cardiology, Dermatology, etc.): ");
-        Specialization spec = Specialization.valueOf(scanner.nextLine());
+        String name, icNumber, contactNumber, email, address;
+        Gender gender;
+        LocalDate birthDate;
+        Specialization specialization;
 
-        Doctor newDoctor = new Doctor(ic, name, gender, birthDate, contact, email, address, LocalDate.now(), spec, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        System.out.println("\n--- Add New Doctor ---");
+
+        // Ic
+        while (true) {
+            System.out.print("Enter IC Number (YYMMDD-XX-XXXX): ");
+            icNumber = scanner.nextLine();
+
+            String formatError = DoctorValidator.validateIcFormat(icNumber);
+            if (formatError != null) {
+                System.out.println("Error: " + formatError);
+                continue; // Repeat loop
+            }
+
+            // For a new doctor, the current ID is null or empty
+            String duplicateError = DoctorValidator.validateDuplicateIc(icNumber, "", doctorController.getAllDoctors());
+            if (duplicateError != null) {
+                System.out.println("Error: " + duplicateError);
+                continue; // Repeat loop
+            }
+
+            break; // Exit loop if both format and uniqueness are valid
+        }
+
+        // Name
+        while (true) {
+            System.out.print("Enter Doctor's Name: ");
+            name = scanner.nextLine();
+            String error = DoctorValidator.validateName(name);
+            if (error == null) {
+                break; // Exit loop if valid
+            }
+            System.out.println("Error: " + error); // Show error and repeat loop
+        }
+
+        // Gender
+        while (true) {
+            System.out.print("Enter Gender (1 = Male, 2 = Female): ");
+            String genderInput = scanner.nextLine();
+            if (genderInput.equals("1")) {
+                gender = Gender.Male;
+                break;
+            } else if (genderInput.equals("2")) {
+                gender = Gender.Female;
+                break;
+            } else {
+                System.out.println("Error: Please enter only '1' or '2'.");
+            }
+        }
+
+        // Birth Date
+        while (true) {
+            System.out.print("Enter Birth Date (YYYY-MM-DD): ");
+            String dateInput = scanner.nextLine();
+            try {
+                birthDate = LocalDate.parse(dateInput);
+                String error = DoctorValidator.validateBirthDate(birthDate);
+                if (error == null) {
+                    break; // Exit loop if valid
+                }
+                System.out.println("Error: " + error);
+            } catch (DateTimeParseException e) {
+                System.out.println("Error: Invalid date format. Please use YYYY-MM-DD.");
+            }
+        }
+
+        // Contack  Number
+        while (true) {
+            System.out.print("Enter Contact Number (e.g., 012-3456789): ");
+            contactNumber = scanner.nextLine();
+            String error = DoctorValidator.validatePhoneNumber(contactNumber);
+            if (error == null) {
+                break;
+            }
+            System.out.println("Error: " + error);
+        }
+
+        // Email
+        while (true) {
+            System.out.print("Enter Email Address: ");
+            email = scanner.nextLine();
+            String error = DoctorValidator.validateEmail(email);
+            if (error == null) {
+                break;
+            }
+            System.out.println("Error: " + error);
+        }
+
+        // Address
+        while (true) {
+            System.out.print("Enter Address: ");
+            address = scanner.nextLine();
+            String error = DoctorValidator.validateAddress(address);
+            if (error == null) {
+                break;
+            }
+            System.out.println("Error: " + error);
+        }
+
+        // Specialization
+        while (true) {
+            System.out.println("\nSelect Specialization:");
+            Specialization[] availableSpecs = Specialization.values();
+            int choiceCount = 0;
+            // Display only valid, non-Unknown specializations
+            for (int i = 0; i < availableSpecs.length; i++) {
+                if (availableSpecs[i] != Specialization.Unknown) {
+                    System.out.printf("%d. %s\n", (i + 1), availableSpecs[i]);
+                    choiceCount++;
+                }
+            }
+
+            System.out.print("Enter your choice (1-" + choiceCount + "): ");
+            try {
+                int choice = Integer.parseInt(scanner.nextLine());
+                if (choice > 0 && choice <= choiceCount) {
+                    specialization = availableSpecs[choice - 1];
+                    break;
+                } else {
+                    System.out.println("Error: Invalid choice. Please enter a number between 1 and " + choiceCount + ".");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Please enter a valid number.");
+            }
+        }
+
+        Doctor newDoctor = new Doctor(icNumber, name, gender, birthDate, contactNumber, email, address,
+                LocalDate.now(), specialization, new ArrayList<>(), new ArrayList<>(),
+                new ArrayList<>(), new ArrayList<>());
+
         doctorController.addDoctor(newDoctor);
-        System.out.println("Doctor added successfully! Doctor ID: " + newDoctor.getDoctorId());
+        System.out.println("\nDoctor added successfully!");
     }
 
     private void viewAllDoctorsUI() {
@@ -131,28 +247,106 @@ public class DoctorUI {
     }
 
     private void updateDoctorUI() {
-        System.out.print("\nEnter Doctor ID to update: ");
+        System.out.print("\nEnter Doctor ID to update (e.g., D0001): ");
         String docId = scanner.nextLine();
         Doctor doc = doctorController.getDoctorById(docId);
 
         if (doc != null) {
-            System.out.println("Enter new information (leave blank to keep current value):");
-            System.out.print("Update Contact Number (" + doc.getContactNumber() + "): ");
-            String contact = scanner.nextLine();
-            if (!contact.isEmpty()) doc.setContactNumber(contact);
+            System.out.println("\nNow updating Dr. " + doc.getName() + ". Press Enter to keep the current value.");
 
-            System.out.print("Update Email (" + doc.getEmail() + "): ");
-            String email = scanner.nextLine();
-            if (!email.isEmpty()) doc.setEmail(email);
+            // Update Contact Number
+            while (true) {
+                System.out.print("Update Contact Number (" + doc.getContactNumber() + "): ");
+                String newContact = scanner.nextLine();
+                if (newContact.isEmpty()) {
+                    break; // User skipped, keep old value and exit loop
+                }
 
-            System.out.print("Update Address (" + doc.getAddress() + "): ");
-            String address = scanner.nextLine();
-            if (!address.isEmpty()) doc.setAddress(address);
+                String error = DoctorValidator.validatePhoneNumber(newContact); //
+                if (error == null) {
+                    doc.setContactNumber(newContact); //
+                    break; // Valid new value, exit loop
+                }
+                System.out.println("Error: " + error); // Invalid, show error and repeat loop
+            }
 
-            doctorController.updateDoctor(doc);
-            System.out.println("Doctor information updated successfully.");
+            // Update Email
+            while (true) {
+                System.out.print("Update Email (" + doc.getEmail() + "): ");
+                String newEmail = scanner.nextLine();
+                if (newEmail.isEmpty()) {
+                    break;
+                }
+
+                String error = DoctorValidator.validateEmail(newEmail); //
+                if (error == null) {
+                    doc.setEmail(newEmail); //
+                    break;
+                }
+                System.out.println("Error: " + error);
+            }
+
+            // Update Address
+            while (true) {
+                System.out.print("Update Address (" + doc.getAddress() + "): ");
+                String newAddress = scanner.nextLine();
+                if (newAddress.isEmpty()) {
+                    break;
+                }
+
+                String error = DoctorValidator.validateAddress(newAddress); //
+                if (error == null) {
+                    doc.setAddress(newAddress); //
+                    break;
+                }
+                System.out.println("Error: " + error);
+            }
+
+            //  Update Doctor  Specialization
+            while (true) {
+                System.out.println("\nUpdate Specialization (" + doc.getSpecialization() + "):");
+                Specialization[] availableSpecs = Specialization.values(); //
+                int choiceCount = 0;
+                for (int i = 0; i < availableSpecs.length; i++) {
+                    if (availableSpecs[i] != Specialization.Unknown) {
+                        System.out.printf("%d. %s\n", (i + 1), availableSpecs[i]);
+                        choiceCount++;
+                    }
+                }
+
+                System.out.print("Enter new choice (1-" + choiceCount + ") or leave blank to skip: ");
+                String choiceInput = scanner.nextLine();
+
+                if (choiceInput.isEmpty()) {
+                    break; // User skipped
+                }
+
+                try {
+                    int choice = Integer.parseInt(choiceInput);
+                    if (choice > 0 && choice <= choiceCount) {
+                        doc.setSpecialization(availableSpecs[choice - 1]); //
+                        break; // Valid choice
+                    } else {
+                        System.out.println("Error: Invalid choice. Please enter a number between 1 and " + choiceCount + ".");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Please enter a valid number.");
+                }
+            }
+
+            ListInterface<String> finalErrors = doctorController.updateDoctor(doc);
+
+            if (finalErrors.isEmpty()) {
+                System.out.println("\n✅ Doctor information updated successfully!");
+            } else {
+                // This is a safeguard; should not happen if UI validation is thorough
+                System.out.println("\n❌ Update failed due to a system validation error:");
+                for (int i = 0; i < finalErrors.size(); i++) {
+                    System.out.println("- " + finalErrors.getEntry(i));
+                }
+            }
         } else {
-            System.out.println("Doctor with ID " + docId + " not found.");
+            System.out.println("Error: Doctor with ID " + docId + " not found.");
         }
     }
 
@@ -174,7 +368,7 @@ public class DoctorUI {
             System.out.println("Doctor with ID " + docId + " not found.");
         }
     }
-    
+
     private void showScheduleMenu() {
         System.out.print("\nEnter Doctor ID to manage schedules: ");
         String docId = scanner.nextLine();
@@ -195,13 +389,16 @@ public class DoctorUI {
             scanner.nextLine();
 
             switch (choice) {
-                case 1 -> addScheduleUI(docId);
-                case 2 -> viewSchedulesUI(docId);
-                case 3 -> deleteScheduleUI(docId);
+                case 1 ->
+                    addScheduleUI(docId);
+                case 2 ->
+                    viewSchedulesUI(docId);
+                case 3 ->
+                    deleteScheduleUI(docId);
             }
         } while (choice != 0);
     }
-    
+
     private void addScheduleUI(String doctorId) {
         try {
             System.out.print("Enter Day of Week (e.g., Monday): ");
@@ -253,7 +450,8 @@ public class DoctorUI {
             scanner.nextLine();
 
             switch (choice) {
-                case 1 -> doctorController.generateDoctorSpecializationReport();
+                case 1 ->
+                    doctorController.generateDoctorSpecializationReport();
                 case 2 -> {
                     System.out.print("Enter Day of Week (e.g., Monday): ");
                     DayOfWeek day = DayOfWeek.valueOf(scanner.nextLine());
