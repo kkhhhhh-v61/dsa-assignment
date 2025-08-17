@@ -59,8 +59,8 @@ public class UtilityUI {
 
   public String formatContactNumber(String contactNumber) {
     if (!contactNumber.isEmpty()) {
+      contactNumber = contactNumber.replaceAll("[\\s-]", "");
       contactNumber = contactNumber.replaceAll("(\\d{3})(\\d{4})", "$1-$2 ");
-      
     }
     return contactNumber;
   }

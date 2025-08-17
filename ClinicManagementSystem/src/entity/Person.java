@@ -83,7 +83,11 @@ public class Person {
     int age = LocalDate.now().getYear() - this.birthDate.getYear();
     if (LocalDate.now().getMonthValue() <= this.birthDate.getMonthValue()) {
       if (LocalDate.now().getDayOfMonth() < this.birthDate.getDayOfMonth()) {
-        if(age > 0) age--;
+        if (age > 0) {
+          age--;
+        } else {
+          age = 0;
+        }
       }
     }
     return age;

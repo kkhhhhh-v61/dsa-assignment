@@ -1,9 +1,13 @@
 package control;
 
 import boundary.PatientMaintenanceUI;
+import entity.Patient;
+import utility.Enum.BloodType;
+import utility.Enum.Gender;
 import utility.MessageUI;
 import utility.UtilityUI;
 import utility.Validation;
+import java.time.LocalDate;
 
 public class PatientMaintenance {
   private static PatientMaintenanceUI patientMaintenanceUI = new PatientMaintenanceUI();
@@ -26,19 +30,19 @@ public class PatientMaintenance {
           case '1':
             boolean exit2 = false;
             boolean isDetailsValid = false;
-            String patientDetailsString = "";
+            Patient newPatient = new Patient();
             do {
               String result;
               result = patientMaintenanceUI.inputPatientIcNumber();
               if (result.equals("0")) {
                 exit2 = true;
               } else {
-                patientDetailsString += result + "|";
+                newPatient.setIcNumber(result);
                 result = utilityUI.formatName(utilityUI.removeSpaces(patientMaintenanceUI.inputPatientName()));
                 if (result.equals("0")) {
                   exit2 = true;
                 } else {
-                  patientDetailsString += result + "|";
+                  newPatient.setName(result);
                   result = String.valueOf(patientMaintenanceUI.inputPatientGender());
                   if (result.equals("0")) {
                     exit2 = true;
@@ -53,45 +57,52 @@ public class PatientMaintenance {
                       default:
                         break;
                     }
-                    patientDetailsString += result + "|";
+                    newPatient.setGender(Gender.valueOf(result));
                     result = patientMaintenanceUI.inputPatientBirthDate();
                     if (result.equals("0")) {
                       exit2 = true;
                     } else {
-                      patientDetailsString += result + "|";
-                      result = utilityUI.formatContactNumber(patientMaintenanceUI.inputPatientContactNumber());
+                      newPatient.setBirthDate(LocalDate.parse(result));
+                      newPatient.setAge(newPatient.calculateAge());
+                      result = patientMaintenanceUI.inputPatientContactNumber();
                       if (result.equals("0")) {
                         exit2 = true;
                       } else {
-                        patientDetailsString += result + "|";
+                        newPatient.setContactNumber(utilityUI.formatContactNumber(result));
                         result = patientMaintenanceUI.inputPatientEmail();
                         if (result.equals("0")) {
                           exit2 = true;
                         } else {
-                          patientDetailsString += result + "|";
-                          result = String.valueOf(patientMaintenanceUI.inputPatientBloodType());
+                          newPatient.setEmail(result);
+                          result = patientMaintenanceUI.inputPatientAddress();
                           if (result.equals("0")) {
                             exit2 = true;
                           } else {
-                            switch (result.charAt(0)) {
-                              case '1':
-                                result = "A";
-                                break;
-                              case '2':
-                                result = "B";
-                                break;
-                              case '3':
-                                result = "O";
-                                break;
-                              case '4':
-                                result = "AB";
-                                break;
-                              default:
-                                break;
+                            newPatient.setAddress(result);
+                            result = String.valueOf(patientMaintenanceUI.inputPatientBloodType());
+                            if (result.equals("0")) {
+                              exit2 = true;
+                            } else {
+                              switch (result.charAt(0)) {
+                                case '1':
+                                  result = "A";
+                                  break;
+                                case '2':
+                                  result = "B";
+                                  break;
+                                case '3':
+                                  result = "AB";
+                                  break;
+                                case '4':
+                                  result = "O";
+                                  break;
+                                default:
+                                  break;
+                              }
+                              newPatient.setBloodType(BloodType.valueOf(result));
+                              isDetailsValid = true;
+                              exit2 = true;
                             }
-                            patientDetailsString += result;
-                            isDetailsValid = true;
-                            exit2 = true;
                           }
                         }
                       }
@@ -101,7 +112,7 @@ public class PatientMaintenance {
               }
             } while (!exit2);
             if (isDetailsValid) {
-              System.out.println(patientDetailsString);
+              System.out.println(newPatient.toStringComplete());
               utilityUI.pressAnyKeyToContinue();
             }
             break;
@@ -149,7 +160,7 @@ public class PatientMaintenance {
     return new boolean[] {isId, exit};
   }
 
-  public boolean validatePatientIcNumber(String input, char[] options, String format) {
+  public boolean validatePatientIcNumber(String input, char[] options, String format) { // TODO: add formatting to automatically add hyphens
     if (input.isEmpty()) { // check if input is empty
       messageUI.displayInputErrorMessage();
       return false;
@@ -269,7 +280,7 @@ public class PatientMaintenance {
     return false;
   }
 
-  public boolean validatePatientEmail(String input, char[] options, String format) {
+  public boolean validatePatientEmail(String input, char[] options, String format) { // TODO: add check to ensure at least a letter is present between '@' and '.'
     if (input.isEmpty()) { // check if input is empty
       messageUI.displayInputErrorMessage();
       return false;
