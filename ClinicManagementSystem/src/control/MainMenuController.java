@@ -8,7 +8,7 @@ import boundary.BoundaryAppointment;
 import boundary.BoundaryConsultation;
 import entity.Doctor;
 import entity.Patient;
-public class MainMenu {
+public class MainMenuController {
   public boolean runMainMenu(char input) {
     ArrayList<Patient> patients = new ArrayList<>();
     ArrayList<Doctor> doctors = new ArrayList<>();
