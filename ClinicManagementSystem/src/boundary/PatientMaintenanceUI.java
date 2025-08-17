@@ -31,7 +31,7 @@ public class PatientMaintenanceUI {
   public void displayPatientRegistrationUI() {
     utilityUI.clearScreen();
     utilityUI.displayLine();
-    System.out.println("|                                        PATIENT REGISTRATION                                        |");
+    System.out.println("|                                       PATIENT REGISTRATION                                       |");
     utilityUI.displayLine();
   }
   
@@ -41,6 +41,7 @@ public class PatientMaintenanceUI {
     boolean isId = false;
     boolean exit = false;
     do {
+      displayPatientRegistrationUI();
       System.out.println("Format : PXXXX");
       System.out.println("[0] Cancel");
       System.out.print("Enter Patient ID : P");
@@ -49,7 +50,7 @@ public class PatientMaintenanceUI {
       isId = response[0];
       exit = response[1];
     } while (!exit);
-    if (isId) { // check if input is valid I
+    if (isId) { // check if input is valid ID
       return "P" + input;
     }
     return input;
@@ -60,6 +61,7 @@ public class PatientMaintenanceUI {
     do {
       final char[] INPUT_OPTIONS = { '0' };
       final String FORMAT = "XXXXXX-XX-XXXX";
+      displayPatientRegistrationUI();
       System.out.println("Format : " + FORMAT);
       System.out.println("[0] Cancel");
       System.out.print("Enter Patient IC Number : ");
@@ -74,6 +76,8 @@ public class PatientMaintenanceUI {
     do {
       final char[] INPUT_OPTIONS = { '0' };
       final int MAX_LENGTH = 20;
+      displayPatientRegistrationUI();
+      System.out.println("Format : Capitalize the first letter of each separate word for best result. Spaces are optional.");
       System.out.println("[0] Cancel");
       System.out.print("Enter Patient Name : ");
       input = scanner.nextLine().trim();
@@ -86,8 +90,9 @@ public class PatientMaintenanceUI {
     final char[] INPUT_OPTIONS = { '1', '2', '0' };
     boolean exit = false;
     do {
+      displayPatientRegistrationUI();
       System.out.println("[1] Male | [2] Female | [0] Cancel");
-      System.out.println("Enter Patient Gender " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
+      System.out.print("Enter Patient Gender " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
       input = scanner.nextLine().trim();
       exit = patientMaintenance.validatePatientGender(input, INPUT_OPTIONS);
     } while (!exit);
@@ -96,9 +101,10 @@ public class PatientMaintenanceUI {
   
   public String inputPatientBirthDate() {
     final char[] INPUT_OPTIONS = { '0' };
-    final String FORMAT = "YYYY-MM-DD";
+    final String FORMAT = "yyyy-MM-dd";
     boolean exit = false;
     do {
+      displayPatientRegistrationUI();
       System.out.println("Format : " + FORMAT);
       System.out.println("[0] Cancel");
       System.out.print("Enter Patient Birth Date : ");
@@ -110,9 +116,10 @@ public class PatientMaintenanceUI {
 
   public String inputPatientContactNumber() {
     final char[] INPUT_OPTIONS = { '0' };
-    final String FORMAT = "01X-XXX XXXX OR 01X-XXXX XXXX";
+    final String FORMAT = "01X-XXX XXXX OR 01X-XXXX XXXX (hypens and spaces can be excluded)";
     boolean exit = false;
     do {
+      displayPatientRegistrationUI();
       System.out.println("Format : " + FORMAT);
       System.out.println("[0] Cancel");
       System.out.print("Enter Patient Contact Number : ");
@@ -127,6 +134,7 @@ public class PatientMaintenanceUI {
     final String FORMAT = "XXX@XXXXX.XXX";
     boolean exit = false;
     do {
+      displayPatientRegistrationUI();
       System.out.println("Format : " + FORMAT);
       System.out.println("[0] Cancel");
       System.out.print("Enter Patient Email : ");
@@ -141,6 +149,7 @@ public class PatientMaintenanceUI {
     final int MAX_LENGTH = 30;
     boolean exit = false;
     do {
+      displayPatientRegistrationUI();
       System.out.println("[0] Cancel");
       System.out.print("Enter Patient Address : ");
       input = scanner.nextLine();
@@ -151,9 +160,10 @@ public class PatientMaintenanceUI {
 
   public String inputPatientRegistrationDate() {
     final char[] INPUT_OPTIONS = { '0' };
-    final String FORMAT = "YYYY-MM-DD";
+    final String FORMAT = "yyyy-MM-dd";
     boolean exit = false;
     do {
+      displayPatientRegistrationUI();
       System.out.println("Format : " + FORMAT);
       System.out.println("[0] Cancel");
       System.out.print("Enter Patient Registration Date : ");
@@ -167,8 +177,9 @@ public class PatientMaintenanceUI {
     final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '0' };
     boolean exit = false;
     do {
+      displayPatientRegistrationUI();
       System.out.println("[1] A | [2] B | [3] AB | [4] O | [0] Cancel");
-      System.out.println("Enter Patient Blood Type " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
+      System.out.print("Enter Patient Blood Type " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
       input = scanner.nextLine().trim();
       exit = patientMaintenance.validatePatientBloodType(input, INPUT_OPTIONS);
     } while (!exit);

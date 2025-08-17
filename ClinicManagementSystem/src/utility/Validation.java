@@ -36,7 +36,7 @@ public class Validation {
   }
 
   public boolean checkIsContainSpecialCharacter(String input) {
-    return input.matches(".*\\W.*");
+    return input.matches(".*[^a-zA-Z0-9].*");
   }
 
   public boolean checkIsExceedLength(String input, int maxLength) {
@@ -58,37 +58,20 @@ public class Validation {
   }
 
   public boolean checkIcNumberFormat(String input) {
-    String format = "XXXXXX-XX-XXXX";
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-    try {
-      LocalDate.parse(input, formatter);
+    String format = "\\d{6}-\\d{2}-\\d{4}";
+    if (input.matches(format)) {
       return true;
-    } catch (Exception e) {
-      return false;
     }
+    return false;
   }
   
-  public boolean checkContactNumberFormat(String input, String format) {
-    String[] formats = format.split(" OR ");
-    boolean match = false;
-    for (String aFormat : formats) {
-      try {
-        if (input.matches(aFormat)) {
-          match = true;
-          break;
-        }
-      } catch (Exception e) {
-        continue;
-      }
-    }
-    if (match) {
-      return true;
-    } else {
-      return false;
-    }
+  public boolean checkContactNumberFormat(String input) {
+    String format = "01[012346789]\\d{7,8}";
+    input = input.replaceAll("[\\s-]", "");
+    return input.matches(format);
   }
 
-  public boolean checkEmailFormat(String input, String format) {
+  public boolean checkEmailFormat(String input) {
     if (input.contains("@") && input.contains(".") && input.indexOf(".") > input.indexOf("@")) {
       return true;
     } else {

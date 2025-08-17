@@ -25,6 +25,12 @@ public class MessageUI {
     System.out.println("Invalid Input! Please try again.");
   }
 
+  public void displayInputEmptyErrorMessage() {
+    displayInputErrorMessage();
+    System.out.println("Note: Input cannot be empty.");
+    utilityUI.pressAnyKeyToContinue();
+  }
+
   public void displayInputOptionErrorMessage(char[] inputOptions) {
     displayInputErrorMessage();
     System.out.println("Note: Input must be one of these options : " + utilityUI.displayInputOptions(inputOptions));
