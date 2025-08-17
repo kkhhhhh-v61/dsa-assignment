@@ -1,74 +1,45 @@
+// ╔═══════════════════════════════════════════════════════════════════════════════════════════════╗
+// ║                   ██╗   ██╗███╗   ██╗██╗    ██████╗ █████╗ ██████╗ ███████╗                   ║
+// ║                   ██║   ██║████╗  ██║██║   ██╔════╝██╔══██╗██╔══██╗██╔════╝                   ║
+// ║                   ██║   ██║██╔██╗ ██║██║   ██║     ███████║██████╔╝█████╗                     ║
+// ║                   ██║   ██║██║╚██╗██║██║   ██║     ██╔══██║██╔══██╗██╔══╝                     ║
+// ║                   ╚██████╔╝██║ ╚████║██║   ╚██████╗██║  ██║██║  ██║███████╗                   ║
+// ║                    ╚═════╝ ╚═╝  ╚═══╝╚═╝    ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝                   ║
+// ╠═══════════════════════════════════════════════════════════════════════════════════════════════╣
+// ║                                    CLINIC MANAGEMENT SYSTEM                                   ║
+// ╚═══════════════════════════════════════════════════════════════════════════════════════════════╝
+
 package control;
 
 import boundary.MainMenuUI;
+import utility.MessageUI;
+import utility.UtilityUI;
 
 public class ClinicManagementSystem {
+  private static MainMenuUI mainMenuUI = new MainMenuUI();
+  private static MainMenu mainMenu = new MainMenu();
+  private static MessageUI messageUI = new MessageUI();
+  private static UtilityUI utilityUI = new UtilityUI();
   public static void main(String[] args) {
-    MainMenuUI mainMenuUI = new MainMenuUI();
+    String[] response;
     char input;
+    char[] options;
+    boolean exit = false;
 
     do {
-      input = mainMenuUI.displayMainMenu();
+      response = mainMenuUI.displayMainMenu();
+      input = response[0].charAt(0);
+      options = response[1].toCharArray();
       
-      boolean exit = false;
-      switch (input) {
-        case '1':
-          do {
-            input = mainMenuUI.displayStudentUI();
-            switch (input) {
-              case '1':
-                break;
-              case '2':
-                break;
-              case '3':
-                break;
-              case '4':
-                break;
-              case '5':
-                break;
-              case '6':
-                break;
-              case '0':
-                exit = true;
-                break;
-              default:
-                break;
-            }
-          } while (!exit);
-          break;
-        case '2':
-          do {
-            input = mainMenuUI.displayStaffUI();
-            switch (input) {
-            case '1':
-              break;
-            case '2':
-              break;
-            case '3':
-              break;
-            case '4':
-              break;
-            case '5':
-              break;
-            case '6':
-              break;
-            case '7':
-              break;
-            case '0':
-              exit = true;
-              break;
-            default:
-              break;
-            }
-          } while (!exit);
-          break;
-        case '0':
-          input = 'X';
-          System.out.println("Goodbye!");
-          break;
-        default:
-          break;
+      if (utilityUI.checkInputOptionsMatch(options, input)) {
+        if (input == '0') {
+          exit = true;
+        } else {
+          exit = mainMenu.runMainMenu(input);
+        }
+      } else {
+        messageUI.displayInputOptionErrorMessage(options);
       }
-    } while (input != 'X');
+    } while (!exit);
   }
 }

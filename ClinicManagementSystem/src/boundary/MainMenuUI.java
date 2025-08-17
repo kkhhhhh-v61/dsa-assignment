@@ -1,40 +1,3 @@
-// package boundary;
-
-// public class MainMenuUI {
-//   public void displayTitle() {
-//     System.out.println("""
-//       ╔═══════════════════════════════════════════════════════════════════════════════════════════════╗
-//       ║                   ██╗   ██╗███╗   ██╗██╗    ██████╗ █████╗ ██████╗ ███████╗                   ║
-//       ║                   ██║   ██║████╗  ██║██║   ██╔════╝██╔══██╗██╔══██╗██╔════╝                   ║
-//       ║                   ██║   ██║██╔██╗ ██║██║   ██║     ███████║██████╔╝█████╗                     ║
-//       ║                   ██║   ██║██║╚██╗██║██║   ██║     ██╔══██║██╔══██╗██╔══╝                     ║
-//       ║                   ╚██████╔╝██║ ╚████║██║   ╚██████╗██║  ██║██║  ██║███████╗                   ║
-//       ║                    ╚═════╝ ╚═╝  ╚═══╝╚═╝    ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝                   ║
-//       ╠═══════════════════════════════════════════════════════════════════════════════════════════════╣
-//       ║                                    CLINIC MANAGEMENT SYSTEM                                   ║
-//       ╚═══════════════════════════════════════════════════════════════════════════════════════════════╝
-//       """);
-//   }
-
-//   public void displayRoleSelection() {
-//     System.out.println("""
-//       ╔═══════════════════════════════════════════════════════════════════════════════════════════════╗
-//       ║                                         SELECT A ROLE                                         ║
-//       ╠═══════════════════════════════════════════════╦═══════════════════════════════════════════════╣
-//       ║               STUDENT PORTAL                  ║                STAFF PORTAL                   ║
-//       ╠═══════════════════════════════════════════════╬═══════════════════════════════════════════════╣
-//       ║ + Appointment Registration                    ║ + Patient and Doctor Management               ║
-//       ║ + View Medical History                        ║ + Manage Appointments Schedules               ║
-//       ║ + View Prescriptions                          ║ + Consultation and Treatment Management       ║
-//       ║ + Payment and Bills                           ║ + Pharmacy Management                         ║
-//       ║ + Notifications and Reminders                 ║ + Reporting and Analytics                     ║
-//       ╚═══════════════════════════════════════════════╩═══════════════════════════════════════════════╝
-
-//                                   Enter 'S' for Student or 'T' for Staff: 
-//   """);
-//   }
-// }
-
 package boundary;
 
 import utility.MessageUI;
@@ -45,11 +8,16 @@ public class MainMenuUI {
   MessageUI messageUI = new MessageUI();
   UtilityUI utilityUI = new UtilityUI();
   Scanner scanner = utilityUI.getScannerInput();
+  String option;
 
-  public char displayMainMenu() {
-    displayTitle();
-    utilityUI.nextLine();
-    return displayRoleSelection();
+  public String[] displayMainMenu() {
+    String[] response = new String[2];
+    do {
+      displayTitle();
+      utilityUI.nextLine();
+      response = displayRoleSelection();
+    } while (response[0].isEmpty());
+    return response;
   }
 
   public void displayTitle() {
@@ -67,7 +35,7 @@ public class MainMenuUI {
     utilityUI.displayLine();
   }
   
-  public char displayRoleSelection() {
+  public String[] displayRoleSelection() {
     final char[] INPUT_OPTIONS = { '1', '2', '0' };
 
     utilityUI.displayLine();
@@ -84,59 +52,57 @@ public class MainMenuUI {
     System.out.println("| 0 - Exit                                                                                         |");
     utilityUI.displayLine();
     utilityUI.nextLine();
-
     System.out.print("Select Role " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
-    char role = scanner.next().charAt(0);
-    utilityUI.flushScanner();
-    return utilityUI.checkInputOptionsError(INPUT_OPTIONS, role);
+    option = scanner.nextLine();
+    return new String[] {option, new String(INPUT_OPTIONS)};
   }
   
-  public char displayStudentUI() {
+  public String[] displayStudentUI() {
     final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '5', '6', '0' };
-
-    displayTitle();
-    utilityUI.nextLine();
-    utilityUI.displayLine();
-    System.out.println("|                                          STUDENT PORTAL                                          |");
-    utilityUI.displayLine();
-    System.out.println("| [1] Make an Appointment                                                                          |");
-    System.out.println("| [2] View Appointments                                                                            |");
-    System.out.println("| [3] View Medical History                                                                         |");
-    System.out.println("| [4] View Prescriptions                                                                           |");
-    System.out.println("| [5] Payment and Bills                                                                            |");
-    System.out.println("| [6] Notifications and Reminders                                                                  |");
-    System.out.println("| [0] Exit                                                                                         |");
-    utilityUI.displayLine();
-    utilityUI.nextLine();
-
-    System.out.print("Select Option " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
-    char option = scanner.next().charAt(0);
-    utilityUI.flushScanner();
-    return utilityUI.checkInputOptionsError(INPUT_OPTIONS, option);
+    do {
+      utilityUI.clearScreen();
+      utilityUI.displayLine();
+      System.out.println("|                                          STUDENT PORTAL                                          |");
+      utilityUI.displayLine();
+      System.out.println("| [1] Make an Appointment                                                                          |");
+      System.out.println("| [2] View Appointments                                                                            |");
+      System.out.println("| [3] View Medical History                                                                         |");
+      System.out.println("| [4] View Prescriptions                                                                           |");
+      System.out.println("| [5] Payment and Bills                                                                            |");
+      System.out.println("| [6] Notifications and Reminders                                                                  |");
+      System.out.println("| [0] Exit                                                                                         |");
+      utilityUI.displayLine();
+      utilityUI.nextLine();
+      System.out.print("Select Option " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
+      option = scanner.nextLine();
+    } while (option.isEmpty());
+    return new String[] {option, new String(INPUT_OPTIONS)};
   }
   
-  public char displayStaffUI() {
+  public String[] displayStaffUI() {
     final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '5', '6', '7', '0' };
-    
-    displayTitle();
-    utilityUI.nextLine();
-    utilityUI.displayLine();
-    System.out.println("|                                           STAFF PORTAL                                           |");
-    utilityUI.displayLine();
-    System.out.println("| [1] Patient and Doctor Management                                                                |");
-    System.out.println("| [2] Patient Queuing Management                                                                   |");
-    System.out.println("| [3] Appointment Management                                                                       |");
-    System.out.println("| [4] Consultation Management                                                                      |");
-    System.out.println("| [5] Treatment Management                                                                         |");
-    System.out.println("| [6] Pharmacy Management                                                                          |");
-    System.out.println("| [7] Reporting and Analytics                                                                      |");
-    System.out.println("| [0] Exit                                                                                         |");
-    utilityUI.displayLine();
-    utilityUI.nextLine();
-
-    System.out.print("Select Option " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
-    char option = scanner.next().charAt(0);
-    utilityUI.flushScanner();
-    return utilityUI.checkInputOptionsError(INPUT_OPTIONS, option);
+    do {
+      utilityUI.clearScreen();
+      utilityUI.displayLine();
+      System.out.println("|                                           STAFF PORTAL                                           |");
+      utilityUI.displayLine();
+      System.out.println("| [1] Patient Management                                                                           |");
+      System.out.println("| [2] Doctor Management                                                                            |");
+      System.out.println("| [3] Appointment Management                                                                       |");
+      System.out.println("| [4] Consultation Management                                                                      |");
+      System.out.println("| [5] Treatment Management                                                                         |");
+      System.out.println("| [6] Pharmacy Management                                                                          |");
+      System.out.println("| [7] Reporting and Analytics                                                                      |");
+      System.out.println("| [0] Exit                                                                                         |");
+      utilityUI.displayLine();
+      utilityUI.nextLine();
+      System.out.print("Select Option " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
+      option = scanner.nextLine();
+    } while (option.isEmpty());
+    return new String[] {option, new String(INPUT_OPTIONS)};  
+  }
+  
+  public void displayGoodbyeMessage() {
+    System.out.println("Goodbye!");
   }
 }
