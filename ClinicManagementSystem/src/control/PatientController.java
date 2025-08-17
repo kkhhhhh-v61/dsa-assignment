@@ -122,7 +122,7 @@ public class PatientController {
           case '2':
             boolean exit2 = false;
             do {
-              exit = runPatientList();
+              exit2 = runPatientList();
             } while (!exit2);
             break;
           case '0':
@@ -378,8 +378,14 @@ public class PatientController {
       if (validation.checkInputOptionsMatch(options, input)) { // check if input is in the options
         switch (input) {
           case 'E':
+            if (page > 1) {
+              page--;
+            }
             break;
           case 'Q':
+            if (page < (patientMap.size() + 9) / 10) { // get the number of pages
+              page++;
+            }
             break;
           case 'W':
             if (ui.equals("listLeft")) {
@@ -404,6 +410,6 @@ public class PatientController {
         messageUI.displayInputOptionErrorMessage(options);
       }
     } while (!exit);
-    return false;
+    return true;
   }
 }

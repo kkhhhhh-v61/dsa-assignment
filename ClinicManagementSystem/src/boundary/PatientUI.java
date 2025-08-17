@@ -196,18 +196,18 @@ public class PatientUI {
     final char[] INPUT_OPTIONS = { 'E', 'Q', 'W', '1', '2', '3', '0' };
     char option;
     if (ui.equals("listLeft")) {
-      displayListLeftUI(patientMap);
+      displayListLeftUI(patientMap, page);
     } else if (ui.equals("listRight")) {
-      displayListRightUI(patientMap);
+      displayListRightUI(patientMap, page);
     }
     option = displayListOptionSelection(INPUT_OPTIONS);
     return new String[] { String.valueOf(option), new String(INPUT_OPTIONS) };
   }
   
-  public void displayListLeftUI(HashMap<String, Patient> patientMap) {
+  public void displayListLeftUI(HashMap<String, Patient> patientMap, int page) {
     utilityUI.clearScreen();
     System.out.println("+===========================================================================================================+");
-    System.out.println("|                                           PATIENT LIST (PART 1)                                           |");
+    System.out.printf("| [<-E]                                   [PT1] PATIENT LIST [PG%02d]                                   [Q->] |\n", page);
     System.out.println("+===========================================================================================================+");
     System.out.println("|  PID  |       IC       |              FULL NAME              | GENDER | BIRTH DATE | AGE | CONTACT NUMBER |");
     System.out.println("+===========================================================================================================+");
@@ -216,10 +216,10 @@ public class PatientUI {
     }
   }
 
-  public void displayListRightUI(HashMap<String, Patient> patientMap) {
+  public void displayListRightUI(HashMap<String, Patient> patientMap, int page) {
     utilityUI.clearScreen();
     System.out.println("+===============================================================================================================+");
-    System.out.println("|                                             PATIENT LIST (PART 2)                                             |");
+    System.out.printf("| [<-E]                                   [PT2] PATIENT LIST [PG%02d]                                   [Q->] |\n", page);
     System.out.println("+===============================================================================================================+");
     System.out.println("|  PID  |                EMAIL                |                    ADDRESS                    |  REG DATE  | BT |");
     System.out.println("+===============================================================================================================+");
