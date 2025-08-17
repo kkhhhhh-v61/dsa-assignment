@@ -1,6 +1,6 @@
 package boundary;
 
-import control.ManageAppointment;
+import control.AppointmentController;
 import entity.Appointment;
 import entity.Patient;
 import entity.Doctor;
@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class BoundaryAppointment {
-    private ManageAppointment manageAppointment;
+    private AppointmentController appointmentController;
     private Scanner scanner = new Scanner(System.in);
 
     public BoundaryAppointment(ArrayList<Patient> patients, ArrayList<Doctor> doctors) {
-        this.manageAppointment = new ManageAppointment(patients, doctors);
+        this.appointmentController = new AppointmentController(patients, doctors);
     }
 
     public void run() {
@@ -59,7 +59,7 @@ public class BoundaryAppointment {
                 System.out.println("Appointment creation cancelled.");
                 return;
             }
-            patient = manageAppointment.findPatientById(input);
+            patient = appointmentController.findPatientById(input);
             if (patient == null) System.out.println("Patient not found.");
         }
 
@@ -71,7 +71,7 @@ public class BoundaryAppointment {
                 System.out.println("Appointment creation cancelled.");
                 return;
             }
-            doctor = manageAppointment.findDoctorById(input);
+            doctor = appointmentController.findDoctorById(input);
             if (doctor == null) System.out.println("Doctor not found.");
         }
 
@@ -140,20 +140,20 @@ public class BoundaryAppointment {
             }
         }
 
-        Appointment appt = manageAppointment.addAppointment(patient, doctor, date, time, reason, status);
+        Appointment appt = appointmentController.addAppointment(patient, doctor, date, time, reason, status);
         System.out.println("\nAppointment created: " + appt.getAppointmentId());
     }
 
     private void viewAllAppointmentsUI() {
-        ArrayList<Appointment> appts = manageAppointment.getAllAppointments();
+        ArrayList<Appointment> appts = appointmentController.getAllAppointments();
         if (appts.isEmpty()) {
             System.out.println("No appointments found.");
             return;
         }
         for (int i = 1; i <= appts.size(); i++) {
             Appointment a = appts.getEntry(i);
-            Patient p = manageAppointment.findPatientById(a.getPatientId());
-            Doctor d = manageAppointment.findDoctorById(a.getDoctorId());
+            Patient p = appointmentController.findPatientById(a.getPatientId());
+            Doctor d = appointmentController.findDoctorById(a.getDoctorId());
             System.out.println("\n" + a);
             System.out.println("Patient: " + (p != null ? p.getName() : "Unknown"));
             System.out.println("Doctor : " + (d != null ? d.getName() : "Unknown"));
@@ -163,12 +163,12 @@ public class BoundaryAppointment {
 
     private void searchAppointmentUI() {
         System.out.print("Enter Appointment ID: ");
-        Appointment appt = manageAppointment.findAppointmentById(scanner.nextLine());
+        Appointment appt = appointmentController.findAppointmentById(scanner.nextLine());
         if (appt == null) {
             System.out.println("Appointment not found.");
         } else {
-            Patient p = manageAppointment.findPatientById(appt.getPatientId());
-            Doctor d = manageAppointment.findDoctorById(appt.getDoctorId());
+            Patient p = appointmentController.findPatientById(appt.getPatientId());
+            Doctor d = appointmentController.findDoctorById(appt.getDoctorId());
             System.out.println("\n" + appt);
             System.out.println("Patient: " + (p != null ? p.getName() : "Unknown"));
             System.out.println("Doctor : " + (d != null ? d.getName() : "Unknown"));
@@ -183,7 +183,7 @@ public class BoundaryAppointment {
             return;
         }
 
-        Appointment appt = manageAppointment.findAppointmentById(id);
+        Appointment appt = appointmentController.findAppointmentById(id);
         if (appt == null) {
             System.out.println("Appointment not found.");
             return;
@@ -266,26 +266,26 @@ public class BoundaryAppointment {
         }
 
         // Call control layer to apply changes
-        manageAppointment.updateAppointment(appt, newDate, newTime, newReason, newStatus);
+        appointmentController.updateAppointment(appt, newDate, newTime, newReason, newStatus);
 
         System.out.println("\nAppointment updated successfully!");
     }
     
     private void deleteAppointmentUI() {
         System.out.print("Enter Appointment ID to delete: ");
-        Appointment appt = manageAppointment.findAppointmentById(scanner.nextLine());
+        Appointment appt = appointmentController.findAppointmentById(scanner.nextLine());
         if (appt == null) {
             System.out.println("Appointment not found.");
             return;
         }
-        Patient p = manageAppointment.findPatientById(appt.getPatientId());
-        Doctor d = manageAppointment.findDoctorById(appt.getDoctorId());
+        Patient p = appointmentController.findPatientById(appt.getPatientId());
+        Doctor d = appointmentController.findDoctorById(appt.getDoctorId());
         System.out.println("\n" + appt);
         System.out.println("Patient: " + (p != null ? p.getName() : "Unknown"));
         System.out.println("Doctor : " + (d != null ? d.getName() : "Unknown"));
         System.out.print("\nAre you sure? (Y/N): ");
         if (scanner.nextLine().equalsIgnoreCase("Y")) {
-            manageAppointment.deleteAppointment(appt);
+            appointmentController.deleteAppointment(appt);
             System.out.println("Appointment deleted.");
         } else {
             System.out.println("Deletion cancelled.");
