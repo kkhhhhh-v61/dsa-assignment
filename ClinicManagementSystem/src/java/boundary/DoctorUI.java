@@ -337,10 +337,10 @@ public class DoctorUI {
             ListInterface<String> finalErrors = doctorController.updateDoctor(doc);
 
             if (finalErrors.isEmpty()) {
-                System.out.println("\n✅ Doctor information updated successfully!");
+                System.out.println("\nDoctor information updated successfully!");
             } else {
                 // This is a safeguard; should not happen if UI validation is thorough
-                System.out.println("\n❌ Update failed due to a system validation error:");
+                System.out.println("\nUpdate failed due to a system validation error:");
                 for (int i = 0; i < finalErrors.size(); i++) {
                     System.out.println("- " + finalErrors.getEntry(i));
                 }
