@@ -1,7 +1,7 @@
 package boundary;
 
-import control.ManageConsultation;
-import control.ManageAppointment;
+import control.ConsultationController;
+import control.AppointmentController;
 import entity.Consultation;
 import entity.Patient;
 import entity.Doctor;
@@ -13,11 +13,11 @@ import java.time.LocalTime;
 import java.util.Scanner;
 
 public class BoundaryConsultation {
-    private ManageConsultation manageConsultation;
+    private ConsultationController consultationController;
     private Scanner scanner = new Scanner(System.in);
 
     public BoundaryConsultation(ArrayList<Patient> patients, ArrayList<Doctor> doctors) {
-        this.manageConsultation = new ManageConsultation(patients, doctors);
+        this.consultationController = new ConsultationController(patients, doctors);
     }
 
     public void run() {
@@ -60,7 +60,7 @@ public class BoundaryConsultation {
                 System.out.println("Consultation creation cancelled.");
                 return;
             }
-            patient = ManageAppointment.findPatientById(id);
+            patient = AppointmentController.findPatientById(id);
             if (patient == null) System.out.println("Patient not found.");
         }
 
@@ -72,7 +72,7 @@ public class BoundaryConsultation {
                 System.out.println("Consultation creation cancelled.");
                 return;
             }
-            doctor = ManageAppointment.findDoctorById(id);
+            doctor = AppointmentController.findDoctorById(id);
             if (doctor == null) System.out.println("Doctor not found.");
         }
 
@@ -126,20 +126,20 @@ public class BoundaryConsultation {
             }
         }
 
-        Consultation consult = manageConsultation.addConsultation(patient, doctor, date, time, symptoms, diagnosis, notes, status);
+        Consultation consult = consultationController.addConsultation(patient, doctor, date, time, symptoms, diagnosis, notes, status);
         System.out.println("\nConsultation created: " + consult.getConsultationId());
     }
 
     private void viewAllConsultationsUI() {
-        ArrayList<Consultation> list = manageConsultation.getAllConsultations();
+        ArrayList<Consultation> list = consultationController.getAllConsultations();
         if (list.isEmpty()) {
             System.out.println("No consultations found.");
             return;
         }
         for (int i = 1; i <= list.size(); i++) {
             Consultation c = list.getEntry(i);
-            Patient p = ManageAppointment.findPatientById(c.getPatientId());
-            Doctor d = ManageAppointment.findDoctorById(c.getDoctorId());
+            Patient p = AppointmentController.findPatientById(c.getPatientId());
+            Doctor d = AppointmentController.findDoctorById(c.getDoctorId());
             System.out.println("\n" + c);
             System.out.println("Patient: " + (p != null ? p.getName() : "Unknown"));
             System.out.println("Doctor : " + (d != null ? d.getName() : "Unknown"));
@@ -149,12 +149,12 @@ public class BoundaryConsultation {
 
     private void searchConsultationUI() {
         System.out.print("Enter Consultation ID: ");
-        Consultation consult = ManageConsultation.findConsultationById(scanner.nextLine());
+        Consultation consult = ConsultationController.findConsultationById(scanner.nextLine());
         if (consult == null) {
             System.out.println("Consultation not found.");
         } else {
-            Patient p = ManageAppointment.findPatientById(consult.getPatientId());
-            Doctor d = ManageAppointment.findDoctorById(consult.getDoctorId());
+            Patient p = AppointmentController.findPatientById(consult.getPatientId());
+            Doctor d = AppointmentController.findDoctorById(consult.getDoctorId());
             System.out.println("\n" + consult);
             System.out.println("Patient: " + (p != null ? p.getName() : "Unknown"));
             System.out.println("Doctor : " + (d != null ? d.getName() : "Unknown"));
@@ -164,7 +164,7 @@ public class BoundaryConsultation {
     private void updateConsultationUI() {
 // Consultation ID
         System.out.print("Enter Consultation ID: ");
-        Consultation consult = ManageConsultation.findConsultationById(scanner.nextLine());
+        Consultation consult = ConsultationController.findConsultationById(scanner.nextLine());
         if (consult == null) {
             System.out.println("Not found.");
             return;
@@ -209,25 +209,25 @@ public class BoundaryConsultation {
         }
         Status newStatus = inputStatus.isEmpty() ? null : Status.valueOf(inputStatus);
 
-        manageConsultation.updateConsultation(consult, null, null, newSymptoms, newDiagnosis, newNotes, newStatus);
+        consultationController.updateConsultation(consult, null, null, newSymptoms, newDiagnosis, newNotes, newStatus);
         System.out.println("Consultation updated.");
     }
 
     private void deleteConsultationUI() {
         System.out.print("Enter Consultation ID: ");
-        Consultation consult = ManageConsultation.findConsultationById(scanner.nextLine());
+        Consultation consult = ConsultationController.findConsultationById(scanner.nextLine());
         if (consult == null) {
             System.out.println("Not found.");
             return;
         }
-        Patient p = ManageAppointment.findPatientById(consult.getPatientId());
-        Doctor d = ManageAppointment.findDoctorById(consult.getDoctorId());
+        Patient p = AppointmentController.findPatientById(consult.getPatientId());
+        Doctor d = AppointmentController.findDoctorById(consult.getDoctorId());
         System.out.println("\n" + consult);
         System.out.println("Patient: " + (p != null ? p.getName() : "Unknown"));
         System.out.println("Doctor : " + (d != null ? d.getName() : "Unknown"));
         System.out.print("Delete this consultation? (Y/N): ");
         if (scanner.nextLine().equalsIgnoreCase("Y")) {
-            manageConsultation.deleteConsultation(consult);
+            consultationController.deleteConsultation(consult);
             System.out.println("Deleted.");
         }
     }
