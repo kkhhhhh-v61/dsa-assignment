@@ -6,7 +6,8 @@ import entity.Patient;
 import entity.Doctor;
 import adt.ArrayList;
 import utility.Enum.Status;
-
+import boundary.MainMenuUI;
+import control.MainMenu;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
@@ -15,35 +16,47 @@ import java.util.Scanner;
 public class BoundaryAppointment {
     private AppointmentController appointmentController;
     private Scanner scanner = new Scanner(System.in);
-
-    public BoundaryAppointment(ArrayList<Patient> patients, ArrayList<Doctor> doctors) {
+    private String role;
+    private static MainMenuUI mainMenuUI = new MainMenuUI();
+    private static MainMenu mainMenu = new MainMenu();
+    String[] response;
+    public BoundaryAppointment(ArrayList<Patient> patients, ArrayList<Doctor> doctors, String role) {
         this.appointmentController = new AppointmentController(patients, doctors);
+        this.role = role.toUpperCase();
     }
 
     public void run() {
         int choice;
-        do {
-            System.out.println("\n=== Appointment Management ===");
-            System.out.println("1. Add Appointment");
-            System.out.println("2. View All Appointments");
-            System.out.println("3. Search Appointment by ID");
-            System.out.println("4. Update Appointment");
-            System.out.println("5. Delete Appointment");
-            System.out.println("0. Exit");
-            System.out.print("\nEnter choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+        
+            System.out.println("\n=== Appointment Management (" + role + ") ===");
 
-            switch (choice) {
-                case 1 -> addAppointmentUI();
-                case 2 -> viewAllAppointmentsUI();
-                case 3 -> searchAppointmentUI();
-                case 4 -> updateAppointmentUI();
-                case 5 -> deleteAppointmentUI();
-                case 0 -> System.out.println("Exiting...");
-                default -> System.out.println("Invalid choice, try again.");
-            }
-        } while (choice != 0);
+            if (role.equals("STUDENT")) {
+                addAppointmentUI();
+                mainMenu.runMainMenu('1');
+            } else if (role.equals("STAFF")) {
+            do {
+                // Staff full access
+                System.out.println("1. Add Appointment");
+                System.out.println("2. View All Appointments");
+                System.out.println("3. Search Appointment by ID");
+                System.out.println("4. Update Appointment");
+                System.out.println("5. Delete Appointment");
+                System.out.println("0. Exit");
+                
+                System.out.print("\nEnter choice: ");
+            choice = scanner.nextInt(); 
+            scanner.nextLine(); // consume newline
+                switch (choice) {
+                    case 1 -> addAppointmentUI();
+                    case 2 -> viewAllAppointmentsUI();
+                    case 3 -> searchAppointmentUI();
+                    case 4 -> updateAppointmentUI();
+                    case 5 -> deleteAppointmentUI();
+                    case 0 -> mainMenu.runMainMenu('2');
+                    default -> System.out.println("Invalid choice, try again.");
+                }
+            }while (choice != 0);
+        } 
     }
 
     // ====== UI Methods ======
