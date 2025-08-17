@@ -6,20 +6,18 @@ import entity.Patient;
 import entity.Doctor;
 import adt.ArrayList;
 import utility.Enum.Status;
-import boundary.MainMenuUI;
 import control.MainMenu;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.LocalDateTime;
 import java.util.Scanner;
+import utility.UtilityUI;
 
 public class BoundaryAppointment {
     private AppointmentController appointmentController;
     private Scanner scanner = new Scanner(System.in);
+    UtilityUI utilityUI = new UtilityUI();
     private String role;
-    private static MainMenuUI mainMenuUI = new MainMenuUI();
     private static MainMenu mainMenu = new MainMenu();
-    String[] response;
     public BoundaryAppointment(ArrayList<Patient> patients, ArrayList<Doctor> doctors, String role) {
         this.appointmentController = new AppointmentController(patients, doctors);
         this.role = role.toUpperCase();
@@ -27,21 +25,24 @@ public class BoundaryAppointment {
 
     public void run() {
         int choice;
-        
-            System.out.println("\n=== Appointment Management (" + role + ") ===");
-
-            if (role.equals("STUDENT")) {
+            if (role.equals("STUDENTADD")) {
                 addAppointmentUI();
+                mainMenu.runMainMenu('1');
+            } else if (role.equals("STUDENTVIEW")) {
+                viewAllAppointmentsByPatientIdUI();
                 mainMenu.runMainMenu('1');
             } else if (role.equals("STAFF")) {
             do {
-                // Staff full access
-                System.out.println("1. Add Appointment");
-                System.out.println("2. View All Appointments");
-                System.out.println("3. Search Appointment by ID");
-                System.out.println("4. Update Appointment");
-                System.out.println("5. Delete Appointment");
-                System.out.println("0. Exit");
+                utilityUI.displayLine();
+                System.out.println("|                                      APPOINTMENT MANAGEMENT                                      |");
+                utilityUI.displayLine();
+                System.out.println("| [1] Add Appointment                                                                              |");
+                System.out.println("| [2] View All Appointments                                                                        |");
+                System.out.println("| [3] Search Appointment by ID                                                                     |");
+                System.out.println("| [4] Update Appointment                                                                           |");
+                System.out.println("| [5] Delete Appointment                                                                           |");
+                System.out.println("| [0] Exit                                                                                         |");
+                utilityUI.displayLine();
                 
                 System.out.print("\nEnter choice: ");
             choice = scanner.nextInt(); 
@@ -63,10 +64,12 @@ public class BoundaryAppointment {
     private void addAppointmentUI() {
         Patient patient = null;
         Doctor doctor = null;
-
+        utilityUI.displayLine();
+        System.out.println("|                                         ADD APPOINTMENT                                          |");
+        utilityUI.displayLine();
         // Patient ID
         while (patient == null) {
-            System.out.print("\nEnter Patient ID (or EXIT to cancel): ");
+            System.out.print("Enter Patient ID (or EXIT to cancel): ");
             String input = scanner.nextLine();
             if (input.equalsIgnoreCase("EXIT")) {
                 System.out.println("Appointment creation cancelled.");
@@ -137,32 +140,23 @@ public class BoundaryAppointment {
             }
         
 // Status
-        Status status = null;
-        while (status == null) {
-            System.out.println("\nAvailable Status: " + java.util.Arrays.toString(Status.values()));
-            System.out.print("\nEnter Status (or EXIT to cancel): ");
-            String input = scanner.nextLine();
-            if (input.equalsIgnoreCase("EXIT")) {
-                System.out.println("Appointment creation cancelled.");
-                return;
-            }
-            try {
-                status = Status.valueOf(input);
-            } catch (Exception e) {
-                System.out.println("Invalid status. Please select either 1 "  + java.util.Arrays.toString(Status.values()));
-            }
-        }
+        Status status = Status.valueOf("Pending");
 
         Appointment appt = appointmentController.addAppointment(patient, doctor, date, time, reason, status);
         System.out.println("\nAppointment created: " + appt.getAppointmentId());
     }
 
     private void viewAllAppointmentsUI() {
+        utilityUI.displayLine();
+        System.out.println("|                                      VIEW ALL APPOINTMENTS                                       |");
+        utilityUI.displayLine();
         ArrayList<Appointment> appts = appointmentController.getAllAppointments();
         if (appts.isEmpty()) {
-            System.out.println("No appointments found.");
+            System.out.println("\nNo appointments found.\n");
+            utilityUI.displayLine();
             return;
         }
+        
         for (int i = 1; i <= appts.size(); i++) {
             Appointment a = appts.getEntry(i);
             Patient p = appointmentController.findPatientById(a.getPatientId());
@@ -170,25 +164,69 @@ public class BoundaryAppointment {
             System.out.println("\n" + a);
             System.out.println("Patient: " + (p != null ? p.getName() : "Unknown"));
             System.out.println("Doctor : " + (d != null ? d.getName() : "Unknown"));
-            System.out.println("\n----------------------------");
+            utilityUI.displayLine();
         }
     }
 
+    private void viewAllAppointmentsByPatientIdUI() {
+        System.out.print("Enter Patient ID: ");
+        String patientId = scanner.nextLine();
+
+        Patient patient = appointmentController.findPatientById(patientId);
+        if (patient == null) {
+            System.out.println("\nPatient not found.\n");
+            utilityUI.displayLine();
+            return;
+        }
+
+        utilityUI.displayLine();
+        System.out.println("|                    VIEW ALL APPOINTMENTS FOR PATIENT: " + patient.getName() + "                    |");
+        utilityUI.displayLine();
+
+        ArrayList<Appointment> appts = appointmentController.getAllAppointments();
+        boolean found = false;
+
+        for (int i = 1; i <= appts.size(); i++) {
+            Appointment a = appts.getEntry(i);
+            if (a.getPatientId().equalsIgnoreCase(patientId)) {
+                Doctor d = appointmentController.findDoctorById(a.getDoctorId());
+                System.out.println("\n" + a);
+                System.out.println("Patient: " + patient.getName());
+                System.out.println("Doctor : " + (d != null ? d.getName() : "Unknown"));
+                utilityUI.displayLine();
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No appointments found for this patient.");
+        }
+    }
+    
     private void searchAppointmentUI() {
+        utilityUI.displayLine();
+        System.out.println("|                                     VIEW APPOINTMENT BY ID                                       |");
+        utilityUI.displayLine();
         System.out.print("Enter Appointment ID: ");
         Appointment appt = appointmentController.findAppointmentById(scanner.nextLine());
+        
         if (appt == null) {
-            System.out.println("Appointment not found.");
+            System.out.println("\nAppointment not found.\n");
+            utilityUI.displayLine();
         } else {
             Patient p = appointmentController.findPatientById(appt.getPatientId());
             Doctor d = appointmentController.findDoctorById(appt.getDoctorId());
             System.out.println("\n" + appt);
             System.out.println("Patient: " + (p != null ? p.getName() : "Unknown"));
             System.out.println("Doctor : " + (d != null ? d.getName() : "Unknown"));
+            utilityUI.displayLine();
         }
     }
 
     private void updateAppointmentUI() {
+        utilityUI.displayLine();
+        System.out.println("|                                       UPDATE APPOINTMENT                                         |");
+        utilityUI.displayLine();
         System.out.print("Enter Appointment ID to update (or type EXIT to cancel): ");
         String id = scanner.nextLine();
         if (id.equalsIgnoreCase("EXIT")) {
@@ -285,6 +323,9 @@ public class BoundaryAppointment {
     }
     
     private void deleteAppointmentUI() {
+        utilityUI.displayLine();
+        System.out.println("|                                       DELETE APPOINTMENT                                         |");
+        utilityUI.displayLine();
         System.out.print("Enter Appointment ID to delete: ");
         Appointment appt = appointmentController.findAppointmentById(scanner.nextLine());
         if (appt == null) {
@@ -293,9 +334,11 @@ public class BoundaryAppointment {
         }
         Patient p = appointmentController.findPatientById(appt.getPatientId());
         Doctor d = appointmentController.findDoctorById(appt.getDoctorId());
+        utilityUI.displayLine();
         System.out.println("\n" + appt);
         System.out.println("Patient: " + (p != null ? p.getName() : "Unknown"));
         System.out.println("Doctor : " + (d != null ? d.getName() : "Unknown"));
+        utilityUI.displayLine();
         System.out.print("\nAre you sure? (Y/N): ");
         if (scanner.nextLine().equalsIgnoreCase("Y")) {
             appointmentController.deleteAppointment(appt);

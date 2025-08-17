@@ -7,15 +7,17 @@ import entity.Patient;
 import entity.Doctor;
 import adt.ArrayList;
 import utility.Enum.Status;
-
+import control.MainMenu;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
+import utility.UtilityUI;
 
 public class BoundaryConsultation {
     private ConsultationController consultationController;
     private Scanner scanner = new Scanner(System.in);
-
+    private static MainMenu mainMenu = new MainMenu();
+    UtilityUI utilityUI = new UtilityUI();
     public BoundaryConsultation(ArrayList<Patient> patients, ArrayList<Doctor> doctors) {
         this.consultationController = new ConsultationController(patients, doctors);
     }
@@ -23,13 +25,16 @@ public class BoundaryConsultation {
     public void run() {
         int choice;
         do {
-            System.out.println("\n=== Consultation Management ===");
-            System.out.println("1. Add Consultation");
-            System.out.println("2. View All Consultations");
-            System.out.println("3. Search Consultation by ID");
-            System.out.println("4. Update Consultation");
-            System.out.println("5. Delete Consultation");
-            System.out.println("0. Exit");
+            utilityUI.displayLine();
+            System.out.println("|                                     CONSULTATION MANAGEMENT                                      |");
+            utilityUI.displayLine();
+            System.out.println("| [1] Add Consultation                                                                             |");
+            System.out.println("| [2] View All Consultations                                                                       |");
+            System.out.println("| [3] Search Consultation by ID                                                                    |");
+            System.out.println("| [4] Update Consultation                                                                          |");
+            System.out.println("| [5] Delete Consultation                                                                          |");
+            System.out.println("| [0] Exit                                                                                         |");
+            utilityUI.displayLine();
             System.out.print("Enter choice: ");
             choice = scanner.nextInt();
             scanner.nextLine();
@@ -40,7 +45,7 @@ public class BoundaryConsultation {
                 case 3 -> searchConsultationUI();
                 case 4 -> updateConsultationUI();
                 case 5 -> deleteConsultationUI();
-                case 0 -> System.out.println("Exiting...");
+                case 0 -> mainMenu.runMainMenu('2');
                 default -> System.out.println("Invalid choice.");
             }
         } while (choice != 0);
@@ -136,6 +141,9 @@ public class BoundaryConsultation {
             System.out.println("No consultations found.");
             return;
         }
+        utilityUI.displayLine();
+        System.out.println("|                                     VIEW ALL CONSULTATIONS                                       |");
+        utilityUI.displayLine();
         for (int i = 1; i <= list.size(); i++) {
             Consultation c = list.getEntry(i);
             Patient p = AppointmentController.findPatientById(c.getPatientId());
@@ -143,21 +151,28 @@ public class BoundaryConsultation {
             System.out.println("\n" + c);
             System.out.println("Patient: " + (p != null ? p.getName() : "Unknown"));
             System.out.println("Doctor : " + (d != null ? d.getName() : "Unknown"));
-            System.out.println("----------------------");
+            utilityUI.displayLine();
         }
     }
 
     private void searchConsultationUI() {
+        utilityUI.displayLine();
+        System.out.println("|                                     VIEW CONSULTATIONS BY ID                                     |");
+        utilityUI.displayLine();
         System.out.print("Enter Consultation ID: ");
         Consultation consult = ConsultationController.findConsultationById(scanner.nextLine());
+        
         if (consult == null) {
-            System.out.println("Consultation not found.");
+            System.out.println("\nConsultation not found.\n");
+            utilityUI.displayLine();
         } else {
+            
             Patient p = AppointmentController.findPatientById(consult.getPatientId());
             Doctor d = AppointmentController.findDoctorById(consult.getDoctorId());
             System.out.println("\n" + consult);
             System.out.println("Patient: " + (p != null ? p.getName() : "Unknown"));
             System.out.println("Doctor : " + (d != null ? d.getName() : "Unknown"));
+            utilityUI.displayLine();
         }
     }
 
