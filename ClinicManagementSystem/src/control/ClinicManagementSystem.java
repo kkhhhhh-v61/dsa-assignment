@@ -13,13 +13,14 @@ package control;
 
 import boundary.MainMenuUI;
 import utility.MessageUI;
-import utility.UtilityUI;
+import utility.Validation;
 
 public class ClinicManagementSystem {
   private static MainMenuUI mainMenuUI = new MainMenuUI();
   private static MainMenu mainMenu = new MainMenu();
   private static MessageUI messageUI = new MessageUI();
-  private static UtilityUI utilityUI = new UtilityUI();
+  private static Validation validation = new Validation();
+  
   public static void main(String[] args) {
     String[] response;
     char input;
@@ -31,7 +32,7 @@ public class ClinicManagementSystem {
       input = response[0].charAt(0);
       options = response[1].toCharArray();
       
-      if (utilityUI.checkInputOptionsMatch(options, input)) {
+      if (validation.checkInputOptionsMatch(options, input)) { // check if input is in the options
         if (input == '0') {
           exit = true;
         } else {

@@ -2,14 +2,14 @@ package control;
 
 import boundary.MainMenuUI;
 import utility.MessageUI;
-import utility.UtilityUI;
+import utility.Validation;
 
 public class MainMenu {
   public boolean runMainMenu(char input) {
     MainMenuUI mainMenuUI = new MainMenuUI();
     PatientMaintenance patientMaintenance = new PatientMaintenance();
     MessageUI messageUI = new MessageUI();
-    UtilityUI utilityUI = new UtilityUI();
+    Validation validation = new Validation();
     String[] response;
     char[] options;
     boolean exit = false;
@@ -21,7 +21,7 @@ public class MainMenu {
           input = response[0].charAt(0);
           options = response[1].toCharArray();
 
-          if (utilityUI.checkInputOptionsMatch(options, input)) {
+          if (validation.checkInputOptionsMatch(options, input)) { // check if input is in the options
             if (input == '0') {
               exit = true;
             } else {
@@ -56,7 +56,7 @@ public class MainMenu {
           input = response[0].charAt(0);
           options = response[1].toCharArray();
           
-          if (utilityUI.checkInputOptionsMatch(options, input)) {
+          if (validation.checkInputOptionsMatch(options, input)) { // check if input is in the options
             if (input == '0') {
               exit = true;
             } else {

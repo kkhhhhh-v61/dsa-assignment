@@ -2,13 +2,14 @@ package utility;
 
 public class MessageUI {
   private static UtilityUI utilityUI = new UtilityUI();
+  private static Validation validation = new Validation();
 
   public char displayPatientRegistrationConfirmationMessage() {
     final char[] INPUT_OPTIONS = { 'Y', 'N' };
     utilityUI.flushScanner();
     System.out.print("Sure to register this patient? " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
     char option = utilityUI.getScannerInput().next().charAt(0);
-    if (utilityUI.checkIsInputOptions(INPUT_OPTIONS, String.valueOf(option))) {
+    if (validation.checkIsInputOptions(INPUT_OPTIONS, String.valueOf(option))) {
       return option;
     } else {
       return 'X';
@@ -42,6 +43,12 @@ public class MessageUI {
     utilityUI.pressAnyKeyToContinue();
   }
 
+  public void displayNameErrorMessage() {
+    displayInputErrorMessage();
+    System.out.println("Note: Input must be a name with proper capitalization for the first letter of each word.");
+    utilityUI.pressAnyKeyToContinue();
+  }
+
   public void displayCannotContainNumberErrorMessage() {
     displayInputErrorMessage();
     System.out.println("Note: Input cannot contain numbers.");
@@ -57,6 +64,18 @@ public class MessageUI {
   public void displayCannotExceedLengthErrorMessage(int maxLength) {
     displayInputErrorMessage();
     System.out.println("Note: Input cannot exceed " + maxLength + " characters.");
+    utilityUI.pressAnyKeyToContinue();
+  }
+
+  public void displayMustBeEqualsLength(int length) {
+    displayInputErrorMessage();
+    System.out.println("Note: Input must be " + length + " characters.");
+    utilityUI.pressAnyKeyToContinue();
+  }
+
+  public void displayMustBeNumericErrorMessage() {
+    displayInputErrorMessage();
+    System.out.println("Note: Input must be numeric.");
     utilityUI.pressAnyKeyToContinue();
   }
 }
