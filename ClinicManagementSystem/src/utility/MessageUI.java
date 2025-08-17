@@ -1,7 +1,11 @@
 package utility;
 
+/**
+ *
+ * @author khtan
+ */
 public class MessageUI {
-  private static UtilityUI utilityUI = new UtilityUI();
+  private static Utilities utilityUI = new Utilities();
   private static Validation validation = new Validation();
 
   public char displayPatientRegistrationConfirmationMessage() {

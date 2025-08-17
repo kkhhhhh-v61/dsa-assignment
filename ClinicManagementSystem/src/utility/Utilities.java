@@ -2,7 +2,11 @@ package utility;
 
 import java.util.Scanner;
 
-public class UtilityUI {
+/**
+ *
+ * @author khtan
+ */
+public class Utilities {
   MessageUI messageUI = new MessageUI();
   Scanner scanner = new Scanner(System.in);
 
@@ -28,7 +32,7 @@ public class UtilityUI {
   }
 
   public void pressAnyKeyToContinue() {
-    System.out.println("Press any key to continue...");
+    System.out.print("Press any key to continue...");
     scanner.nextLine();
   }
 

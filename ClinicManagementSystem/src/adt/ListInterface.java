@@ -1,6 +1,11 @@
 package adt;
 
 /**
+ *
+ * @author khtan
+ */
+
+/**
  * An interface for the ADT List.
  * 
  * @param <T> The type of elements in this list

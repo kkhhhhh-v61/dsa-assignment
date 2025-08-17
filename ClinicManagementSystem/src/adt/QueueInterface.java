@@ -1,6 +1,11 @@
 package adt;
 
 /**
+ *
+ * @author khtan
+ */
+
+/**
  * An interface for the ADT Queue.
  * 
  * @param <T> The type of elements in this queue

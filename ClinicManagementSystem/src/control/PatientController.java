@@ -1,21 +1,27 @@
 package control;
 
-import boundary.PatientMaintenanceUI;
+import adt.HashMap;
+import boundary.PatientUI;
 import entity.Patient;
 import utility.Enum.BloodType;
 import utility.Enum.Gender;
 import utility.MessageUI;
-import utility.UtilityUI;
+import utility.Utilities;
 import utility.Validation;
 import java.time.LocalDate;
 
-public class PatientMaintenance {
-  private static PatientMaintenanceUI patientMaintenanceUI = new PatientMaintenanceUI();
-  private static MessageUI messageUI = new MessageUI();
-  private static UtilityUI utilityUI = new UtilityUI();
-  private static Validation validation = new Validation();
+/**
+ *
+ * @author khtan
+ */
+public class PatientController {
+  private final static PatientUI patientMaintenanceUI = new PatientUI();
+  private final static MessageUI messageUI = new MessageUI();
+  private final static Utilities utilityUI = new Utilities();
+  private final static Validation validation = new Validation();
+  private final static HashMap<String, Patient> patientMap = new HashMap<>();
 
-  public void runPatientMaintenance() {
+  public void runPatientManagement() {
     String[] response;
     char input;
     char[] options;
@@ -28,24 +34,23 @@ public class PatientMaintenance {
       if (validation.checkInputOptionsMatch(options, input)) {
         switch (input) {
           case '1':
-            boolean exit2 = false;
-            boolean isDetailsValid = false;
+            boolean exit1 = false;
             Patient newPatient = new Patient();
             do {
               String result;
               result = patientMaintenanceUI.inputPatientIcNumber();
               if (result.equals("0")) {
-                exit2 = true;
+                exit1 = true;
               } else {
                 newPatient.setIcNumber(result);
                 result = utilityUI.formatName(utilityUI.removeSpaces(patientMaintenanceUI.inputPatientName()));
                 if (result.equals("0")) {
-                  exit2 = true;
+                  exit1 = true;
                 } else {
                   newPatient.setName(result);
                   result = String.valueOf(patientMaintenanceUI.inputPatientGender());
                   if (result.equals("0")) {
-                    exit2 = true;
+                    exit1 = true;
                   } else {
                     switch (result.charAt(0)) {
                       case '1':
@@ -60,28 +65,28 @@ public class PatientMaintenance {
                     newPatient.setGender(Gender.valueOf(result));
                     result = patientMaintenanceUI.inputPatientBirthDate();
                     if (result.equals("0")) {
-                      exit2 = true;
+                      exit1 = true;
                     } else {
                       newPatient.setBirthDate(LocalDate.parse(result));
                       newPatient.setAge(newPatient.calculateAge());
                       result = patientMaintenanceUI.inputPatientContactNumber();
                       if (result.equals("0")) {
-                        exit2 = true;
+                        exit1 = true;
                       } else {
                         newPatient.setContactNumber(utilityUI.formatContactNumber(result));
                         result = patientMaintenanceUI.inputPatientEmail();
                         if (result.equals("0")) {
-                          exit2 = true;
+                          exit1 = true;
                         } else {
                           newPatient.setEmail(result);
                           result = patientMaintenanceUI.inputPatientAddress();
                           if (result.equals("0")) {
-                            exit2 = true;
+                            exit1 = true;
                           } else {
                             newPatient.setAddress(result);
                             result = String.valueOf(patientMaintenanceUI.inputPatientBloodType());
                             if (result.equals("0")) {
-                              exit2 = true;
+                              exit1 = true;
                             } else {
                               switch (result.charAt(0)) {
                                 case '1':
@@ -100,8 +105,10 @@ public class PatientMaintenance {
                                   break;
                               }
                               newPatient.setBloodType(BloodType.valueOf(result));
-                              isDetailsValid = true;
-                              exit2 = true;
+                              // Store the patient in the HashMap using patientId as the key
+                              patientMap.put(newPatient.getPatientId(), newPatient);
+                              messageUI.displayPatientRegistrationSuccessMessage();
+                              exit1 = true;
                             }
                           }
                         }
@@ -110,15 +117,13 @@ public class PatientMaintenance {
                   }
                 }
               }
-            } while (!exit2);
-            if (isDetailsValid) {
-              System.out.println(newPatient.toStringComplete());
-              utilityUI.pressAnyKeyToContinue();
-            }
+            } while (!exit1);
             break;
           case '2':
-            break;
-          case '3':
+            boolean exit2 = false;
+            do {
+              exit = runPatientList();
+            } while (!exit2);
             break;
           case '0':
             exit = true;
@@ -280,7 +285,7 @@ public class PatientMaintenance {
     return false;
   }
 
-  public boolean validatePatientEmail(String input, char[] options, String format) { // TODO: add check to ensure at least a letter is present between '@' and '.'
+  public boolean validatePatientEmail(String input, char[] options, String format) {
     if (input.isEmpty()) { // check if input is empty
       messageUI.displayInputErrorMessage();
       return false;
@@ -357,4 +362,48 @@ public class PatientMaintenance {
     return false;
   }
 
+  public boolean runPatientList() {
+    String[] response;
+    char input;
+    char[] options;
+    boolean exit = false;
+    String ui = "listLeft";
+    int page = 1;
+    
+    do {
+      response = patientMaintenanceUI.displayPatientListUI(patientMap, ui, page);
+      input = response[0].charAt(0);
+      options = response[1].toCharArray();
+      
+      if (validation.checkInputOptionsMatch(options, input)) { // check if input is in the options
+        switch (input) {
+          case 'E':
+            break;
+          case 'Q':
+            break;
+          case 'W':
+            if (ui.equals("listLeft")) {
+              ui = "listRight";
+            } else {
+              ui = "listLeft";
+            }
+            break;
+          case '1':
+            break;
+          case '2':
+            break;
+          case '3':
+            break;
+          case '0':
+            exit = true;
+            break;
+          default:
+            break;
+        }
+      } else {
+        messageUI.displayInputOptionErrorMessage(options);
+      }
+    } while (!exit);
+    return false;
+  }
 }

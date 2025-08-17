@@ -3,8 +3,12 @@ package entity;
 import utility.Enum.DayOfWeek;
 import java.time.LocalTime;
 
+/**
+ *
+ * @author khtan
+ */
 public class Schedule {
-  private static int lastId = 0000;
+  private static int lastId = 0;
 
   private String scheduleId;
   private String doctorId;

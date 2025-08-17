@@ -6,8 +6,12 @@ import utility.Enum.BloodType;
 import utility.Enum.Gender;
 import java.time.LocalDate;
 
+/**
+ *
+ * @author khtan
+ */
 public class Patient extends Person {
-  private static int lastId = 0000;
+  private static int lastId = 0;
 
   private String patientId;
   private BloodType bloodType;
@@ -86,12 +90,11 @@ public class Patient extends Person {
   }
 
   public String toString() {
-    return "Patient ID: " + patientId + "\nBlood Type: " + bloodType + "\nAllergies: " + allergies + "\nAppointment Records: " + appointmentRecords + "\nConsultation Records: " + consultationRecords + "\nTreatment Records: " + treatmentRecords;
+    return "Patient ID: " + patientId + "\n" + super.toString();
   }
 
   public String toFileString() {
-    return patientId + "|" + bloodType + "|" + allergies + "|" + appointmentRecords + "|" + consultationRecords + "|"
-        + treatmentRecords;
+    return patientId + "|" + super.toFileString();
   }
   
   public String toStringComplete() {
@@ -101,7 +104,18 @@ public class Patient extends Person {
   }
   
   public String toFileStringComplete() {
-    return patientId + "|" + super.toFileString() + "|" + bloodType + "|" + allergies + "|" + appointmentRecords + "|" + consultationRecords + "|"
+    return patientId + "|" + super.toFileString() + "|" + bloodType + "|" + allergies + "|" + appointmentRecords + "|"
+        + consultationRecords + "|"
         + treatmentRecords;
+  }
+  
+  public String toStringListLeft() {
+    return String.format("| %-5s | %14s | %-35s | %6s | %10s | %3s | %-14s |",
+        patientId, icNumber, name, gender, birthDate, age, contactNumber);
+  }
+  
+  public String toStringListRight() {
+    return String.format("| %-5s | %-35s | %-45s | %10s | %-2s |",
+        patientId, email, address, registrationDate, bloodType);
   }
 }

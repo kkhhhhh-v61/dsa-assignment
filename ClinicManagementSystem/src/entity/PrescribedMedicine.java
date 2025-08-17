@@ -1,5 +1,9 @@
 package entity;
 
+/**
+ *
+ * @author khtan
+ */
 public class PrescribedMedicine {
   private String medicineId;
   private String dosage;

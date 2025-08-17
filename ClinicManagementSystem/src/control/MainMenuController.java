@@ -4,10 +4,14 @@ import boundary.MainMenuUI;
 import utility.MessageUI;
 import utility.Validation;
 
-public class MainMenu {
+/**
+ *
+ * @author khtan
+ */
+public class MainMenuController {
   public boolean runMainMenu(char input) {
     MainMenuUI mainMenuUI = new MainMenuUI();
-    PatientMaintenance patientMaintenance = new PatientMaintenance();
+    PatientController patientMaintenance = new PatientController();
     MessageUI messageUI = new MessageUI();
     Validation validation = new Validation();
     String[] response;
@@ -62,7 +66,7 @@ public class MainMenu {
             } else {
               switch (input) {
                 case '1':
-                  patientMaintenance.runPatientMaintenance();
+                  patientMaintenance.runPatientManagement();
                   break;
                 case '2':
                   break;

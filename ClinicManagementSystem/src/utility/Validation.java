@@ -3,6 +3,10 @@ package utility;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ *
+ * @author khtan
+ */
 public class Validation {
   public boolean checkInputOptionsMatch(char[] inputOptions, char input) {
     for (char option : inputOptions) {
@@ -14,10 +18,12 @@ public class Validation {
   }
 
   public boolean checkIsInputOptions(char[] inputOptions, String input) {
-    for (char option : inputOptions) {
-      if (checkIsCharInput(input)) {
-        if (option == input.charAt(0)) {
-          return true;
+    if (input.length() == 1) {
+      for (char option : inputOptions) {
+        if (checkIsCharInput(input)) {
+          if (option == input.charAt(0)) {
+            return true;
+          }
         }
       }
     }
@@ -80,6 +86,6 @@ public class Validation {
   }
 
   public boolean checkIsNumeric(String input) {
-    return input.matches(".*\\d.*");
+    return input.matches("^\\d+$");
   }
 }

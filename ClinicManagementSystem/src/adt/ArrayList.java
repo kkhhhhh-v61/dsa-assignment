@@ -1,6 +1,11 @@
 package adt;
 
 /**
+ *
+ * @author khtan
+ */
+
+/**
  * Resizable-array implementation of the ListInterface. Implements all optional
  * list operations, and permits all elements, including null.
  * 

@@ -1,0 +1,6 @@
+TODO List ~~~ cuz i tend to forget stuff ~~~
+
++======================================= Validation ========================================+
+- [ ] add formatting to automatically add hyphens for validatePatientIcNumber()
+- [ ] automatically assign gender based on ic number last digit, odd = male, even = female
++===========================================================================================+

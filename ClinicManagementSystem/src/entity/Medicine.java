@@ -2,8 +2,12 @@ package entity;
 
 import utility.Enum.MedicineCategory;
 
+/**
+ *
+ * @author khtan
+ */
 public class Medicine {
-  private static int lastId = 0000;
+  private static int lastId = 0;
 
   private String medicineId;
   private String name;

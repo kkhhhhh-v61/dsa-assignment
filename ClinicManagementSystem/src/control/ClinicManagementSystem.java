@@ -15,11 +15,15 @@ import boundary.MainMenuUI;
 import utility.MessageUI;
 import utility.Validation;
 
+/**
+ *
+ * @author khtan
+ */
 public class ClinicManagementSystem {
-  private static MainMenuUI mainMenuUI = new MainMenuUI();
-  private static MainMenu mainMenu = new MainMenu();
-  private static MessageUI messageUI = new MessageUI();
-  private static Validation validation = new Validation();
+  private final static MainMenuUI mainMenuUI = new MainMenuUI();
+  private final static MainMenuController mainMenu = new MainMenuController();
+  private final static MessageUI messageUI = new MessageUI();
+  private final static Validation validation = new Validation();
   
   public static void main(String[] args) {
     String[] response;

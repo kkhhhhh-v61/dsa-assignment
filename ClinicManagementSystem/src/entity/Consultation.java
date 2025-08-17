@@ -5,8 +5,12 @@ import utility.Enum.Status;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ *
+ * @author khtan
+ */
 public class Consultation {
-  private static int lastId = 0000;
+  private static int lastId = 0;
 
   private String consultationId;
   private String patientId;

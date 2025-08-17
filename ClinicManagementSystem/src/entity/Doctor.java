@@ -5,8 +5,12 @@ import utility.Enum.Gender;
 import utility.Enum.Specialization;
 import java.time.LocalDate;
 
+/**
+ *
+ * @author khtan
+ */
 public class Doctor extends Person {
-  private static int lastId = 0000;
+  private static int lastId = 0;
 
   private String doctorId;
   private Specialization specialization;

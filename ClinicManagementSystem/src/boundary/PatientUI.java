@@ -1,13 +1,19 @@
 package boundary;
 
-import control.PatientMaintenance;
-import utility.UtilityUI;
+import adt.HashMap;
+import control.PatientController;
+import entity.Patient;
+import utility.Utilities;
 import java.util.Scanner;
 
-public class PatientMaintenanceUI {
-  private static PatientMaintenance patientMaintenance = new PatientMaintenance();
-  private static UtilityUI utilityUI = new UtilityUI();
-  private static Scanner scanner = new Scanner(System.in);
+/**
+ *
+ * @author khtan
+ */
+public class PatientUI {
+  private final static PatientController patientMaintenance = new PatientController();
+  private final static Utilities utilityUI = new Utilities();
+  private final static Scanner scanner = new Scanner(System.in);
   private static String input;
 
   public String[] displayPatientManagementUI() {
@@ -75,7 +81,7 @@ public class PatientMaintenanceUI {
     boolean exit = false;
     do {
       final char[] INPUT_OPTIONS = { '0' };
-      final int MAX_LENGTH = 20;
+      final int MAX_LENGTH = 35;
       displayPatientRegistrationUI();
       System.out.println("Format : Capitalize the first letter of each separate word for best result. Spaces are optional.");
       System.out.println("[0] Cancel");
@@ -146,7 +152,7 @@ public class PatientMaintenanceUI {
 
   public String inputPatientAddress() {
     final char[] INPUT_OPTIONS = { '0' };
-    final int MAX_LENGTH = 30;
+    final int MAX_LENGTH = 50;
     boolean exit = false;
     do {
       displayPatientRegistrationUI();
@@ -184,5 +190,49 @@ public class PatientMaintenanceUI {
       exit = patientMaintenance.validatePatientBloodType(input, INPUT_OPTIONS);
     } while (!exit);
     return input.charAt(0);
+  }
+
+  public String[] displayPatientListUI(HashMap<String, Patient> patientMap, String ui, int page) {
+    final char[] INPUT_OPTIONS = { 'E', 'Q', 'W', '1', '2', '3', '0' };
+    char option;
+    if (ui.equals("listLeft")) {
+      displayListLeftUI(patientMap);
+    } else if (ui.equals("listRight")) {
+      displayListRightUI(patientMap);
+    }
+    option = displayListOptionSelection(INPUT_OPTIONS);
+    return new String[] { String.valueOf(option), new String(INPUT_OPTIONS) };
+  }
+  
+  public void displayListLeftUI(HashMap<String, Patient> patientMap) {
+    utilityUI.clearScreen();
+    System.out.println("+===========================================================================================================+");
+    System.out.println("|                                           PATIENT LIST (PART 1)                                           |");
+    System.out.println("+===========================================================================================================+");
+    System.out.println("|  PID  |       IC       |              FULL NAME              | GENDER | BIRTH DATE | AGE | CONTACT NUMBER |");
+    System.out.println("+===========================================================================================================+");
+    for (String key : patientMap.getKeys()) {
+      System.out.println(patientMap.get(key).toStringListLeft());
+    }
+  }
+
+  public void displayListRightUI(HashMap<String, Patient> patientMap) {
+    utilityUI.clearScreen();
+    System.out.println("+===============================================================================================================+");
+    System.out.println("|                                             PATIENT LIST (PART 2)                                             |");
+    System.out.println("+===============================================================================================================+");
+    System.out.println("|  PID  |                EMAIL                |                    ADDRESS                    |  REG DATE  | BT |");
+    System.out.println("+===============================================================================================================+");
+    for (String key : patientMap.getKeys()) {
+      System.out.println(patientMap.get(key).toStringListRight());
+    }
+  }
+  
+  public char displayListOptionSelection(char[] options) {
+    utilityUI.nextLine();
+    System.out.println("[E] Previous Page | [Q] Next Page | [W] Switch Part View");
+    System.out.println("[1] View Details | [2] Update Record | [3] Remove Record | [0] Back");
+    System.out.print("Select Option " + utilityUI.displayInputOptions(options) + " : ");
+    return scanner.nextLine().trim().charAt(0);
   }
 }

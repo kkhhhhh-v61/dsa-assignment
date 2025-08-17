@@ -3,6 +3,10 @@ package entity;
 import utility.Enum.Gender;
 import java.time.LocalDate;
 
+/**
+ *
+ * @author khtan
+ */
 public class Person {
   protected String icNumber;
   protected String name;

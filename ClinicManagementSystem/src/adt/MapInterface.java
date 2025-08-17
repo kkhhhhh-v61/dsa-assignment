@@ -1,6 +1,11 @@
 package adt;
 
 /**
+ *
+ * @author khtan
+ */
+
+/**
  * An interface for the ADT Map.
  * 
  * @param <K> The type of keys maintained by this map

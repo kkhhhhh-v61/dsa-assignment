@@ -1,6 +1,11 @@
 package adt;
 
 /**
+ *
+ * @author khtan
+ */
+
+/**
  * An interface for the ADT Stack.
  * 
  * @param <T> The type of elements in this stack

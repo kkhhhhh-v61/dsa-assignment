@@ -1,6 +1,11 @@
 package adt;
 
 /**
+ *
+ * @author khtan
+ */
+
+/**
  * Hash table based implementation of the MapInterface with chaining for collision resolution.
  * 
  * @param <K> the type of keys maintained by this map
@@ -166,6 +171,25 @@ public class HashMap<K, V> implements MapInterface<K, V> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+    
+    /**
+     * Returns an array containing all of the keys in this map.
+     * 
+     * @return An array containing all the keys in this map
+     */
+    public String[] getKeys() {
+        String[] keys = new String[size];
+        int index = 0;
+        
+        for (Entry<K, V> entry : table) {
+            while (entry != null) {
+                keys[index++] = String.valueOf(entry.key);
+                entry = entry.next;
+            }
+        }
+        
+        return keys;
     }
 
     @Override

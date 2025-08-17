@@ -1,14 +1,16 @@
 package boundary;
 
-import utility.MessageUI;
-import utility.UtilityUI;
+import utility.Utilities;
 import java.util.Scanner;
 
+/**
+ *
+ * @author khtan
+ */
 public class MainMenuUI {
-  MessageUI messageUI = new MessageUI();
-  UtilityUI utilityUI = new UtilityUI();
-  Scanner scanner = utilityUI.getScannerInput();
-  String option;
+  private final static Utilities utilityUI = new Utilities();
+  private final static Scanner scanner = utilityUI.getScannerInput();
+  private static String option;
 
   public String[] displayMainMenu() {
     String[] response = new String[2];

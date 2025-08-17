@@ -3,8 +3,12 @@ package entity;
 import adt.ArrayList;
 import utility.Enum.Status;
 
+/**
+ *
+ * @author khtan
+ */
 public class Treatment {
-  private static int lastId = 0000;
+  private static int lastId = 0;
 
   private String treatmentId;
   private String consultationId;

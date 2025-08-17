@@ -4,8 +4,12 @@ import utility.Enum.Status;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ *
+ * @author khtan
+ */
 public class Appointment {
-  private static int lastId = 0000;
+  private static int lastId = 0;
 
   private String appointmentId;
   private String patientId;
