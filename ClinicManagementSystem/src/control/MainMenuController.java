@@ -26,29 +26,25 @@ public class MainMenuController {
           options = response[1].toCharArray();
 
           if (validation.checkInputOptionsMatch(options, input)) { // check if input is in the options
-            if (input == '0') {
-              exit = true;
-            } else {
-              switch (input) {
-                case '1':
-                  break;
-                case '2':
-                  break;
-                case '3':
-                  break;
-                case '4':
-                  break;
-                case '5':
-                  break;
-                case '6':
-                  break;
-                case '0':
-                  exit = true;
-                  break;
-                default:
-                  break;
-              }
-            } while (!exit);
+            switch (input) {
+              case '1':
+                break;
+              case '2':
+                break;
+              case '3':
+                break;
+              case '4':
+                break;
+              case '5':
+                break;
+              case '6':
+                break;
+              case '0':
+                exit = true;
+                break;
+              default:
+                break;
+            }
           } else {
             messageUI.displayInputOptionErrorMessage(options);
           }
@@ -61,32 +57,28 @@ public class MainMenuController {
           options = response[1].toCharArray();
           
           if (validation.checkInputOptionsMatch(options, input)) { // check if input is in the options
-            if (input == '0') {
-              exit = true;
-            } else {
-              switch (input) {
-                case '1':
-                  patientMaintenance.runPatientManagement();
-                  break;
-                case '2':
-                  break;
-                case '3':
-                  break;
-                case '4':
-                  break;
-                case '5':
-                  break;
-                case '6':
-                  break;
-                case '7':
-                  break;
-                case '0':
-                  exit = true;
-                  break;
-                default:
-                  break;
-              }
-            } while (!exit);
+            switch (input) {
+              case '1':
+                patientMaintenance.runPatientManagement();
+                break;
+              case '2':
+                break;
+              case '3':
+                break;
+              case '4':
+                break;
+              case '5':
+                break;
+              case '6':
+                break;
+              case '7':
+                break;
+              case '0':
+                exit = true;
+                break;
+              default:
+                break;
+            }
           } else {
             messageUI.displayInputOptionErrorMessage(options);
           }
