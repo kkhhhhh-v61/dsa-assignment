@@ -12,33 +12,33 @@ import java.util.Scanner;
  */
 public class PatientUI {
   private final static PatientController patientMaintenance = new PatientController();
-  private final static Utilities utilityUI = new Utilities();
+  private final static Utilities utilities = new Utilities();
   private final static Scanner scanner = new Scanner(System.in);
   private static String input;
 
   public String[] displayPatientManagementUI() {
     final char[] INPUT_OPTIONS = { '1', '2', '0' };
     do {
-      utilityUI.clearScreen();
-      utilityUI.displayLine();
+      utilities.clearScreen();
+      utilities.displayLine();
       System.out.println("|                                        PATIENT MANAGEMENT                                        |");
-      utilityUI.displayLine();
+      utilities.displayLine();
       System.out.println("| [1] Patient Registration                                                                         |");
       System.out.println("| [2] Patient List                                                                                 |");
       System.out.println("| [0] Back                                                                                         |");
-      utilityUI.displayLine();
-      utilityUI.nextLine();
-      System.out.print("Select Option " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
+      utilities.displayLine();
+      utilities.nextLine();
+      System.out.print("Select Option " + utilities.displayInputOptions(INPUT_OPTIONS) + " : ");
       input = scanner.nextLine();
     } while (input.isEmpty());
     return new String[] {input, new String(INPUT_OPTIONS)};
   }
   
   public void displayPatientRegistrationUI() {
-    utilityUI.clearScreen();
-    utilityUI.displayLine();
+    utilities.clearScreen();
+    utilities.displayLine();
     System.out.println("|                                       PATIENT REGISTRATION                                       |");
-    utilityUI.displayLine();
+    utilities.displayLine();
   }
   
   public String inputPatientId() {
@@ -98,7 +98,7 @@ public class PatientUI {
     do {
       displayPatientRegistrationUI();
       System.out.println("[1] Male | [2] Female | [0] Cancel");
-      System.out.print("Enter Patient Gender " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
+      System.out.print("Enter Patient Gender " + utilities.displayInputOptions(INPUT_OPTIONS) + " : ");
       input = scanner.nextLine().trim();
       exit = patientMaintenance.validatePatientGender(input, INPUT_OPTIONS);
     } while (!exit);
@@ -185,7 +185,7 @@ public class PatientUI {
     do {
       displayPatientRegistrationUI();
       System.out.println("[1] A | [2] B | [3] AB | [4] O | [0] Cancel");
-      System.out.print("Enter Patient Blood Type " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
+      System.out.print("Enter Patient Blood Type " + utilities.displayInputOptions(INPUT_OPTIONS) + " : ");
       input = scanner.nextLine().trim();
       exit = patientMaintenance.validatePatientBloodType(input, INPUT_OPTIONS);
     } while (!exit);
@@ -205,7 +205,7 @@ public class PatientUI {
   }
   
   public void displayListLeftUI(HashMap<String, Patient> patientMap, int page) {
-    utilityUI.clearScreen();
+    utilities.clearScreen();
     System.out.println("+===========================================================================================================+");
     System.out.printf("| [<-E]                                   [PT1] PATIENT LIST [PG%02d]                                   [Q->] |\n", page);
     System.out.println("+===========================================================================================================+");
@@ -217,7 +217,7 @@ public class PatientUI {
   }
 
   public void displayListRightUI(HashMap<String, Patient> patientMap, int page) {
-    utilityUI.clearScreen();
+    utilities.clearScreen();
     System.out.println("+===============================================================================================================+");
     System.out.printf("| [<-E]                                   [PT2] PATIENT LIST [PG%02d]                                   [Q->] |\n", page);
     System.out.println("+===============================================================================================================+");
@@ -229,10 +229,10 @@ public class PatientUI {
   }
   
   public char displayListOptionSelection(char[] options) {
-    utilityUI.nextLine();
+    utilities.nextLine();
     System.out.println("[E] Previous Page | [Q] Next Page | [W] Switch Part View");
     System.out.println("[1] View Details | [2] Update Record | [3] Remove Record | [0] Back");
-    System.out.print("Select Option " + utilityUI.displayInputOptions(options) + " : ");
+    System.out.print("Select Option " + utilities.displayInputOptions(options) + " : ");
     return scanner.nextLine().trim().charAt(0);
   }
 }

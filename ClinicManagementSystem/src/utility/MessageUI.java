@@ -5,14 +5,14 @@ package utility;
  * @author khtan
  */
 public class MessageUI {
-  private static Utilities utilityUI = new Utilities();
+  private static Utilities utilities = new Utilities();
   private static Validation validation = new Validation();
 
   public char displayPatientRegistrationConfirmationMessage() {
     final char[] INPUT_OPTIONS = { 'Y', 'N' };
-    utilityUI.flushScanner();
-    System.out.print("Sure to register this patient? " + utilityUI.displayInputOptions(INPUT_OPTIONS) + " : ");
-    char option = utilityUI.getScannerInput().next().charAt(0);
+    utilities.flushScanner();
+    System.out.print("Sure to register this patient? " + utilities.displayInputOptions(INPUT_OPTIONS) + " : ");
+    char option = utilities.getScannerInput().next().charAt(0);
     if (validation.checkIsInputOptions(INPUT_OPTIONS, String.valueOf(option))) {
       return option;
     } else {
@@ -22,7 +22,7 @@ public class MessageUI {
 
   public void displayPatientRegistrationSuccessMessage() {
     System.out.println("Patient Successfully Registered!");
-    utilityUI.pressAnyKeyToContinue();
+    utilities.pressAnyKeyToContinue();
   }
 
   public void displayInputErrorMessage() {
@@ -32,60 +32,60 @@ public class MessageUI {
   public void displayInputEmptyErrorMessage() {
     displayInputErrorMessage();
     System.out.println("Note: Input cannot be empty.");
-    utilityUI.pressAnyKeyToContinue();
+    utilities.pressAnyKeyToContinue();
   }
 
   public void displayInputOptionErrorMessage(char[] inputOptions) {
     displayInputErrorMessage();
-    System.out.println("Note: Input must be one of these options : " + utilityUI.displayInputOptions(inputOptions));
-    utilityUI.pressAnyKeyToContinue();
+    System.out.println("Note: Input must be one of these options : " + utilities.displayInputOptions(inputOptions));
+    utilities.pressAnyKeyToContinue();
   }
 
   public void displayFormatErrorMessage(String format) {
     displayInputErrorMessage();
     System.out.println("Note: Input must be in the format of " + format);
-    utilityUI.pressAnyKeyToContinue();
+    utilities.pressAnyKeyToContinue();
   }
 
   public void displayFormatErrorMessage(String[] formats) {
     displayInputErrorMessage();
     System.out.println("Note: Input must be in the format of " + String.join(" OR ", formats));
-    utilityUI.pressAnyKeyToContinue();
+    utilities.pressAnyKeyToContinue();
   }
 
   public void displayNameErrorMessage() {
     displayInputErrorMessage();
     System.out.println("Note: Input must be a name with proper capitalization for the first letter of each word.");
-    utilityUI.pressAnyKeyToContinue();
+    utilities.pressAnyKeyToContinue();
   }
 
   public void displayCannotContainNumberErrorMessage() {
     displayInputErrorMessage();
     System.out.println("Note: Input cannot contain numbers.");
-    utilityUI.pressAnyKeyToContinue();
+    utilities.pressAnyKeyToContinue();
   }
 
   public void displayCannotContainSpecialCharacterErrorMessage() {
     displayInputErrorMessage();
     System.out.println("Note: Input cannot contain special characters.");
-    utilityUI.pressAnyKeyToContinue();
+    utilities.pressAnyKeyToContinue();
   }
 
   public void displayCannotExceedLengthErrorMessage(int maxLength) {
     displayInputErrorMessage();
     System.out.println("Note: Input cannot exceed " + maxLength + " characters.");
-    utilityUI.pressAnyKeyToContinue();
+    utilities.pressAnyKeyToContinue();
   }
 
   public void displayMustBeEqualsLength(int length) {
     displayInputErrorMessage();
     System.out.println("Note: Input must be " + length + " characters.");
-    utilityUI.pressAnyKeyToContinue();
+    utilities.pressAnyKeyToContinue();
   }
 
   public void displayMustBeNumericErrorMessage() {
     displayInputErrorMessage();
     System.out.println("Note: Input must be numeric.");
-    utilityUI.pressAnyKeyToContinue();
+    utilities.pressAnyKeyToContinue();
   }
 }

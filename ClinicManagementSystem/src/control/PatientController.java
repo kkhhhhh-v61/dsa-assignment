@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class PatientController {
   private final static PatientUI patientMaintenanceUI = new PatientUI();
   private final static MessageUI messageUI = new MessageUI();
-  private final static Utilities utilityUI = new Utilities();
+  private final static Utilities utilities = new Utilities();
   private final static Validation validation = new Validation();
   private final static HashMap<String, Patient> patientMap = new HashMap<>();
 
@@ -43,7 +43,7 @@ public class PatientController {
                 exit1 = true;
               } else {
                 newPatient.setIcNumber(result);
-                result = utilityUI.formatName(utilityUI.removeSpaces(patientMaintenanceUI.inputPatientName()));
+                result = utilities.formatName(utilities.removeSpaces(patientMaintenanceUI.inputPatientName()));
                 if (result.equals("0")) {
                   exit1 = true;
                 } else {
@@ -73,7 +73,7 @@ public class PatientController {
                       if (result.equals("0")) {
                         exit1 = true;
                       } else {
-                        newPatient.setContactNumber(utilityUI.formatContactNumber(result));
+                        newPatient.setContactNumber(utilities.formatContactNumber(result));
                         result = patientMaintenanceUI.inputPatientEmail();
                         if (result.equals("0")) {
                           exit1 = true;
@@ -201,7 +201,7 @@ public class PatientController {
         messageUI.displayNameErrorMessage();
         inputError = true;
       } else {
-        input = utilityUI.removeSpaces(input);
+        input = utilities.removeSpaces(input);
         if (validation.checkIsContainSpecialCharacter(input)) { // check if input contains special characters
           messageUI.displayCannotContainSpecialCharacterErrorMessage();
           return false;
