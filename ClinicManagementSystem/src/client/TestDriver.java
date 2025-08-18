@@ -18,10 +18,23 @@ import utility.Enum.MedicineCategory;
 import utility.Enum.Specialization;
 import utility.Enum.Status;
 import java.time.LocalDate;
+import control.ClinicManagementSystem; // Import ClinicManagementSystem
 import java.time.LocalTime;
 
+<<<<<<< Updated upstream
+=======
+/**
+ *
+ * @author khtan
+ * @author Cline
+ */
+>>>>>>> Stashed changes
 public class TestDriver {
   public static void main(String[] args) {
+    // Run the Clinic Management System
+    ClinicManagementSystem.main(args);
+
+    /* Original Test Driver Initialization (commented out or removed if not needed) */
     /* Initialization */
     ArrayList<Allergy> allergies = new ArrayList<>();
     allergies.add(Allergy.Dairy);
@@ -121,5 +134,6 @@ public class TestDriver {
     Treatment treatment = new Treatment("C0001", "D0001", "P0001", medicines, "Notes", Status.Completed);
     System.out.println(treatment.toString() + "\n");
     System.out.println(treatment.toFileString() + "\n");
+    // */ // End of original test driver content - removed extra closing comment
   }
 }
