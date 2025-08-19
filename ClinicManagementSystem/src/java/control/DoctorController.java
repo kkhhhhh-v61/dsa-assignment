@@ -29,17 +29,6 @@ public class DoctorController {
     private void loadData() {
         // Corrected Parser for Doctor
         FileHandler.loadFromFile(DOCTORS_FILE, doctorList, data -> {
-            // Expected format: doctorId|icNumber|name|gender|birthDate|contact|email|address|regDate|specialization
-            // data[0] = doctorId
-            // data[1] = icNumber
-            // data[2] = name
-            // data[3] = gender
-            // data[4] = birthDate
-            // data[5] = contact
-            // data[6] = email
-            // data[7] = address
-            // data[8] = regDate
-            // data[9] = specialization
             if (data.length >= 10) {
                 String ic = data[1];
                 String name = data[2];

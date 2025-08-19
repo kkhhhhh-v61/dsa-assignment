@@ -58,7 +58,6 @@ public class DoctorValidator {
     public static String validateDuplicateIc(String icNumber, String currentDoctorId, ListInterface<Doctor> doctorList) {
         for (int i = 0; i < doctorList.size(); i++) {
             Doctor existingDoctor = doctorList.getEntry(i);
-            // When updating, don't compare the doctor to themselves
             if (!existingDoctor.getDoctorId().equals(currentDoctorId)
                     && existingDoctor.getIcNumber().equalsIgnoreCase(icNumber)) {
                 return "Another doctor with this IC number already exists.";
