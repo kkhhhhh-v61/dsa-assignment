@@ -1,6 +1,7 @@
 package boundary;
 
-import adt.HashMap;
+import adt.RedBlackTreeMap;
+import adt.ListInterface;
 import control.PatientController;
 import entity.Patient;
 import utility.Utilities;
@@ -192,7 +193,7 @@ public class PatientUI {
     return input.charAt(0);
   }
 
-  public String[] displayPatientListUI(HashMap<String, Patient> patientMap, String ui, int page) {
+  public String[] displayPatientListUI(RedBlackTreeMap<String, Patient> patientMap, String ui, int page) {
     final char[] INPUT_OPTIONS = { 'E', 'Q', 'W', '1', '2', '3', '0' };
     char option;
     if (ui.equals("listLeft")) {
@@ -204,27 +205,29 @@ public class PatientUI {
     return new String[] { String.valueOf(option), new String(INPUT_OPTIONS) };
   }
   
-  public void displayListLeftUI(HashMap<String, Patient> patientMap, int page) {
+  public void displayListLeftUI(RedBlackTreeMap<String, Patient> patientMap, int page) {
     utilities.clearScreen();
     System.out.println("+===========================================================================================================+");
     System.out.printf("| [<-E]                                   [PT1] PATIENT LIST [PG%02d]                                   [Q->] |\n", page);
     System.out.println("+===========================================================================================================+");
     System.out.println("|  PID  |       IC       |              FULL NAME              | GENDER | BIRTH DATE | AGE | CONTACT NUMBER |");
     System.out.println("+===========================================================================================================+");
-    for (String key : patientMap.getKeys()) {
-      System.out.println(patientMap.get(key).toStringListLeft());
+    ListInterface<String> keys = patientMap.getKeys();
+    for (int i = 0; i < keys.size(); i++) {
+      System.out.println(patientMap.get(keys.getEntry(i)).toStringListLeft());
     }
   }
 
-  public void displayListRightUI(HashMap<String, Patient> patientMap, int page) {
+  public void displayListRightUI(RedBlackTreeMap<String, Patient> patientMap, int page) {
     utilities.clearScreen();
     System.out.println("+===============================================================================================================+");
     System.out.printf("| [<-E]                                   [PT2] PATIENT LIST [PG%02d]                                   [Q->] |\n", page);
     System.out.println("+===============================================================================================================+");
     System.out.println("|  PID  |                EMAIL                |                    ADDRESS                    |  REG DATE  | BT |");
     System.out.println("+===============================================================================================================+");
-    for (String key : patientMap.getKeys()) {
-      System.out.println(patientMap.get(key).toStringListRight());
+    ListInterface<String> keys = patientMap.getKeys();
+    for (int i = 0; i < keys.size(); i++) {
+      System.out.println(patientMap.get(keys.getEntry(i)).toStringListRight());
     }
   }
   

@@ -1,6 +1,6 @@
 package control;
 
-import adt.HashMap;
+import adt.RedBlackTreeMap;
 import boundary.PatientUI;
 import entity.Patient;
 import utility.Enum.BloodType;
@@ -19,7 +19,7 @@ public class PatientController {
   private final static MessageUI messageUI = new MessageUI();
   private final static Utilities utilities = new Utilities();
   private final static Validation validation = new Validation();
-  private final static HashMap<String, Patient> patientMap = new HashMap<>();
+  private final static RedBlackTreeMap<String, Patient> patientMap = new RedBlackTreeMap<>();
 
   public void runPatientManagement() {
     String[] response;
