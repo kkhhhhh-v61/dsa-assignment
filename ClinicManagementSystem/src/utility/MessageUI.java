@@ -88,4 +88,10 @@ public class MessageUI {
     System.out.println("Note: Input must be numeric.");
     utilities.pressAnyKeyToContinue();
   }
+
+  public void displayInvalidIcBirthDateErrorMessage() {
+    displayInputErrorMessage();
+    System.out.println("Note: The first 6 digits of the IC number must be a valid birth date.");
+    utilities.pressAnyKeyToContinue();
+  }
 }

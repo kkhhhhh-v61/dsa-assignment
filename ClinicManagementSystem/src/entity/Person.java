@@ -34,8 +34,8 @@ public class Person {
       String address, LocalDate registrationDate) {
     this.icNumber = icNumber;
     this.name = name;
-    this.gender = gender;
-    this.birthDate = birthDate;
+    this.gender = identifyGender();
+    this.birthDate = identifyBirthDate();
     this.age = calculateAge();
     this.contactNumber = contactNumber;
     this.email = email;
@@ -67,12 +67,34 @@ public class Person {
     this.gender = gender;
   }
 
+  public Gender identifyGender() {
+    String tempIc = this.icNumber.replace("-", "");
+    if (tempIc.length() == 12) {
+      this.gender = tempIc.charAt(11) % 2 == 0 ? Gender.Female : Gender.Male;
+    }
+    return this.gender;
+  }
+
   public LocalDate getBirthDate() {
     return birthDate;
   }
 
   public void setBirthDate(LocalDate birthDate) {
     this.birthDate = birthDate;
+  }
+
+  public LocalDate identifyBirthDate() {
+    String tempIc = this.icNumber.replace("-", "");
+    if (tempIc.length() == 12) {
+      int currentYear = LocalDate.now().getYear();
+      int century = (currentYear / 100) * 100;
+      int year = Integer.parseInt(tempIc.substring(0, 2));
+      year = year > (currentYear % 100) ? century - 100 + year : century + year;
+      int month = Integer.parseInt(tempIc.substring(2, 4));
+      int day = Integer.parseInt(tempIc.substring(4, 6));
+      this.birthDate = LocalDate.of(year, month, day);
+    }
+    return this.birthDate;
   }
 
   public int getAge() {

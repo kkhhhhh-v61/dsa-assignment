@@ -2,6 +2,7 @@ package utility;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 /**
  *
@@ -65,10 +66,40 @@ public class Validation {
 
   public boolean checkIcNumberFormat(String input) {
     String format = "\\d{6}-\\d{2}-\\d{4}";
-    if (input.matches(format)) {
-      return true;
+    return input.matches(format);
+  }
+
+  public boolean checkIsValidIcBirthDate(String input) {
+    try {
+      int year = Integer.parseInt(input.substring(0, 2));
+      int month = Integer.parseInt(input.substring(2, 4));
+      int day = Integer.parseInt(input.substring(4, 6));
+      
+      int monthInt = Integer.parseInt(input.substring(2, 4));
+      if (monthInt < 1 || monthInt > 12) {
+        return false;
+      }
+      
+      int dayInt = Integer.parseInt(input.substring(4, 6));
+      int daysInMonth = LocalDate.of(year, monthInt, 1).lengthOfMonth();
+      if (dayInt < 1 || dayInt > daysInMonth) {
+        return false;
+      }
+
+      int currentYear = LocalDate.now().getYear();
+      int century = (currentYear / 100) * 100;
+      year = year > (currentYear % 100) ? century - 100 + year : century + year;
+
+      LocalDate birthDate = LocalDate.of(year, month, day);
+
+      if (birthDate.isAfter(LocalDate.now())) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (NumberFormatException | DateTimeParseException e) {
+      return false;
     }
-    return false;
   }
   
   public boolean checkContactNumberFormat(String input) {
@@ -86,6 +117,7 @@ public class Validation {
   }
 
   public boolean checkIsNumeric(String input) {
+    input = input.replaceAll("[\\s-]", "");
     return input.matches("^\\d+$");
   }
 }

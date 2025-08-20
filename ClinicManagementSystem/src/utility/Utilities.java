@@ -52,19 +52,35 @@ public class Utilities {
 
   public String formatName(String name) {
     if (!name.isEmpty()) {
-      char firstChar = name.charAt(0); // get the first char
-      if (Character.isLowerCase(firstChar)) { // check if first char is lowercase
-        name = Character.toUpperCase(firstChar) + name.substring(1); // capitalize first char
+      StringBuilder capitalizeName = new StringBuilder();
+      String[] words = name.split("\\s+");
+      for (String word : words) {
+        if (!word.isEmpty()) {
+          capitalizeName.append(Character.toUpperCase(word.charAt(0)) + word.substring(1));
+        }
       }
-      name = name.replaceAll("(?<!^)(?=[A-Z])", " "); // add space between each word
+      String noSpacesName = capitalizeName.toString().replaceAll(" ", "");
+      return noSpacesName.replaceAll("(?<!^)(?=[A-Z])", " ");
     }
     return name;
+  }
+
+  public String formatIcNumber(String icNumber) {
+    if (!icNumber.isEmpty()) {
+      icNumber = icNumber.replaceAll("[\\s-]", "");
+      icNumber = icNumber.replaceAll("(\\d{6})(\\d{2})(\\d{4})", "$1-$2-$3");
+    }
+    return icNumber;
   }
 
   public String formatContactNumber(String contactNumber) {
     if (!contactNumber.isEmpty()) {
       contactNumber = contactNumber.replaceAll("[\\s-]", "");
-      contactNumber = contactNumber.replaceAll("(\\d{3})(\\d{4})", "$1-$2 ");
+      if (contactNumber.length() == 10) {
+        contactNumber = contactNumber.replaceAll("(\\d{3})(\\d{3})", "$1-$2 ");
+      } else if (contactNumber.length() == 11) {
+        contactNumber = contactNumber.replaceAll("(\\d{3})(\\d{4})", "$1-$2 ");
+      }
     }
     return contactNumber;
   }

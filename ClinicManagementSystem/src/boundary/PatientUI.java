@@ -84,7 +84,8 @@ public class PatientUI {
       final char[] INPUT_OPTIONS = { '0' };
       final int MAX_LENGTH = 35;
       displayPatientRegistrationUI();
-      System.out.println("Format : Capitalize the first letter of each separate word for best result. Spaces are optional.");
+      System.out.println("Format : Use either capitalization or spaces to identify separate words for best results.");
+      System.out.println("Example: 'Your Name', 'yourName', 'your name'");
       System.out.println("[0] Cancel");
       System.out.print("Enter Patient Name : ");
       input = scanner.nextLine().trim();
@@ -208,27 +209,43 @@ public class PatientUI {
   public void displayListLeftUI(RedBlackTreeMap<String, Patient> patientMap, int page) {
     utilities.clearScreen();
     System.out.println("+===========================================================================================================+");
-    System.out.printf("| [<-E]                                   [PT1] PATIENT LIST [PG%02d]                                   [Q->] |\n", page);
+    System.out.printf("|                                         [PT1] PATIENT LIST [PG%02d]                                         |\n", page);
     System.out.println("+===========================================================================================================+");
     System.out.println("|  PID  |       IC       |              FULL NAME              | GENDER | BIRTH DATE | AGE | CONTACT NUMBER |");
     System.out.println("+===========================================================================================================+");
-    ListInterface<String> keys = patientMap.getKeys();
-    for (int i = 0; i < keys.size(); i++) {
-      System.out.println(patientMap.get(keys.getEntry(i)).toStringListLeft());
+    
+    if (patientMap.isEmpty()) {
+      System.out.println("|                                  No Patient records found in the system.                                  |");
+    } else {
+      int startIndex = (page - 1) * 10 + 1;
+      int endIndex = Math.min(startIndex + 9, patientMap.size());
+      ListInterface<String> keys = patientMap.getKeys();
+      for (int i = startIndex; i <= endIndex; i++) {
+        System.out.println(patientMap.get(keys.getEntry(i)).toStringListLeft());
+      }
     }
+    System.out.println("+===========================================================================================================+");
   }
 
   public void displayListRightUI(RedBlackTreeMap<String, Patient> patientMap, int page) {
     utilities.clearScreen();
     System.out.println("+===============================================================================================================+");
-    System.out.printf("| [<-E]                                   [PT2] PATIENT LIST [PG%02d]                                   [Q->] |\n", page);
+    System.out.printf("|                                           [PT2] PATIENT LIST [PG%02d]                                           |\n", page);
     System.out.println("+===============================================================================================================+");
     System.out.println("|  PID  |                EMAIL                |                    ADDRESS                    |  REG DATE  | BT |");
     System.out.println("+===============================================================================================================+");
-    ListInterface<String> keys = patientMap.getKeys();
-    for (int i = 0; i < keys.size(); i++) {
-      System.out.println(patientMap.get(keys.getEntry(i)).toStringListRight());
+    
+    if (patientMap.isEmpty()) {
+      System.out.println("|                                    No Patient records found in the system.                                    |");
+    } else {
+      int startIndex = (page - 1) * 10 + 1;
+      int endIndex = Math.min(startIndex + 9, patientMap.size());
+      ListInterface<String> keys = patientMap.getKeys();
+      for (int i = startIndex; i <= endIndex; i++) {
+        System.out.println(patientMap.get(keys.getEntry(i)).toStringListRight());
+      }
     }
+    System.out.println("+===============================================================================================================+");
   }
   
   public char displayListOptionSelection(char[] options) {
@@ -236,6 +253,6 @@ public class PatientUI {
     System.out.println("[E] Previous Page | [Q] Next Page | [W] Switch Part View");
     System.out.println("[1] View Details | [2] Update Record | [3] Remove Record | [0] Back");
     System.out.print("Select Option " + utilities.displayInputOptions(options) + " : ");
-    return scanner.nextLine().trim().charAt(0);
+    return Character.toUpperCase(scanner.nextLine().trim().charAt(0));
   }
 }

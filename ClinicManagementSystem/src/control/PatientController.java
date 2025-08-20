@@ -4,11 +4,9 @@ import adt.RedBlackTreeMap;
 import boundary.PatientUI;
 import entity.Patient;
 import utility.Enum.BloodType;
-import utility.Enum.Gender;
 import utility.MessageUI;
 import utility.Utilities;
 import utility.Validation;
-import java.time.LocalDate;
 
 /**
  *
@@ -43,74 +41,53 @@ public class PatientController {
                 exit1 = true;
               } else {
                 newPatient.setIcNumber(result);
-                result = utilities.formatName(utilities.removeSpaces(patientMaintenanceUI.inputPatientName()));
+                result = utilities.formatName(patientMaintenanceUI.inputPatientName());
                 if (result.equals("0")) {
                   exit1 = true;
                 } else {
                   newPatient.setName(result);
-                  result = String.valueOf(patientMaintenanceUI.inputPatientGender());
+                  newPatient.setGender(newPatient.identifyGender());
+                  newPatient.setBirthDate(newPatient.identifyBirthDate());
+                  newPatient.setAge(newPatient.calculateAge());
+                  result = patientMaintenanceUI.inputPatientContactNumber();
                   if (result.equals("0")) {
                     exit1 = true;
                   } else {
-                    switch (result.charAt(0)) {
-                      case '1':
-                        result = "Male";
-                        break;
-                      case '2':
-                        result = "Female";
-                        break;
-                      default:
-                        break;
-                    }
-                    newPatient.setGender(Gender.valueOf(result));
-                    result = patientMaintenanceUI.inputPatientBirthDate();
+                    newPatient.setContactNumber(utilities.formatContactNumber(result));
+                    result = patientMaintenanceUI.inputPatientEmail();
                     if (result.equals("0")) {
                       exit1 = true;
                     } else {
-                      newPatient.setBirthDate(LocalDate.parse(result));
-                      newPatient.setAge(newPatient.calculateAge());
-                      result = patientMaintenanceUI.inputPatientContactNumber();
+                      newPatient.setEmail(result);
+                      result = patientMaintenanceUI.inputPatientAddress();
                       if (result.equals("0")) {
                         exit1 = true;
                       } else {
-                        newPatient.setContactNumber(utilities.formatContactNumber(result));
-                        result = patientMaintenanceUI.inputPatientEmail();
+                        newPatient.setAddress(result);
+                        result = String.valueOf(patientMaintenanceUI.inputPatientBloodType());
                         if (result.equals("0")) {
                           exit1 = true;
                         } else {
-                          newPatient.setEmail(result);
-                          result = patientMaintenanceUI.inputPatientAddress();
-                          if (result.equals("0")) {
-                            exit1 = true;
-                          } else {
-                            newPatient.setAddress(result);
-                            result = String.valueOf(patientMaintenanceUI.inputPatientBloodType());
-                            if (result.equals("0")) {
-                              exit1 = true;
-                            } else {
-                              switch (result.charAt(0)) {
-                                case '1':
-                                  result = "A";
-                                  break;
-                                case '2':
-                                  result = "B";
-                                  break;
-                                case '3':
-                                  result = "AB";
-                                  break;
-                                case '4':
-                                  result = "O";
-                                  break;
-                                default:
-                                  break;
-                              }
-                              newPatient.setBloodType(BloodType.valueOf(result));
-                              // Store the patient in the HashMap using patientId as the key
-                              patientMap.put(newPatient.getPatientId(), newPatient);
-                              messageUI.displayPatientRegistrationSuccessMessage();
-                              exit1 = true;
-                            }
+                          switch (result.charAt(0)) {
+                            case '1':
+                              result = "A";
+                              break;
+                            case '2':
+                              result = "B";
+                              break;
+                            case '3':
+                              result = "AB";
+                              break;
+                            case '4':
+                              result = "O";
+                              break;
+                            default:
+                              break;
                           }
+                          newPatient.setBloodType(BloodType.valueOf(result));
+                          patientMap.put(newPatient.getPatientId(), newPatient);
+                          messageUI.displayPatientRegistrationSuccessMessage();
+                          exit1 = true;
                         }
                       }
                     }
@@ -177,9 +154,13 @@ public class PatientController {
         messageUI.displayInputOptionErrorMessage(options);
       }
     } else {
-      if (validation.checkIsNumeric(input.replace("-", ""))) { // check if input is numeric
+      if (validation.checkIsNumeric(input)) { // check if input is numeric
         if (validation.checkIcNumberFormat(input)) { // check if input matches the format
-          return true;
+          if (validation.checkIsValidIcBirthDate(input)) {
+            return true;
+          } else {
+            messageUI.displayInvalidIcBirthDateErrorMessage();
+          }
         } else {
           messageUI.displayFormatErrorMessage(format);
         }
