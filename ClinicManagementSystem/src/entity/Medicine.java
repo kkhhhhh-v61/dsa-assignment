@@ -94,6 +94,22 @@ public class Medicine {
     return "Medicine ID: " + medicineId + "\nName: " + name + "\nDescription: " + description + "\nCategory: " + category + "\nPrice: " + price + "\nStock Quantity: " + stockQuantity + "\nReorder Level: " + reorderLevel;
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    Medicine medicine = (Medicine) obj;
+    return medicineId.equals(medicine.medicineId);
+  }
+
+  public int compareTo(Medicine other) {
+    return this.name.compareTo(other.name);
+  }
+
   public String toFileString() {
     return medicineId + "|" + name + "|" + description + "|" + category + "|" + price + "|" + stockQuantity + "|" + reorderLevel;
   }

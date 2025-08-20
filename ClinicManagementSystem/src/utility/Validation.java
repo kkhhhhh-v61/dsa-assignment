@@ -39,6 +39,16 @@ public class Validation {
     }
   }
 
+  public static String displayInputOptions(char[] options) {
+    StringBuilder sb = new StringBuilder("(");
+    for (char option : options) {
+      sb.append(option).append("/");
+    }
+    sb.deleteCharAt(sb.length() - 1); // Remove trailing slash
+    sb.append(")");
+    return sb.toString();
+  }
+
   public boolean checkInputOptionsMatch(char[] inputOptions, char input) {
     for (char option : inputOptions) {
       if (option == input) {

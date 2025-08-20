@@ -4,7 +4,8 @@ import adt.ListInterface;
 import adt.ArrayList;
 import entity.Medicine;
 import entity.PrescribedMedicine;
-import utility.Enum.MedicineCategory; // Assuming this enum is used for Medicine
+import utility.Enum.MedicineCategory;
+import utility.DataManager; // Import DataManager
 
 /**
  *
@@ -15,18 +16,7 @@ public class PharmacyController {
     private ListInterface<Medicine> medicineList;
 
     public PharmacyController() {
-        medicineList = new ArrayList<>();
-        // Initialize with some dummy data for testing
-        initializeMedicineData();
-    }
-
-    // For testing purposes, to be replaced by actual data loading
-    private void initializeMedicineData() {
-        medicineList.add(new Medicine("Paracetamol", "Pain reliever", MedicineCategory.Tablet, 5.50, 100, 20));
-        medicineList.add(new Medicine("Amoxicillin", "Antibiotic", MedicineCategory.Capsule, 12.00, 50, 10));
-        medicineList.add(new Medicine("Loratadine", "Antihistamine", MedicineCategory.Liquid, 8.75, 75, 15));
-        medicineList.add(new Medicine("Omeprazole", "Antacid", MedicineCategory.Tablet, 15.20, 60, 12));
-        medicineList.add(new Medicine("Insulin", "Diabetes medication", MedicineCategory.Syringe, 45.00, 30, 5));
+        medicineList = DataManager.loadMedicines(); // Load medicines from file
     }
 
     public ListInterface<Medicine> getAllMedicines() {
@@ -45,7 +35,11 @@ public class PharmacyController {
 
     public boolean addMedicine(Medicine medicine) {
         if (getMedicineById(medicine.getMedicineId()) == null) {
-            return medicineList.add(medicine);
+            boolean added = medicineList.add(medicine);
+            if (added) {
+                DataManager.saveMedicines(medicineList); // Save after adding
+            }
+            return added;
         }
         return false; // Medicine with this ID already exists
     }
@@ -55,6 +49,7 @@ public class PharmacyController {
             Medicine medicine = medicineList.getEntry(i);
             if (medicine.getMedicineId().equals(updatedMedicine.getMedicineId())) {
                 medicineList.replace(i, updatedMedicine);
+                DataManager.saveMedicines(medicineList); // Save after updating
                 return true;
             }
         }
@@ -65,7 +60,11 @@ public class PharmacyController {
         for (int i = 0; i < medicineList.size(); i++) {
             Medicine medicine = medicineList.getEntry(i);
             if (medicine.getMedicineId().equals(medicineId)) {
-                return medicineList.remove(i);
+                boolean removed = medicineList.remove(i);
+                if (removed) {
+                    DataManager.saveMedicines(medicineList); // Save after deleting
+                }
+                return removed;
             }
         }
         return false;
@@ -87,7 +86,7 @@ public class PharmacyController {
                 int requiredQuantity = pm.getTimesPerDay() * pm.getDuration(); // Simple calculation for required quantity
                 if (medicine.getStockQuantity() >= requiredQuantity) {
                     medicine.setStockQuantity(medicine.getStockQuantity() - requiredQuantity);
-                    updateMedicine(medicine); // Update the medicine in the list
+                    updateMedicine(medicine); // Update the medicine in the list (which also saves)
                 } else {
                     System.out.println("Insufficient stock for " + medicine.getName() + ". Required: " + requiredQuantity + ", Available: " + medicine.getStockQuantity());
                     allDispensed = false;
@@ -96,6 +95,9 @@ public class PharmacyController {
                 System.out.println("Medicine with ID " + pm.getMedicineId() + " not found.");
                 allDispensed = false;
             }
+        }
+        if (allDispensed) {
+            DataManager.saveMedicines(medicineList); // Save after all dispensing operations are complete
         }
         return allDispensed;
     }

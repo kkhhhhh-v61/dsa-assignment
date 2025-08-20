@@ -6,8 +6,8 @@ import entity.Patient;
 import utility.Enum.BloodType;
 import utility.Enum.Gender;
 import utility.MessageUI;
-import utility.Utilities;
 import utility.Validation;
+import utility.Format; // Import Format
 import java.time.LocalDate;
 
 /**
@@ -16,8 +16,6 @@ import java.time.LocalDate;
  */
 public class PatientController {
   private final static PatientUI patientMaintenanceUI = new PatientUI();
-  // private final static MessageUI messageUI = new MessageUI(); // Now static
-  private final static Utilities utilityUI = new Utilities();
   private final static Validation validation = new Validation();
   private final static HashMap<String, Patient> patientMap = new HashMap<>();
 
@@ -43,7 +41,7 @@ public class PatientController {
                 exit1 = true;
               } else {
                 newPatient.setIcNumber(result);
-                result = utilityUI.formatName(utilityUI.removeSpaces(patientMaintenanceUI.inputPatientName()));
+                result = Format.formatName(Format.removeSpaces(patientMaintenanceUI.inputPatientName())); // Use Format.formatName and Format.removeSpaces
                 if (result.equals("0")) {
                   exit1 = true;
                 } else {
@@ -73,7 +71,7 @@ public class PatientController {
                       if (result.equals("0")) {
                         exit1 = true;
                       } else {
-                        newPatient.setContactNumber(utilityUI.formatContactNumber(result));
+                        newPatient.setContactNumber(Format.formatContactNumber(result)); // Use Format.formatContactNumber
                         result = patientMaintenanceUI.inputPatientEmail();
                         if (result.equals("0")) {
                           exit1 = true;
@@ -201,7 +199,7 @@ public class PatientController {
         MessageUI.displayNameErrorMessage();
         inputError = true;
       } else {
-        input = utilityUI.removeSpaces(input);
+        input = Format.removeSpaces(input); // Use Format.removeSpaces
         if (validation.checkIsContainSpecialCharacter(input)) { // check if input contains special characters
           MessageUI.displayCannotContainSpecialCharacterErrorMessage();
           return false;

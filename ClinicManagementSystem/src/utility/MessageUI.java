@@ -1,5 +1,7 @@
 package utility;
 
+import java.util.Scanner; // Import Scanner
+
 /**
  *
  * @author khtan
@@ -66,5 +68,31 @@ public class MessageUI {
 
     public static void displayCannotContainNumberErrorMessage() {
         System.err.println("[ERROR] Input cannot contain numbers.");
+    }
+
+    public static void clearScreen() {
+        // Clears the console screen. This is a common way to do it in Java for simple console apps.
+        // Note: This might not work on all IDEs or terminals.
+        try {
+            final String os = System.getProperty("os.name");
+            if (os.contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (final Exception e) {
+            // Handle exceptions
+            System.out.println("Error clearing screen: " + e.getMessage());
+        }
+    }
+
+    public static void displayBorder() {
+        System.out.println("+------------------------------------------------------------------------------------------------------------------+");
+    }
+
+    public static void displayContinueMessage() {
+        System.out.println("Press Enter to continue...");
+        new Scanner(System.in).nextLine(); // Wait for user to press Enter
     }
 }

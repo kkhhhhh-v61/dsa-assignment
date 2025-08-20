@@ -21,14 +21,11 @@ import java.time.LocalDate;
 import control.ClinicManagementSystem; // Import ClinicManagementSystem
 import java.time.LocalTime;
 
-<<<<<<< Updated upstream
-=======
 /**
  *
  * @author khtan
  * @author Cline
  */
->>>>>>> Stashed changes
 public class TestDriver {
   public static void main(String[] args) {
     // Run the Clinic Management System

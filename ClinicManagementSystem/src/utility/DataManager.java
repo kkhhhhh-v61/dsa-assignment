@@ -1,76 +1,125 @@
 package utility;
 
-import adt.ArrayList;
 import adt.ListInterface;
+import adt.ArrayList;
+import entity.Medicine;
 import entity.Consultation;
 import entity.Doctor;
 import entity.Patient;
-import java.io.BufferedReader;
-import java.io.FileReader;
+import utility.Enum.MedicineCategory;
+import utility.Enum.Status;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
+import java.util.Scanner;
 
 public class DataManager {
 
-    private static final String FILE_PATH = "consultations.txt";
+    private static final String MEDICINES_FILE = "medicines.txt";
+    private static final String CONSULTATIONS_FILE = "consultations.txt";
 
-    public static void saveConsultations(ListInterface<Consultation> consultationList) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH))) {
-            for (int i = 1; i <= consultationList.size(); i++) {
-                writer.println(consultationList.getEntry(i).toFileString());
+    public static ListInterface<Medicine> loadMedicines() {
+        ListInterface<Medicine> medicineList = new ArrayList<>();
+        File file = new File(MEDICINES_FILE);
+        if (!file.exists()) {
+            return medicineList;
+        }
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] data = line.split("\\|");
+                if (data.length == 7) {
+                    Medicine medicine = new Medicine(
+                            data[0], // medicineId
+                            data[1], // name
+                            MedicineCategory.valueOf(data[2]), // category
+                            Double.parseDouble(data[3]), // price
+                            Integer.parseInt(data[4]), // stockQuantity
+                            Integer.parseInt(data[5]) // reorderLevel
+                    );
+                    // Assuming medicineId is already set by the constructor if it's the first element
+                    // If not, it should be explicitly set: medicine.setMedicineId(data[0]);
+                    // The constructor for Medicine seems to take medicineId as the first argument, so it should be fine.
+                    medicineList.add(medicine);
+                }
+            }
+        } catch (Exception e) {
+            MessageUI.displayErrorMessage("Error loading medicines from file: " + e.getMessage());
+        }
+        return medicineList;
+    }
+
+    public static void saveMedicines(ListInterface<Medicine> medicineList) {
+        try (FileWriter writer = new FileWriter(MEDICINES_FILE, false)) {
+            for (int i = 0; i < medicineList.size(); i++) {
+                writer.write(medicineList.getEntry(i + 1).toFileString() + "\n");
             }
         } catch (IOException e) {
-            System.err.println("Error saving consultations to file: " + e.getMessage());
+            MessageUI.displayErrorMessage("Error saving medicines to file: " + e.getMessage());
         }
     }
 
     public static ListInterface<Consultation> loadConsultations() {
         ListInterface<Consultation> consultationList = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
+        File file = new File(CONSULTATIONS_FILE);
+        if (!file.exists()) {
+            return consultationList;
+        }
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
                 String[] data = line.split("\\|");
-                
-                // Recreate Patient and Doctor objects (simplified)
-                Patient patient = new Patient();
-                patient.setPatientId(data[1]);
-                Doctor doctor = new Doctor();
-                doctor.setDoctorId(data[2]);
+                if (data.length == 9) {
+                    Patient patient = new Patient();
+                    patient.setPatientId(data[1]); // Assuming patient ID is at index 1
+                    Doctor doctor = new Doctor();
+                    doctor.setDoctorId(data[0]); // Assuming doctor ID is at index 0
+                    
+                    ArrayList<String> symptoms = new ArrayList<>();
+                    String[] symptomArray = data[4].replace("[", "").replace("]", "").split(",");
+                    for(String s : symptomArray){
+                        if(!s.trim().isEmpty()) symptoms.add(s.trim());
+                    }
+                    
+                    ArrayList<String> diagnosis = new ArrayList<>();
+                    String[] diagnosisArray = data[5].replace("[", "").replace("]", "").split(",");
+                     for(String s : diagnosisArray){
+                        if(!s.trim().isEmpty()) diagnosis.add(s.trim());
+                    }
 
-                // Recreate symptoms and diagnosis lists
-                ArrayList<String> symptoms = new ArrayList<>();
-                String[] sympArr = data[5].replace("[", "").replace("]", "").split(", ");
-                for(String s : sympArr) {
-                    if(!s.isEmpty()) symptoms.add(s);
+                    Consultation consultation = new Consultation(
+                            doctor,
+                            patient,
+                            LocalDate.parse(data[2]), // Assuming date is at index 2
+                            LocalTime.parse(data[3]), // Assuming time is at index 3
+                            symptoms,
+                            diagnosis,
+                            data[6], // Assuming remarks is at index 6
+                            Status.valueOf(data[7]) // Assuming status is at index 7
+                    );
+                    consultation.setConsultationId(data[8]); // Assuming consultation ID is at index 8
+                    consultationList.add(consultation);
                 }
-
-                ArrayList<String> diagnosis = new ArrayList<>();
-                String[] diagArr = data[6].replace("[", "").replace("]", "").split(", ");
-                 for(String d : diagArr) {
-                    if(!d.isEmpty()) diagnosis.add(d);
-                }
-
-                Consultation consultation = new Consultation(
-                    doctor,
-                    patient,
-                    LocalDate.parse(data[3]),
-                    LocalTime.parse(data[4]),
-                    symptoms,
-                    diagnosis,
-                    data[7],
-                    Enum.Status.valueOf(data[8])
-                );
-                consultation.setConsultationId(data[0]); // Set the original ID
-                consultationList.add(consultation);
             }
-        } catch (IOException e) {
-            // File might not exist on first run, which is fine.
-            System.out.println("No existing consultation data found. Starting fresh.");
+        } catch (Exception e) {
+            MessageUI.displayErrorMessage("Error loading consultations from file: " + e.getMessage());
         }
         return consultationList;
+    }
+
+    public static void saveConsultations(ListInterface<Consultation> consultationList) {
+        try (FileWriter writer = new FileWriter(CONSULTATIONS_FILE, false)) {
+            for (int i = 0; i < consultationList.size(); i++) {
+                writer.write(consultationList.getEntry(i).toFileString() + "\n");
+            }
+        } catch (IOException e) {
+            MessageUI.displayErrorMessage("Error saving consultations to file: " + e.getMessage());
+        }
     }
 }

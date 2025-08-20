@@ -1,0 +1,1 @@
+M0001|comma|good|Liquid|300.0|200|2
