@@ -28,8 +28,8 @@ public class DoctorDAO {
      * @param list     The list of objects to be saved.
      */
     public static <T> void saveToFile(String fileName, ListInterface<T> list) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
-            for (int i = 0; i < list.size(); i++) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("./data/" + fileName))) {
+            for (int i = 1; i <= list.size(); i++) {
                 // Assumes the object has a toFileString() method that returns a pipe-delimited string
                 writer.println(list.get(i).getClass().getMethod("toFileString").invoke(list.get(i)));
             }
@@ -50,7 +50,7 @@ public class DoctorDAO {
      * @param parser   A function that takes a string array (from a split line) and returns an object of type T.
      */
     public static <T> void loadFromFile(String fileName, ListInterface<T> list, Function<String[], T> parser) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("./data/" + fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (!line.trim().isEmpty()) {

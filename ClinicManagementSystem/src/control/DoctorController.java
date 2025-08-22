@@ -82,7 +82,7 @@ public class DoctorController {
     }
 
     public Doctor getDoctorById(String doctorId) {
-        for (int i = 0; i < doctorList.size(); i++) {
+        for (int i = 1; i <= doctorList.size(); i++) {
             if (doctorList.get(i).getDoctorId().equals(doctorId)) {
                 return doctorList.get(i);
             }
@@ -93,7 +93,7 @@ public class DoctorController {
     public ListInterface<String> updateDoctor(Doctor updatedDoctor) {
         ListInterface<String> errors = DoctorValidator.validateDoctor(updatedDoctor, doctorList);
         if (errors.isEmpty()) {
-            for (int i = 0; i < doctorList.size(); i++) {
+            for (int i = 1; i <= doctorList.size(); i++) {
                 if (doctorList.get(i).getDoctorId().equals(updatedDoctor.getDoctorId())) {
                     doctorList.replace(i, updatedDoctor);
                     saveData();
@@ -105,7 +105,7 @@ public class DoctorController {
     }
 
     public void deleteDoctor(String doctorId) {
-        for (int i = 0; i < doctorList.size(); i++) {
+        for (int i = 1; i <= doctorList.size(); i++) {
             if (doctorList.get(i).getDoctorId().equals(doctorId)) {
                 doctorList.remove(i);
                 deleteSchedulesForDoctor(doctorId);

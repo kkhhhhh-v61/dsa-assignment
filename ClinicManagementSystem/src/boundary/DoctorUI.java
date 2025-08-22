@@ -194,7 +194,7 @@ public class DoctorUI {
         }
         System.out.printf("%-10s | %-20s | %-15s | %s\n", "Doctor ID", "Name", "Specialization", "Contact No.");
         System.out.println("--------------------------------------------------------------------");
-        for (int i = 0; i < doctors.size(); i++) {
+        for (int i = 1; i <= doctors.size(); i++) {
             Doctor doc = doctors.get(i);
             System.out.printf("%-10s | %-20s | %-15s | %s\n", doc.getDoctorId(), doc.getName(), doc.getSpecialization(), doc.getContactNumber());
         }
