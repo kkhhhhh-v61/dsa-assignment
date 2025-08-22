@@ -28,6 +28,7 @@ public class DoctorUI {
     private final DoctorController doctorController = new DoctorController();
     private final Scanner scanner = new Scanner(System.in);
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public void showDoctorMenu() {
         int choice;
@@ -89,24 +90,21 @@ public class DoctorUI {
 
         // Ic
         while (true) {
-            System.out.print("Enter IC Number (YYMMDD-XX-XXXX): ");
+            System.out.print("Enter IC Number (e.g., 901231-14-1234): ");
             icNumber = scanner.nextLine();
-
-            String formatError = DoctorValidator.validateIcFormat(icNumber);
-            if (formatError != null) {
-                System.out.println("Error: " + formatError);
-                continue; // Repeat loop
+            String error = DoctorValidator.validateNewIcNumber(icNumber, doctorController.getAllDoctors());
+            if (error == null) {
+                break;
             }
-
-            // For a new doctor, the current ID is null or empty
-            String duplicateError = DoctorValidator.validateDuplicateIc(icNumber, "", doctorController.getAllDoctors());
-            if (duplicateError != null) {
-                System.out.println("Error: " + duplicateError);
-                continue; // Repeat loop
-            }
-
-            break; // Exit loop if both format and uniqueness are valid
+            System.out.println(error);
         }
+        
+        birthDate = DoctorValidator.getBirthDateFromIc(icNumber);
+        gender = DoctorValidator.getGenderFromIc(icNumber);
+        
+        System.out.println("IC Number accepted.");
+        System.out.println("Derived Birth Date: " + birthDate.format(dateFormatter));
+        System.out.println("Derived Gender: " + gender);
 
         // Name
         while (true) {
@@ -118,38 +116,7 @@ public class DoctorUI {
             }
             System.out.println("Error: " + error); // Show error and repeat loop
         }
-
-        // Gender
-        while (true) {
-            System.out.print("Enter Gender (1 = Male, 2 = Female): ");
-            String genderInput = scanner.nextLine();
-            if (genderInput.equals("1")) {
-                gender = Gender.Male;
-                break;
-            } else if (genderInput.equals("2")) {
-                gender = Gender.Female;
-                break;
-            } else {
-                System.out.println("Error: Please enter only '1' or '2'.");
-            }
-        }
-
-        // Birth Date
-        while (true) {
-            System.out.print("Enter Birth Date (YYYY-MM-DD): ");
-            String dateInput = scanner.nextLine();
-            try {
-                birthDate = LocalDate.parse(dateInput);
-                String error = DoctorValidator.validateBirthDate(birthDate);
-                if (error == null) {
-                    break; // Exit loop if valid
-                }
-                System.out.println("Error: " + error);
-            } catch (DateTimeParseException e) {
-                System.out.println("Error: Invalid date format. Please use YYYY-MM-DD.");
-            }
-        }
-
+   
         // Contack  Number
         while (true) {
             System.out.print("Enter Contact Number (e.g., 012-3456789): ");
@@ -199,8 +166,8 @@ public class DoctorUI {
             System.out.print("Enter your choice (1-" + choiceCount + "): ");
             try {
                 int choice = Integer.parseInt(scanner.nextLine());
-                if (choice > 0 && choice <= choiceCount) {
-                    specialization = availableSpecs[choice - 1];
+                if (choice >= 1 && choice <= choiceCount) {
+                    specialization = availableSpecs[choice];
                     break;
                 } else {
                     System.out.println("Error: Invalid choice. Please enter a number between 1 and " + choiceCount + ".");

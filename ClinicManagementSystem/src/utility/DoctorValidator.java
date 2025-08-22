@@ -10,6 +10,7 @@ import entity.Doctor;
 import entity.Schedule;
 import java.time.LocalDate;
 import java.util.regex.Pattern;
+import utility.Enum.Gender;
 
 /**
  *
@@ -35,25 +36,65 @@ public class DoctorValidator {
      * @return A list of error messages. An empty list means the doctor is
      * valid.
      */
-    // Name Validation
+    public static String validateNewIcNumber(String icNumber, ListInterface<Doctor> doctorList) {
+        if (icNumber == null || icNumber.trim().isEmpty()) {
+            return "Error: IC Number cannot be empty.";
+        }
+        if (!isIcNumberFormat(icNumber)) {
+            return "Error: Invalid IC format. Please use YYMMDD-XX-XXXX.";
+        }
+        if (getBirthDateFromIc(icNumber) == null) {
+            return "Error: The birth date in the IC is not a valid date (e.g., month is > 12).";
+        }
+        if (!isIcUnique(icNumber, doctorList)) {
+            return "Error: This IC Number already exists in the system.";
+        }
+        return null; // All checks passed
+    }
+
+    // === Individual Field Validators ===
     public static String validateName(String name) {
         if (name == null || name.trim().isEmpty()) {
             return "Doctor's name cannot be empty.";
         }
-        return null; // Valid
+        return null;
     }
 
-    // IC Number Validation
-    public static String validateIcFormat(String icNumber) {
-        if (icNumber == null || icNumber.trim().isEmpty()) {
-            return "IC number cannot be empty.";
+    public static String validateEmail(String email) {
+        if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
+            return "Invalid email format (e.g., user@example.com).";
         }
-        if (!IC_PATTERN.matcher(icNumber).matches()) {
-            return "Invalid IC Number format. Expected format: YYMMDD-XX-XXXX.";
-        }
-        return null; // Valid format
+        return null;
     }
 
+    public static String validatePhoneNumber(String phone) {
+        if (phone == null || !PHONE_PATTERN.matcher(phone).matches()) {
+            return "Invalid phone number format (e.g., 012-3456789).";
+        }
+        return null;
+    }
+
+    public static String validateAddress(String address) {
+        if (address == null || address.trim().isEmpty()) {
+            return "Address cannot be empty.";
+        }
+        return null;
+    }
+
+    // === IC Helper Methods ===
+    public static boolean isIcNumberFormat(String icNumber) {
+        return icNumber != null && IC_PATTERN.matcher(icNumber).matches();
+    }
+
+    public static boolean isIcUnique(String icNumber, ListInterface<Doctor> doctors) {
+        for (int i = 0; i < doctors.size(); i++) {
+            if (doctors.get(i).getIcNumber().equals(icNumber)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     public static String validateDuplicateIc(String icNumber, String currentDoctorId, ListInterface<Doctor> doctorList) {
         for (int i = 0; i < doctorList.size(); i++) {
             Doctor existingDoctor = doctorList.get(i);
@@ -62,56 +103,43 @@ public class DoctorValidator {
                 return "Another doctor with this IC number already exists.";
             }
         }
-        return null; // No duplicates
-    }
-
-    // Email Validation
-    public static String validateEmail(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            return "Email address cannot be empty.";
-        }
-        if (!EMAIL_PATTERN.matcher(email).matches()) {
-            return "Please enter a valid email address.";
-        }
         return null;
     }
 
-    // Contact Number Validation
-    public static String validatePhoneNumber(String contactNumber) {
-        if (contactNumber == null || contactNumber.trim().isEmpty()) {
-            return "Contact number cannot be empty.";
+    public static LocalDate getBirthDateFromIc(String icNumber) {
+        if (!isIcNumberFormat(icNumber)) {
+            return null;
         }
-        if (!PHONE_PATTERN.matcher(contactNumber).matches()) {
-            return "Invalid phone number format. Expected format: 01X-XXXXXXXX.";
+        String datePart = icNumber.substring(0, 6);
+        int year = Integer.parseInt(datePart.substring(0, 2));
+        int month = Integer.parseInt(datePart.substring(2, 4));
+        int day = Integer.parseInt(datePart.substring(4, 6));
+        year += (year > LocalDate.now().getYear() % 100) ? 1900 : 2000;
+        try {
+            return LocalDate.of(year, month, day);
+        } catch (Exception e) {
+            return null;
         }
-        return null; // Valid
-    }
-    
-    // Address Validation
-    public static String validateAddress(String address) {
-        if (address == null || address.trim().isEmpty()) {
-            return "Address cannot be empty.";
-        }
-        return null; // Valid
     }
 
-    // Birth Date Validation
-    public static String validateBirthDate(LocalDate birthDate) {
-        if (birthDate.isAfter(LocalDate.now())) {
-            return "Birth date cannot be in the future.";
+    public static Gender getGenderFromIc(String icNumber) {
+        if (!isIcNumberFormat(icNumber)) {
+            return Gender.Unknown;
         }
-        return null; // Valid
+        int lastDigit = Character.getNumericValue(icNumber.charAt(icNumber.length() - 1));
+        return (lastDigit % 2 == 0) ? Gender.Female : Gender.Male;
     }
 
+    // === Comprehensive Doctor Validator (as requested) ===
     public static ListInterface<String> validateDoctor(Doctor doctor, ListInterface<Doctor> doctorList) {
         ListInterface<String> errors = new ArrayList<>();
-        // This method can now be a collection of the smaller checks
         addError(errors, validateName(doctor.getName()));
-        addError(errors, validateIcFormat(doctor.getIcNumber()));
         addError(errors, validateEmail(doctor.getEmail()));
-        if (validateIcFormat(doctor.getIcNumber()) == null) { // Only check for duplicates if format is OK
-            addError(errors, validateDuplicateIc(doctor.getIcNumber(), doctor.getDoctorId(), doctorList));
-        }
+        addError(errors, validatePhoneNumber(doctor.getContactNumber()));
+        addError(errors, validateAddress(doctor.getAddress()));
+        // Use the comprehensive IC validator, but adapt it for updates vs. new entries
+        addError(errors, validateDuplicateIc(doctor.getIcNumber(), doctor.getDoctorId(), doctorList));
+        
         return errors;
     }
 
