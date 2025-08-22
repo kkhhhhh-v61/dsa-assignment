@@ -1,5 +1,8 @@
 package utility;
 
+// import java.awt.AWTException;
+// import java.awt.Robot;
+// import java.awt.event.KeyEvent;
 import java.util.Scanner;
 
 /**
@@ -15,11 +18,28 @@ public class Utilities {
       e.printStackTrace();
     }
   }
-  
+
   public static void clearScreen() {
     System.out.print("\033[H\033[2J");
     System.out.flush();
   }
+
+  // public static void clearScreen() {
+  //   try {
+  //     Robot rob = new Robot();
+  //     try {
+  //       rob.keyPress(KeyEvent.VK_CONTROL); // press "CTRL"
+  //       rob.keyPress(KeyEvent.VK_L); // press "L"
+  //       rob.keyRelease(KeyEvent.VK_L); // unpress "L"
+  //       rob.keyRelease(KeyEvent.VK_CONTROL); // unpress "CTRL"
+  //       Thread.sleep(100); // add delay in milisecond, if not there will automatically stop after clear
+  //     } catch (InterruptedException e) {
+  //       e.printStackTrace();
+  //     }
+  //   } catch (AWTException e) {
+  //     e.printStackTrace();
+  //   }
+  // }
 
   public static Scanner getUserInput() {
     return new Scanner(System.in);

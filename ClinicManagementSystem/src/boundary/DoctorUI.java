@@ -167,7 +167,7 @@ public class DoctorUI {
             try {
                 int choice = Integer.parseInt(scanner.nextLine());
                 if (choice >= 1 && choice <= choiceCount) {
-                    specialization = availableSpecs[choice];
+                    specialization = availableSpecs[choice - 1];
                     break;
                 } else {
                     System.out.println("Error: Invalid choice. Please enter a number between 1 and " + choiceCount + ".");
@@ -391,7 +391,7 @@ public class DoctorUI {
             System.out.println("No schedules found for this doctor.");
             return;
         }
-        for (int i = 0; i < schedules.size(); i++) {
+        for (int i = 1; i <= schedules.size(); i++) {
             System.out.println(schedules.get(i).toString());
         }
     }

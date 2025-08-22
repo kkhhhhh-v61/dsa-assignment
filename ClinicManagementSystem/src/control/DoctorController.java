@@ -131,7 +131,7 @@ public class DoctorController {
 
     public ListInterface<Schedule> getSchedulesForDoctor(String doctorId) {
         ListInterface<Schedule> doctorSchedules = new ArrayList<>();
-        for (int i = 0; i < scheduleList.size(); i++) {
+        for (int i = 1; i <= scheduleList.size(); i++) {
             Schedule currentSchedule = scheduleList.get(i);
             if (currentSchedule.doctorId().equals(doctorId)) {
                 doctorSchedules.add(currentSchedule);
@@ -141,7 +141,7 @@ public class DoctorController {
     }
     
     public void updateSchedule(Schedule updatedSchedule) {
-        for (int i = 0; i < scheduleList.size(); i++) {
+        for (int i = 1; i <= scheduleList.size(); i++) {
             if (scheduleList.get(i).getScheduleId().equals(updatedSchedule.getScheduleId())) {
                 scheduleList.replace(i, updatedSchedule);
                 saveData();
@@ -151,7 +151,7 @@ public class DoctorController {
     }
 
     public void deleteSchedule(String scheduleId) {
-        for (int i = 0; i < scheduleList.size(); i++) {
+        for (int i = 1; i <= scheduleList.size(); i++) {
             if (scheduleList.get(i).getScheduleId().equals(scheduleId)) {
                 scheduleList.remove(i);
                 saveData();

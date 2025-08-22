@@ -96,7 +96,7 @@ public class DoctorValidator {
     }
     
     public static String validateDuplicateIc(String icNumber, String currentDoctorId, ListInterface<Doctor> doctorList) {
-        for (int i = 0; i < doctorList.size(); i++) {
+        for (int i = 1; i <= doctorList.size(); i++) {
             Doctor existingDoctor = doctorList.get(i);
             if (!existingDoctor.getDoctorId().equals(currentDoctorId)
                     && existingDoctor.getIcNumber().equalsIgnoreCase(icNumber)) {
