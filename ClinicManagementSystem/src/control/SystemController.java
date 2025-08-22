@@ -1,5 +1,6 @@
 package control;
 
+import boundary.DoctorUI;
 import boundary.SystemUI;
 
 /**
@@ -11,6 +12,7 @@ public class SystemController {
   SystemUI systemUI = new SystemUI();
   
   PatientController patientController = new PatientController();
+  DoctorUI doctorUI = new DoctorUI();
   
   public void runClinicStaffPortal() {
     boolean exit = false;
@@ -26,6 +28,7 @@ public class SystemController {
           patientController.runPatientManagement();
           break;
         case '2':
+          doctorUI.showDoctorMenu();
           break;
         case '3':
           break;

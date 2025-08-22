@@ -111,6 +111,10 @@ public class Doctor extends Person {
   public String toString() {
     return "Doctor ID: " + doctorId + "\nSpecialization: " + specialization + "\nYears of Experience: " + yearsOfExperience + "\nDuty Schedule: " + dutySchedule + "\nAppointment Records: " + appointmentRecords + "\nConsultation Records: " + consultationRecords + "\nTreatment Records: " + treatmentRecords;
   }
+  
+  public String toStringComplete() {
+    return "Doctor ID: " + doctorId + "\n" + super.toString() + "\nSpecialization: " + specialization + "\nYears of Experience: " + getYearsOfExperience();
+  }
 
   public String toFileString() {
     return doctorId + "|" + specialization + "|" + yearsOfExperience + "|" + dutySchedule + "|" + appointmentRecords + "|" + consultationRecords + "|" + treatmentRecords;

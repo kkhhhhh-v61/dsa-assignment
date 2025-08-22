@@ -26,4 +26,8 @@
 
 [TODO]
 - add value modification in the registration confirmation check details screen
-- ensure that each entered ic number, contact number, and email are unique
+
+
+[Integration]
+- Brian
+  - DoctorDAO (DONE)
