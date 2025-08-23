@@ -454,14 +454,6 @@ public class RedBlackTreeMap<K extends Comparable<K>, V> implements MapInterface
           if (patient.getIcNumber().equals(value)) {
             return true;
           }
-        } else if (attribute.equals("contactNumber")) {
-          if (patient.getContactNumber().equals(value)) {
-            return true;
-          }
-        } else if (attribute.equals("email")) {
-          if (patient.getEmail().equals(value)) {
-            return true;
-          }
         }
       }
 

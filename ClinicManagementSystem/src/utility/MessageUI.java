@@ -93,9 +93,9 @@ public class MessageUI {
     Utilities.wait(1000);
   }
 
-  public static void sameAsOld() {
+  public static void sameAsCurrent() {
     invalidInput();
-    System.out.println("Error! Input must be different from the old value.");
+    System.out.println("Error! Input must be different from the current value.");
     Utilities.wait(1000);
   }
 }

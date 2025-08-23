@@ -4,9 +4,7 @@ import adt.ListInterface;
 import adt.RedBlackTreeMap;
 import entity.Patient;
 import utility.Enum.BloodType;
-import utility.MessageUI;
 import utility.Utilities;
-import utility.Validation;
 
 /**
  *
@@ -35,7 +33,7 @@ public class PatientUI {
     System.out.println();
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };    
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };    
   }
   
   public String[] inputPatientId() {
@@ -56,7 +54,7 @@ public class PatientUI {
     System.out.println("[0] Exit");
 
     System.out.print("> P");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] inputIcNumber() {
@@ -77,7 +75,7 @@ public class PatientUI {
     System.out.println("[0] Exit");
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] inputPatientName() {
@@ -101,7 +99,7 @@ public class PatientUI {
     System.out.println("[0] Exit");
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
   }
   
   public String[] inputContactNumber() {
@@ -120,7 +118,7 @@ public class PatientUI {
     System.out.println("[0] Exit");
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] inputEmail() {
@@ -140,7 +138,7 @@ public class PatientUI {
     System.out.println("[0] Exit");
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
   }
   
   public String[] inputAddress() {
@@ -159,7 +157,7 @@ public class PatientUI {
     System.out.println("[0] Exit");
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
   }
   
   public String[] inputBloodType() {
@@ -178,7 +176,7 @@ public class PatientUI {
     System.out.println("[0] Exit");
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] confirmRegistration(Patient patient) {
@@ -210,7 +208,7 @@ public class PatientUI {
     System.out.println("[1] Confirm | [2] Edit | [0] Cancel");
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
 
   public String[] runPatientRecordListMenu(RedBlackTreeMap<String, Patient> patientMap, String ui, int page) {
@@ -271,7 +269,7 @@ public class PatientUI {
     System.out.println("[1] Edit Record | [2] Delete Record | [0] Return");
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] runPatientEditMenu(Patient patient, String ui) {
@@ -317,7 +315,7 @@ public class PatientUI {
     System.out.println("[W] Switch Part View | [0] Return");
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] editIcNumber(String icNumber) {
@@ -339,9 +337,9 @@ public class PatientUI {
 
     System.out.println();
 
-    System.out.println("Old IC Number: " + icNumber);
+    System.out.println("Current IC Number: " + icNumber);
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] editPatientName(String name) {
@@ -366,9 +364,9 @@ public class PatientUI {
 
     System.out.println();
 
-    System.out.println("Old Patient Name: " + name);
+    System.out.println("Current Patient Name: " + name);
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
   }
   
   public String[] editContactNumber(String contactNumber) {
@@ -388,9 +386,9 @@ public class PatientUI {
 
     System.out.println();
 
-    System.out.println("Old Contact Number: " + contactNumber);
+    System.out.println("Current Contact Number: " + contactNumber);
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] editEmail(String email) {
@@ -411,9 +409,9 @@ public class PatientUI {
 
     System.out.println();
 
-    System.out.println("Old Email: " + email);
+    System.out.println("Current Email: " + email);
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
   }
   
   public String[] editAddress(String address) {
@@ -433,9 +431,9 @@ public class PatientUI {
 
     System.out.println();
 
-    System.out.println("Old Address: " + address);
+    System.out.println("Current Address: " + address);
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
   }
   
   public String[] editBloodType(BloodType bloodType) {
@@ -455,14 +453,14 @@ public class PatientUI {
 
     System.out.println();
 
-    System.out.println("Old Blood Type: " + bloodType);
+    System.out.println("Current Blood Type: " + bloodType);
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] confirmEdit(String field, String oldValue, String newValue) {
 
-    final char[] INPUT_OPTIONS = { '1', '2' };
+    final char[] INPUT_OPTIONS = { '1', '0' };
 
     System.out.println();
 
@@ -473,10 +471,10 @@ public class PatientUI {
     System.out.println("+----------------------+");
 
     System.out.println(field + ": " + oldValue + " -> " + newValue);
-    System.out.println("[1] Confirm | [2] Cancel");
+    System.out.println("[1] Confirm | [0] Cancel");
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] runPatientDeleteMenu(Patient patient, String ui) {
@@ -522,46 +520,24 @@ public class PatientUI {
     System.out.println("[1] Confirm | [0] Cancel");
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
-  public String runClearPatientRecord() {
+  public String[] runPatientClearance() {
 
     final char[] INPUT_OPTIONS = { '1', '0' };
-    
-    boolean exit = false;
-    String response = "X";
-    
-    do {
-      System.out.println();
 
-      Utilities.clearScreen();
+    System.out.println();
 
-      System.out.println("+----------------------+");
-      System.out.println("| Clear Patient Record |");
-      System.out.println("+----------------------+");
+    Utilities.clearScreen();
 
-      System.out.println("[1] Confirm | [0] Cancel");
+    System.out.println("+----------------------+");
+    System.out.println("| Clear Patient Record |");
+    System.out.println("+----------------------+");
 
-      System.out.print("> ");
-      String userInput = Utilities.getUserInput().nextLine();
+    System.out.println("[1] Confirm | [0] Cancel");
 
-      if (userInput != "") {
-        if (Validation.isSingleChar(userInput)) {
-          char option = userInput.charAt(0);
-
-          if (Validation.isValidOption(option, INPUT_OPTIONS)) {
-            response = String.valueOf(option);
-            exit = true;
-          } else {
-            MessageUI.notValidOption(INPUT_OPTIONS);
-          }
-        } else {
-          MessageUI.notSingleChar();
-        }
-      }
-    } while (!exit);
-
-    return response;
+    System.out.print("> ");
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
 }

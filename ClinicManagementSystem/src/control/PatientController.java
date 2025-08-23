@@ -35,6 +35,7 @@ public class PatientController {
 
     boolean exit = false;
     String[] response;
+    String[] vResponse;
     char userInput;
     char[] inputOptions;
 
@@ -55,11 +56,20 @@ public class PatientController {
                 runPatientRecordList();
                 break;
               case '3':
-                if (patientUI.runClearPatientRecord().equals("1")) {
-                  patientMap.clear();
-                  patientDAO.clearFile();
-                  Patient.setLastId(0);
-                  System.out.println("Patient records cleared.");
+                if (!patientMap.isEmpty()) {
+                  response = patientUI.runPatientClearance();
+                  vResponse = PatientValidation.validatePatientClearance(response[0], response[1].toCharArray());
+                  if (Boolean.parseBoolean(vResponse[0])) {
+                    if (vResponse[1].equals("1")) {
+                      patientMap.clear();
+                      patientDAO.clearFile();
+                      Patient.setLastId(0);
+                      System.out.println("Patient records cleared.");
+                      Utilities.wait(1000);
+                    }
+                  }
+                } else {
+                  System.out.println("Error! Clearance can only be performed when there are existing Patient records.");
                   Utilities.wait(1000);
                 }
                 break;
@@ -72,7 +82,7 @@ public class PatientController {
                   System.out.println("Initialization done.");
                   Utilities.wait(1000);
                 } else {
-                  System.out.println("Error! Initialization can only be done when there are no existing Patient records.");
+                  System.out.println("Error! Initialization can only be performed when there are no existing Patient records.");
                   Utilities.wait(1000);
                 }
                 break;
@@ -116,9 +126,10 @@ public class PatientController {
           newPatient.identifyBirthDate();
           newPatient.setAge(newPatient.calculateAge());
 
-          response = patientUI.inputPatientName();
-          vResponse = PatientValidation.validateName(response[0], response[1].toCharArray(),
-              Integer.parseInt(response[2]));
+          do {
+            response = patientUI.inputPatientName();
+            vResponse = PatientValidation.validateName(response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
+          } while (!Boolean.parseBoolean(vResponse[0]));
 
           if (Boolean.parseBoolean(vResponse[0])) {
             if (vResponse[1].equals("0")) {
@@ -126,8 +137,10 @@ public class PatientController {
             } else {
               newPatient.setName(Utilities.formatName(vResponse[1]));
 
-              response = patientUI.inputContactNumber();
-              vResponse = PatientValidation.validateContactNumber(response[0], response[1].toCharArray());
+              do {
+                response = patientUI.inputContactNumber();
+                vResponse = PatientValidation.validateContactNumber(response[0], response[1].toCharArray());
+              } while (!Boolean.parseBoolean(vResponse[0]));
 
               if (Boolean.parseBoolean(vResponse[0])) {
                 if (vResponse[1].equals("0")) {
@@ -135,9 +148,10 @@ public class PatientController {
                 } else {
                   newPatient.setContactNumber(Utilities.formatContactNumber(vResponse[1]));
 
-                  response = patientUI.inputEmail();
-                  vResponse = PatientValidation.validateEmail(response[0], response[1].toCharArray(),
-                      Integer.parseInt(response[2]));
+                  do {
+                    response = patientUI.inputEmail();
+                    vResponse = PatientValidation.validateEmail(response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
+                  } while (!Boolean.parseBoolean(vResponse[0]));
 
                   if (Boolean.parseBoolean(vResponse[0])) {
                     if (vResponse[1].equals("0")) {
@@ -145,9 +159,10 @@ public class PatientController {
                     } else {
                       newPatient.setEmail(vResponse[1]);
 
-                      response = patientUI.inputAddress();
-                      vResponse = PatientValidation.validateAddress(response[0], response[1].toCharArray(),
-                          Integer.parseInt(response[2]));
+                      do {
+                        response = patientUI.inputAddress();
+                        vResponse = PatientValidation.validateAddress(response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
+                      } while (!Boolean.parseBoolean(vResponse[0]));
 
                       if (Boolean.parseBoolean(vResponse[0])) {
                         if (vResponse[1].equals("0")) {
@@ -155,8 +170,10 @@ public class PatientController {
                         } else {
                           newPatient.setAddress(vResponse[1]);
 
-                          response = patientUI.inputBloodType();
-                          vResponse = PatientValidation.validateBloodType(response[0], response[1].toCharArray());
+                          do {
+                            response = patientUI.inputBloodType();
+                            vResponse = PatientValidation.validateBloodType(response[0], response[1].toCharArray());
+                          } while (!Boolean.parseBoolean(vResponse[0]));
 
                           if (Boolean.parseBoolean(vResponse[0])) {
                             switch (vResponse[1]) {
@@ -201,6 +218,7 @@ public class PatientController {
               case "1":
                 patientMap.put(newPatient.getPatientId(), newPatient);
                 patientDAO.saveToFile(patientMap);
+                System.out.println();
                 System.out.println("Patient registered successfully.");
                 Utilities.wait(1000);
                 exit1 = true;
@@ -233,7 +251,7 @@ public class PatientController {
       Utilities.clearScreen();
 
       response = patientUI.runPatientEditMenu(patient, ui);
-      vResponse = PatientValidation.validatePatientId(patientMap, response[0], response[1].toCharArray());
+      vResponse = PatientValidation.validateRegistrationEdit(response[0], response[1].toCharArray());
 
       if (Boolean.parseBoolean(vResponse[0])) {
         switch (vResponse[1]) {
@@ -245,23 +263,30 @@ public class PatientController {
             }
             break;
           case "1":
-            response = patientUI.editIcNumber(patient.getIcNumber());
-            vResponse = PatientValidation.validateEditIcNumber(response[0], response[1].toCharArray(), patient.getIcNumber());
-            
+            do {
+              response = patientUI.editIcNumber(patient.getIcNumber());
+              vResponse = PatientValidation.validateEditIcNumber(response[0], response[1].toCharArray(), patient.getIcNumber());
+            } while (!Boolean.parseBoolean(vResponse[0]));
+
             if (Boolean.parseBoolean(vResponse[0])) {
               if (vResponse[1].equals("0")) {
                 exit = true;
               } else {
-                response = patientUI.confirmEdit("IC Number", patient.getIcNumber(), vResponse[1]);
-                vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+                String temp = Utilities.formatIcNumber(vResponse[1]);
+                do {
+                  response = patientUI.confirmEdit("IC Number", patient.getIcNumber(), temp);
+                  vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+                } while (!Boolean.parseBoolean(vResponse[0]));
 
                 if (Boolean.parseBoolean(vResponse[0])) {
                   switch (vResponse[1]) {
                     case "1":
-                      patient.setIcNumber(vResponse[1]);
+                      patient.setIcNumber(temp);
+                      patient.identifyGender();
+                      patient.identifyBirthDate();
+                      patient.setAge(patient.calculateAge());
                       break;
                     case "0":
-                      exit = true;
                       break;
                   }
                 }
@@ -269,23 +294,27 @@ public class PatientController {
             }
             break;
           case "2":
-            response = patientUI.editPatientName(patient.getName());
-            vResponse = PatientValidation.validateEditName(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patient.getName());
+            do {
+              response = patientUI.editPatientName(patient.getName());
+              vResponse = PatientValidation.validateEditName(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patient.getName());
+            } while (!Boolean.parseBoolean(vResponse[0]));
             
             if (Boolean.parseBoolean(vResponse[0])) {
               if (vResponse[1].equals("0")) {
                 exit = true;
               } else {
-                response = patientUI.confirmEdit("Patient Name", patient.getName(), vResponse[1]);
-                vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+                String temp = Utilities.formatName(vResponse[1]);
+                do {
+                  response = patientUI.confirmEdit("Patient Name", patient.getName(), temp);
+                  vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+                } while (!Boolean.parseBoolean(vResponse[0]));
 
                 if (Boolean.parseBoolean(vResponse[0])) {
                   switch (vResponse[1]) {
                     case "1":
-                      patient.setName(vResponse[1]);
+                      patient.setName(temp);
                       break;
                     case "0":
-                      exit = true;
                       break;
                   }
                 }
@@ -293,23 +322,27 @@ public class PatientController {
             }
             break;
           case "3":
-            response = patientUI.editContactNumber(patient.getContactNumber());
-            vResponse = PatientValidation.validateEditContactNumber(response[0], response[1].toCharArray(), patient.getContactNumber());
+            do {
+              response = patientUI.editContactNumber(patient.getContactNumber());
+              vResponse = PatientValidation.validateEditContactNumber(response[0], response[1].toCharArray(), patient.getContactNumber());
+            } while (!Boolean.parseBoolean(vResponse[0]));
             
             if (Boolean.parseBoolean(vResponse[0])) {
               if (vResponse[1].equals("0")) {
                 exit = true;
               } else {
-                response = patientUI.confirmEdit("Contact Number", patient.getContactNumber(), vResponse[1]);
-                vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+                String temp = Utilities.formatContactNumber(vResponse[1]);
+                do {
+                  response = patientUI.confirmEdit("Contact Number", patient.getContactNumber(), temp);
+                  vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+                } while (!Boolean.parseBoolean(vResponse[0]));
 
                 if (Boolean.parseBoolean(vResponse[0])) {
                   switch (vResponse[1]) {
                     case "1":
-                      patient.setContactNumber(vResponse[1]);
+                      patient.setContactNumber(temp);
                       break;
                     case "0":
-                      exit = true;
                       break;
                   }
                 }
@@ -317,23 +350,27 @@ public class PatientController {
             }
             break;
           case "4":
-            response = patientUI.editEmail(patient.getEmail());
-            vResponse = PatientValidation.validateEditEmail(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patient.getEmail());
+            do {
+              response = patientUI.editEmail(patient.getEmail());
+              vResponse = PatientValidation.validateEditEmail(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patient.getEmail());
+            } while (!Boolean.parseBoolean(vResponse[0]));
             
             if (Boolean.parseBoolean(vResponse[0])) {
               if (vResponse[1].equals("0")) {
                 exit = true;
               } else {
-                response = patientUI.confirmEdit("Email", patient.getEmail(), vResponse[1]);
-                vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+                String temp = vResponse[1];
+                do {
+                  response = patientUI.confirmEdit("Email", patient.getEmail(), temp);
+                  vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+                } while (!Boolean.parseBoolean(vResponse[0]));
 
                 if (Boolean.parseBoolean(vResponse[0])) {
                   switch (vResponse[1]) {
                     case "1":
-                      patient.setEmail(vResponse[1]);
+                      patient.setEmail(temp);
                       break;
                     case "0":
-                      exit = true;
                       break;
                   }
                 }
@@ -341,23 +378,27 @@ public class PatientController {
             }
             break;
           case "5":
-            response = patientUI.editAddress(patient.getAddress());
-            vResponse = PatientValidation.validateEditAddress(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patient.getAddress());
+            do {
+              response = patientUI.editAddress(patient.getAddress());
+              vResponse = PatientValidation.validateEditAddress(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patient.getAddress());
+            } while (!Boolean.parseBoolean(vResponse[0]));
             
             if (Boolean.parseBoolean(vResponse[0])) {
               if (vResponse[1].equals("0")) {
                 exit = true;
               } else {
-                response = patientUI.confirmEdit("Address", patient.getAddress(), vResponse[1]);
-                vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+                String temp = vResponse[1];
+                do {
+                  response = patientUI.confirmEdit("Address", patient.getAddress(), temp);
+                  vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+                } while (!Boolean.parseBoolean(vResponse[0]));
 
                 if (Boolean.parseBoolean(vResponse[0])) {
                   switch (vResponse[1]) {
                     case "1":
-                      patient.setAddress(vResponse[1]);
+                      patient.setAddress(temp);
                       break;
                     case "0":
-                      exit = true;
                       break;
                   }
                 }
@@ -365,34 +406,40 @@ public class PatientController {
             }
             break;
           case "6":
-            response = patientUI.editBloodType(patient.getBloodType());
-            vResponse = PatientValidation.validateEditBloodType(response[0], response[1].toCharArray(), String.valueOf(patient.getBloodType()));
+            do {
+              response = patientUI.editBloodType(patient.getBloodType());
+              vResponse = PatientValidation.validateEditBloodType(response[0], response[1].toCharArray(), String.valueOf(patient.getBloodType()));
+            } while (!Boolean.parseBoolean(vResponse[0]));
 
-            if (Boolean.parseBoolean(response[0])) {
-              if (vResponse[1].equals("0")) {
-                exit = true;
-              } else {
-                response = patientUI.confirmEdit("Blood Type", String.valueOf(patient.getBloodType()), vResponse[1]);
+            if (Boolean.parseBoolean(vResponse[0])) {
+              String temp = "";
+              switch (vResponse[1]) {
+                case "1":
+                  temp = "A";
+                  break;
+                case "2":
+                  temp = "B";
+                  break;
+                case "3":
+                  temp = "AB";
+                  break;
+                case "4":
+                  temp = "O";
+                  break;
+              }
+
+              do {
+                response = patientUI.confirmEdit("Blood Type", String.valueOf(patient.getBloodType()), temp);
                 vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+              } while (!Boolean.parseBoolean(vResponse[0]));
 
-                if (Boolean.parseBoolean(vResponse[0])) {
-                  switch (vResponse[1]) {
-                    case "1":
-                      patient.setBloodType(BloodType.A);
-                      break;
-                    case "2":
-                      patient.setBloodType(BloodType.B);
-                      break;
-                    case "3":
-                      patient.setBloodType(BloodType.AB);
-                      break;
-                    case "4":
-                      patient.setBloodType(BloodType.O);
-                      break;
-                    case "0":
-                      exit = true;
-                      break;
-                  }
+              if (Boolean.parseBoolean(vResponse[0])) {
+                switch (vResponse[1]) {
+                  case "1":
+                    patient.setBloodType(BloodType.valueOf(temp));
+                    break;
+                  case "0":
+                    break;
                 }
               }
             }
@@ -526,155 +573,163 @@ public class PatientController {
             }
             break;
           case "1":
-            response = patientUI.editIcNumber(patientMap.get(id).getIcNumber());
-            vResponse = PatientValidation.validateEditIcNumber(response[0], response[1].toCharArray(), patientMap.get(id).getIcNumber());
+            do {
+              response = patientUI.editIcNumber(patientMap.get(id).getIcNumber());
+              vResponse = PatientValidation.validateEditIcNumber(response[0], response[1].toCharArray(), patientMap.get(id).getIcNumber());
+            } while (!Boolean.parseBoolean(vResponse[0]));
             
-            if (Boolean.parseBoolean(vResponse[0])) {
-              if (vResponse[1].equals("0")) {
-                exit = true;
-              } else {
-                response = patientUI.confirmEdit("IC Number", patientMap.get(id).getIcNumber(), vResponse[1]);
+            if (!vResponse[1].equals("0")) {
+              String temp = Utilities.formatIcNumber(vResponse[1]);
+              do {
+                response = patientUI.confirmEdit("IC Number", patientMap.get(id).getIcNumber(), temp);
                 vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+              } while (!Boolean.parseBoolean(vResponse[0]));
 
-                if (Boolean.parseBoolean(vResponse[0])) {
-                  switch (vResponse[1]) {
-                    case "1":
-                      patientMap.get(id).setIcNumber(vResponse[1]);
-                      break;
-                    case "0":
-                      exit = true;
-                      break;
-                  }
+              if (Boolean.parseBoolean(vResponse[0])) {
+                switch (vResponse[1]) {
+                  case "1":
+                    patientMap.get(id).setIcNumber(temp);
+                    patientMap.get(id).identifyGender();
+                    patientMap.get(id).identifyBirthDate();
+                    patientMap.get(id).setAge(patientMap.get(id).calculateAge());
+                    patientDAO.saveToFile(patientMap);
+                    break;
+                  case "0":
+                    break;
                 }
               }
             }
             break;
           case "2":
-            response = patientUI.editPatientName(patientMap.get(id).getName());
-            vResponse = PatientValidation.validateEditName(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patientMap.get(id).getName());
+            do {
+              response = patientUI.editPatientName(patientMap.get(id).getName());
+              vResponse = PatientValidation.validateEditName(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patientMap.get(id).getName());
+            } while (!Boolean.parseBoolean(vResponse[0]));
             
-            if (Boolean.parseBoolean(vResponse[0])) {
-              if (vResponse[1].equals("0")) {
-                exit = true;
-              } else {
-                response = patientUI.confirmEdit("Patient Name", patientMap.get(id).getName(), vResponse[1]);
+            if (!vResponse[1].equals("0")) {
+              String temp = Utilities.formatName(vResponse[1]);
+              do {
+                response = patientUI.confirmEdit("Patient Name", patientMap.get(id).getName(), temp);
                 vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+              } while (!Boolean.parseBoolean(vResponse[0]));
 
-                if (Boolean.parseBoolean(vResponse[0])) {
-                  switch (vResponse[1]) {
-                    case "1":
-                      patientMap.get(id).setName(vResponse[1]);
-                      break;
-                    case "0":
-                      exit = true;
-                      break;
-                  }
+              if (Boolean.parseBoolean(vResponse[0])) {
+                switch (vResponse[1]) {
+                  case "1":
+                    patientMap.get(id).setName(temp);
+                    patientDAO.saveToFile(patientMap);
+                    break;
+                  case "0":
+                    break;
                 }
               }
             }
             break;
           case "3":
-            response = patientUI.editContactNumber(patientMap.get(id).getContactNumber());
-            vResponse = PatientValidation.validateEditContactNumber(response[0], response[1].toCharArray(), patientMap.get(id).getContactNumber());
+            do {
+              response = patientUI.editContactNumber(patientMap.get(id).getContactNumber());
+              vResponse = PatientValidation.validateEditContactNumber(response[0], response[1].toCharArray(), patientMap.get(id).getContactNumber());
+            } while (!Boolean.parseBoolean(vResponse[0]));
             
-            if (Boolean.parseBoolean(vResponse[0])) {
-              if (vResponse[1].equals("0")) {
-                exit = true;
-              } else {
-                response = patientUI.confirmEdit("Contact Number", patientMap.get(id).getContactNumber(), vResponse[1]);
+            if (!vResponse[1].equals("0")) {
+              String temp = Utilities.formatContactNumber(vResponse[1]);
+              do {
+                response = patientUI.confirmEdit("Contact Number", patientMap.get(id).getContactNumber(), temp);
                 vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+              } while (!Boolean.parseBoolean(vResponse[0]));
 
-                if (Boolean.parseBoolean(vResponse[0])) {
-                  switch (vResponse[1]) {
-                    case "1":
-                      patientMap.get(id).setContactNumber(vResponse[1]);
-                      break;
-                    case "0":
-                      exit = true;
-                      break;
-                  }
+              if (Boolean.parseBoolean(vResponse[0])) {
+                switch (vResponse[1]) {
+                  case "1":
+                    patientMap.get(id).setContactNumber(temp);
+                    patientDAO.saveToFile(patientMap);
+                    break;
+                  case "0":
+                    break;
                 }
               }
             }
             break;
           case "4":
-            response = patientUI.editEmail(patientMap.get(id).getEmail());
-            vResponse = PatientValidation.validateEditEmail(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patientMap.get(id).getEmail());
+            do {
+              response = patientUI.editEmail(patientMap.get(id).getEmail());
+              vResponse = PatientValidation.validateEditEmail(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patientMap.get(id).getEmail());
+            } while (!Boolean.parseBoolean(vResponse[0]));
             
-            if (Boolean.parseBoolean(vResponse[0])) {
-              if (vResponse[1].equals("0")) {
-                exit = true;
-              } else {
-                response = patientUI.confirmEdit("Email", patientMap.get(id).getEmail(), vResponse[1]);
+            if (!vResponse[1].equals("0")) {
+              String temp = vResponse[1];
+              do {
+                response = patientUI.confirmEdit("Email", patientMap.get(id).getEmail(), temp);
                 vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+              } while (!Boolean.parseBoolean(vResponse[0]));
 
-                if (Boolean.parseBoolean(vResponse[0])) {
-                  switch (vResponse[1]) {
-                    case "1":
-                      patientMap.get(id).setEmail(vResponse[1]);
-                      break;
-                    case "0":
-                      exit = true;
-                      break;
-                  }
+              if (Boolean.parseBoolean(vResponse[0])) {
+                switch (vResponse[1]) {
+                  case "1":
+                    patientMap.get(id).setEmail(temp);
+                    patientDAO.saveToFile(patientMap);
+                    break;
+                  case "0":
+                    break;
                 }
               }
             }
             break;
           case "5":
-            response = patientUI.editAddress(patientMap.get(id).getAddress());
-            vResponse = PatientValidation.validateEditAddress(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patientMap.get(id).getAddress());
+            do {
+              response = patientUI.editAddress(patientMap.get(id).getAddress());
+              vResponse = PatientValidation.validateEditAddress(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patientMap.get(id).getAddress());
+            } while (!Boolean.parseBoolean(vResponse[0]));
             
-            if (Boolean.parseBoolean(vResponse[0])) {
-              if (vResponse[1].equals("0")) {
-                exit = true;
-              } else {
-                response = patientUI.confirmEdit("Address", patientMap.get(id).getAddress(), vResponse[1]);
+            if (!vResponse[1].equals("0")) {
+              String temp = vResponse[1];
+              do {
+                response = patientUI.confirmEdit("Address", patientMap.get(id).getAddress(), temp);
                 vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+              } while (!Boolean.parseBoolean(vResponse[0]));
 
-                if (Boolean.parseBoolean(vResponse[0])) {
-                  switch (vResponse[1]) {
-                    case "1":
-                      patientMap.get(id).setAddress(vResponse[1]);
-                      break;
-                    case "0":
-                      exit = true;
-                      break;
-                  }
+              if (Boolean.parseBoolean(vResponse[0])) {
+                switch (vResponse[1]) {
+                  case "1":
+                    patientMap.get(id).setAddress(temp);
+                    patientDAO.saveToFile(patientMap);
+                    break;
+                  case "0":
+                    break;
                 }
               }
             }
             break;
           case "6":
-            response = patientUI.editBloodType(patientMap.get(id).getBloodType());
-            vResponse = PatientValidation.validateEditBloodType(response[0], response[1].toCharArray(), String.valueOf(patientMap.get(id).getBloodType()));
+            do {
+              response = patientUI.editBloodType(patientMap.get(id).getBloodType());
+              vResponse = PatientValidation.validateEditBloodType(response[0], response[1].toCharArray(), String.valueOf(patientMap.get(id).getBloodType()));
+            } while (!Boolean.parseBoolean(vResponse[0]));
 
-            if (Boolean.parseBoolean(response[0])) {
-              if (vResponse[1].equals("0")) {
-                exit = true;
-              } else {
-                response = patientUI.confirmEdit("Blood Type", String.valueOf(patientMap.get(id).getBloodType()), vResponse[1]);
+            if (!vResponse[1].equals("0")) {
+              String temp = "";
+              switch (vResponse[1]) {
+                case "1":
+                  temp = "A";
+                  break;
+                case "2":
+                  temp = "B";
+                  break;
+                case "3":
+                  temp = "AB";
+                  break;
+                case "4":
+                  temp = "O";
+                  break;
+              }
+              do {
+                response = patientUI.confirmEdit("Blood Type", String.valueOf(patientMap.get(id).getBloodType()), temp);
                 vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+              } while (!Boolean.parseBoolean(vResponse[0]));
 
-                if (Boolean.parseBoolean(vResponse[0])) {
-                  switch (vResponse[1]) {
-                    case "1":
-                      patientMap.get(id).setBloodType(BloodType.A);
-                      break;
-                    case "2":
-                      patientMap.get(id).setBloodType(BloodType.B);
-                      break;
-                    case "3":
-                      patientMap.get(id).setBloodType(BloodType.AB);
-                      break;
-                    case "4":
-                      patientMap.get(id).setBloodType(BloodType.O);
-                      break;
-                    case "0":
-                      exit = true;
-                      break;
-                  }
-                }
+              if (Boolean.parseBoolean(vResponse[0])) {
+                patientMap.get(id).setBloodType(BloodType.valueOf(temp));
+                patientDAO.saveToFile(patientMap);
               }
             }
             break;

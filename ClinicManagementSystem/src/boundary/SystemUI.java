@@ -37,7 +37,7 @@ public class SystemUI {
     System.out.println("+-------------------------+");
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] runClinicStaffMenu() {
@@ -62,7 +62,7 @@ public class SystemUI {
     System.out.println();
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] runStudentMenu() {
@@ -85,6 +85,6 @@ public class SystemUI {
     System.out.println();
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
 }
