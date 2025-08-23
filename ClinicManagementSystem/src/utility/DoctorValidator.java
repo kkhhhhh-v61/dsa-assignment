@@ -166,7 +166,7 @@ public class DoctorValidator {
         }
 
         // Overlap Validation
-        for (int i = 0; i < doctorSchedules.size(); i++) {
+        for (int i = 1; i <= doctorSchedules.size(); i++) {
             Schedule existing = doctorSchedules.get(i);
             if (schedule.getDay() == existing.getDay()) {
                 // Check for time overlap: (StartA < EndB) and (EndA > StartB)

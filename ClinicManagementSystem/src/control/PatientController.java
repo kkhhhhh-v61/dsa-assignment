@@ -26,13 +26,6 @@ public class PatientController {
   
   public void runPatientManagement() {
     patientMap = patientDAO.retrieveFromFile();
-    ArrayList<String> keys = patientMap.getKeys();
-    
-    if (!keys.isEmpty()) {
-      String lastKey = keys.get(keys.size());
-      String lastId = lastKey.substring(1);
-      Patient.setLastId(Integer.parseInt(lastId));
-    }
 
     boolean exit = false;
     String[] response;
@@ -103,6 +96,14 @@ public class PatientController {
   }
 
   public void runPatientRegistration() {
+    patientMap = patientDAO.retrieveFromFile();
+    ArrayList<String> keys = patientMap.getKeys();
+    
+    if (!keys.isEmpty()) {
+      String lastKey = keys.get(keys.size());
+      String lastId = lastKey.substring(1);
+      Patient.setLastId(Integer.parseInt(lastId));
+    }
 
     Patient newPatient = new Patient();
 

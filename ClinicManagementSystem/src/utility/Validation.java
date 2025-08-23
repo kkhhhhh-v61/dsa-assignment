@@ -1,5 +1,6 @@
 package utility;
 
+import adt.ListInterface;
 import adt.RedBlackTreeMap;
 import java.time.LocalDate;
 
@@ -31,6 +32,10 @@ public class Validation {
 
   public static boolean isValidId(RedBlackTreeMap<String, ?> map, String input) {
     return map.containsKey(input);
+  }
+
+  public static boolean isValidId(ListInterface<?> list, String input) {
+    return list.contains(input);
   }
 
   public static boolean isIcNumberFormat(String input) {

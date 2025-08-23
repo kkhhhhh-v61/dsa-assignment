@@ -1,2 +1,7 @@
 [TODO]
-- 
+- student appointment booking
+- student view appointment
+- student view upcoming appointment
+- student cancel appointment
+- staff view and manage appointment
+- integrate with consultation

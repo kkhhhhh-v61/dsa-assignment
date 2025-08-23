@@ -53,6 +53,8 @@ public class PatientUI {
     System.out.println("[FORMAT] PXXXX");
     System.out.println("[0] Exit");
 
+    System.out.println();
+
     System.out.print("> P");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
@@ -73,6 +75,8 @@ public class PatientUI {
 
     System.out.println("[FORMAT] YYMMDD-XX-XXXX");
     System.out.println("[0] Exit");
+
+    System.out.println();
 
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
@@ -98,6 +102,8 @@ public class PatientUI {
     System.out.println("[EXAMPLE] 'Your Name', 'yourName', 'your name' are all acceptable.");
     System.out.println("[0] Exit");
 
+    System.out.println();
+
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
   }
@@ -114,8 +120,12 @@ public class PatientUI {
     System.out.println("|  CONTACT NUMBER  |");
     System.out.println("+------------------+");
 
+    System.out.println();
+
     System.out.println("[FORMAT] 01X-XXX XXXX or 01X-XXXX XXXX");
     System.out.println("[0] Exit");
+
+    System.out.println();
 
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
@@ -137,6 +147,8 @@ public class PatientUI {
     System.out.println("[FORMAT] username@mailserver.domain");
     System.out.println("[0] Exit");
 
+    System.out.println();
+
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
   }
@@ -156,6 +168,8 @@ public class PatientUI {
 
     System.out.println("[0] Exit");
 
+    System.out.println();
+
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
   }
@@ -174,6 +188,8 @@ public class PatientUI {
 
     System.out.println("[1] A | [2] B | [3] AB | [4] O");
     System.out.println("[0] Exit");
+
+    System.out.println();
 
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
@@ -206,6 +222,8 @@ public class PatientUI {
     System.out.println();
 
     System.out.println("[1] Confirm | [2] Edit | [0] Cancel");
+
+    System.out.println();
 
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
@@ -268,6 +286,8 @@ public class PatientUI {
     System.out.println("[Q] Previous Page | [E] Next Page | [W] Switch Part View");
     System.out.println("[1] Edit Record | [2] Delete Record | [0] Return");
 
+    System.out.println();
+
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
@@ -313,6 +333,8 @@ public class PatientUI {
 
     System.out.println("[1] IC Number | [2] Name | [3] Contact Number | [4] Email | [5] Address | [6] Blood Type");
     System.out.println("[W] Switch Part View | [0] Return");
+
+    System.out.println();
 
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
@@ -381,6 +403,8 @@ public class PatientUI {
     System.out.println("|  CONTACT NUMBER  |");
     System.out.println("+------------------+");
 
+    System.out.println();
+
     System.out.println("[FORMAT] 01X-XXX XXXX or 01X-XXXX XXXX");
     System.out.println("[0] Exit");
 
@@ -403,6 +427,8 @@ public class PatientUI {
     System.out.println("+-----------------+");
     System.out.println("|      EMAIL      |");
     System.out.println("+-----------------+");
+
+    System.out.println();
 
     System.out.println("[FORMAT] username@mailserver.domain");
     System.out.println("[0] Exit");
@@ -427,6 +453,8 @@ public class PatientUI {
     System.out.println("|     ADDRESS     |");
     System.out.println("+-----------------+");
 
+    System.out.println();
+
     System.out.println("[0] Exit");
 
     System.out.println();
@@ -447,6 +475,8 @@ public class PatientUI {
     System.out.println("+----------------+");
     System.out.println("|   BLOOD TYPE   |");
     System.out.println("+----------------+");
+
+    System.out.println();
 
     System.out.println("[1] A | [2] B | [3] AB | [4] O");
     System.out.println("[0] Exit");
@@ -470,8 +500,12 @@ public class PatientUI {
     System.out.println("|   Edit Confimation   |");
     System.out.println("+----------------------+");
 
+    System.out.println();
+
     System.out.println(field + ": " + oldValue + " -> " + newValue);
     System.out.println("[1] Confirm | [0] Cancel");
+
+    System.out.println();
 
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
@@ -516,8 +550,12 @@ public class PatientUI {
     System.out.println("| Delete Confirmation |");
     System.out.println("+---------------------+");
 
+    System.out.println();
+
     System.out.println("[W] Switch Part View");
     System.out.println("[1] Confirm | [0] Cancel");
+
+    System.out.println();
 
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
@@ -535,7 +573,11 @@ public class PatientUI {
     System.out.println("| Clear Patient Record |");
     System.out.println("+----------------------+");
 
+    System.out.println();
+
     System.out.println("[1] Confirm | [0] Cancel");
+
+    System.out.println();
 
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };

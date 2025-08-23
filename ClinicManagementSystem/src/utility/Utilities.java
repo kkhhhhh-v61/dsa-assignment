@@ -20,7 +20,7 @@ public class Utilities {
   }
 
   public static void pressAnyKey() {
-    System.out.println("Press any key to continue...");
+    System.out.print("Press any key to continue...");
     getUserInput().nextLine();
   }
 

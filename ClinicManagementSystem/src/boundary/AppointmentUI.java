@@ -1,10 +1,7 @@
 package boundary;
 
 import adt.ArrayList;
-import adt.ListInterface;
 import dao.DoctorDAO;
-import entity.Doctor;
-import entity.Schedule;
 import utility.Utilities;
 
 /**
@@ -14,9 +11,6 @@ import utility.Utilities;
 public class AppointmentUI {
 
   DoctorDAO doctorDAO = new DoctorDAO();
-
-  ListInterface<Doctor> doctorList = new ArrayList<>();
-  ListInterface<Schedule> scheduleList = new ArrayList<>();
   
   public String[] runStudentAppointmentMenu() {
 
@@ -39,28 +33,52 @@ public class AppointmentUI {
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
 
-  public void runDoctorRecordListMenu() {
-
-    doctorList = doctorDAO.
-
+  public void runDoctorRecordListMenu(ArrayList<String[]> doctorData, int page) {
     System.out.println();
-
     Utilities.clearScreen();
 
-    System.out.println("+=================================================================================+");
-    System.out.println("|  DID |             DOCTOR NAME             |    DAY    | SCHEDULE TIME | STATUS |");
-    System.out.println("+=================================================================================+");
+    int itemsPerPage = 10;
+    int startIndex = (page - 1) * itemsPerPage + 1;
+    int endIndex = Math.min(startIndex + itemsPerPage - 1, doctorData.size() - 1);
+
+    System.out.println("+========================================================================================+");
+    System.out.printf("|                                  DOCTOR SCHEDULE LIST [PG%02d]                           |\n", page);
+    System.out.println("+========================================================================================+");
+    System.out.println("|  DID  |             DOCTOR NAME             |    DAY    | SCHEDULE TIME | AVAILABILITY |");
+    System.out.println("+========================================================================================+");
+    
+    if (doctorData.size() <= 1) {
+      System.out.println("|                                   No schedules found.                                  |");
+    } else {
+      for (int i = startIndex; i <= endIndex; i++) {
+        if (i < doctorData.size()) {
+          String[] data = doctorData.get(i);
+          System.out.println(String.format("| %-5s | %-35s | %9s | %5s - %5s | %12s |", 
+            data[0], data[1], data[2], data[3], data[4], data[5]));
+        }
+      }
+    }
+    System.out.println("+========================================================================================+");
   }
 
-  public void runAppointmentBookingMenu() {
+  public String[] runAppointmentBookingMenu() {
     
-    final char[] INPUT_OPTIONS = { '0' };
+    final char[] INPUT_OPTIONS = { 'Q', 'E', '0' };
 
     System.out.println();
 
-    Utilities.clearScreen();
+    System.out.println("[Q] Previous Page | [E] Next Page");
+    System.out.println("[0] Exit");
 
-    System.out.println("| APPOINTMENT BOOKING |");
+    System.out.println();
 
+    System.out.println("+-------------------------+");
+    System.out.println("| ENTER DOCTOR ID TO BOOK |");
+    System.out.println("+-------------------------+");
+
+    System.out.println();
+
+    System.out.print("> D");
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
 }

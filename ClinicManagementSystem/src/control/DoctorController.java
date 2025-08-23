@@ -26,7 +26,7 @@ public class DoctorController {
         loadData();
     }
 
-    private void loadData() {
+    public void loadData() {
         // Parser for Doctor - handles the file format from doctors.txt
         DoctorDAO.loadFromFile(DOCTORS_FILE, doctorList, data -> {
             if (data.length >= 10) {
@@ -97,6 +97,8 @@ public class DoctorController {
     }
 
     public ListInterface<Doctor> getAllDoctors() {
+        doctorList.clear();
+        loadData();
         return doctorList;
     }
 
