@@ -1,8 +1,6 @@
 package boundary;
 
-import utility.MessageUI;
 import utility.Utilities;
-import utility.Validation;
 
 /**
  *
@@ -10,104 +8,83 @@ import utility.Validation;
  */
 public class SystemUI {
 
-  public char runMainMenu() {
+  public String[] runMainMenu() {
 
     final char[] INPUT_OPTIONS = { '1', '2', '0' };
 
-    boolean exit = false;
-    char response = 'X';
+    System.out.println();
 
-    do {
-      System.out.println();
+    Utilities.clearScreen();
 
-      Utilities.clearScreen();
+    System.out.println("+==================================================================================================+");
+    System.out.println("|                 ##   ##  ##   ##  #######     #######   #####   ######   #######                 |");
+    System.out.println("|                 ##   ##  ###  ##    ###       ##       ##   ##  ##   ##  ##                      |");
+    System.out.println("|                 ##   ##  #### ##    ###       ##       ##   ##  ##   ##  ##                      |");
+    System.out.println("|                 ##   ##  ## ####    ###       ##       #######  #######  #####                   |");
+    System.out.println("|                 ##   ##  ##  ###    ###       ##       ##   ##  ##  ##   ##                      |");
+    System.out.println("|                 ##   ##  ##  ###    ###       ##       ##   ##  ##   ##  ##                      |");
+    System.out.println("|                 #######  ##   ##  #######     #######  ##   ##  ##   ##  #######                 |");
+    System.out.println("+==================================================================================================+");
+    System.out.println("|                                     CLINIC MANAGEMENT SYSTEM                                     |");
+    System.out.println("+==================================================================================================+");
 
-      System.out.println("+==================================================================================================+");
-      System.out.println("|                 ##   ##  ##   ##  #######     #######   #####   ######   #######                 |");
-      System.out.println("|                 ##   ##  ###  ##    ###       ##       ##   ##  ##   ##  ##                      |");
-      System.out.println("|                 ##   ##  #### ##    ###       ##       ##   ##  ##   ##  ##                      |");
-      System.out.println("|                 ##   ##  ## ####    ###       ##       #######  #######  #####                   |");
-      System.out.println("|                 ##   ##  ##  ###    ###       ##       ##   ##  ##  ##   ##                      |");
-      System.out.println("|                 ##   ##  ##  ###    ###       ##       ##   ##  ##   ##  ##                      |");
-      System.out.println("|                 #######  ##   ##  #######     #######  ##   ##  ##   ##  #######                 |");
-      System.out.println("+==================================================================================================+");
-      System.out.println("|                                     CLINIC MANAGEMENT SYSTEM                                     |");
-      System.out.println("+==================================================================================================+");
+    System.out.println();
 
-      System.out.println();
+    System.out.println("+-------------------------+");
+    System.out.println("| [1] Clinic Staff Portal |");
+    System.out.println("| [2] Student Portal      |");
+    System.out.println("| [0] Exit                |");
+    System.out.println("+-------------------------+");
 
-      System.out.println("+-------------------------+");
-      System.out.println("| [1] Clinic Staff Portal |");
-      System.out.println("| [2] Student Portal      |");
-      System.out.println("| [0] Exit                |");
-      System.out.println("+-------------------------+");
-
-      System.out.print("> ");
-      String userInput = Utilities.getUserInput().nextLine();
-
-      if (userInput != "") {
-        if (Validation.isSingleChar(userInput)) {
-          response = userInput.charAt(0);
-
-          if (Validation.isValidOption(response, INPUT_OPTIONS)) {
-            exit = true;
-          } else {
-            MessageUI.notValidOption(INPUT_OPTIONS);
-          }
-        } else {
-          MessageUI.notSingleChar();
-        }
-      }
-    } while (!exit);
-
-    return response;
+    System.out.print("> ");
+    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
   }
   
-  public char runClinicStaffMenu() {
+  public String[] runClinicStaffMenu() {
 
     final char[] INPUT_OPTIONS = { '1', '2', '0' };
-    
-    boolean exit = false;
-    char response = 'X';
 
-    do {
-      exit = false;
+    System.out.println();
 
-      System.out.println();
+    Utilities.clearScreen();
 
-      Utilities.clearScreen();
+    System.out.println("+-----------------------------+");
+    System.out.println("|     CLINIC STAFF PORTAL     |");
+    System.out.println("+-----------------------------+");
+    System.out.println("| [1] Patient Management      |");
+    System.out.println("| [2] Doctor Management       |");
+    System.out.println("| [3] Appointment Management  |");
+    System.out.println("| [4] Consultation Management |");
+    System.out.println("| [5] Treatment Management    |");
+    System.out.println("| [0] Return                  |");
+    System.out.println("+-----------------------------+");
 
-      System.out.println("+-----------------------------+");
-      System.out.println("|     CLINIC STAFF PORTAL     |");
-      System.out.println("+-----------------------------+");
-      System.out.println("| [1] Patient Management      |");
-      System.out.println("| [2] Doctor Management       |");
-      System.out.println("| [3] Appointment Management  |");
-      System.out.println("| [4] Consultation Management |");
-      System.out.println("| [5] Treatment Management    |");
-      System.out.println("| [0] Return                  |");
-      System.out.println("+-----------------------------+");
+    System.out.println();
 
-      System.out.println();
+    System.out.print("> ");
+    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
+  }
+  
+  public String[] runStudentMenu() {
 
-      System.out.print("> ");
-      String userInput = Utilities.getUserInput().nextLine();
+    final char[] INPUT_OPTIONS = { '1', '2', '0' };
 
-      if (userInput != "") {
-        if (Validation.isSingleChar(userInput)) {
-          response = userInput.charAt(0);
+    System.out.println();
 
-          if (Validation.isValidOption(response, INPUT_OPTIONS)) {
-            exit = true;
-          } else {
-            MessageUI.notValidOption(INPUT_OPTIONS);
-          }
-        } else {
-          MessageUI.notSingleChar();
-        }
-      }
-    } while (!exit);
+    Utilities.clearScreen();
 
-    return response;
+    System.out.println("+--------------------+");
+    System.out.println("|   STUDENT PORTAL   |");
+    System.out.println("+--------------------+");
+    System.out.println("| [1] Appointments   |");
+    System.out.println("| [2] Consultations  |");
+    System.out.println("| [3] Treatments     |");
+    System.out.println("| [0] Return         |");
+    System.out.println("+--------------------+");
+
+    System.out.println();
+
+    System.out.print("> ");
+    return new String[] { Utilities.getUserInput().nextLine(), String.valueOf(INPUT_OPTIONS) };
   }
 }
