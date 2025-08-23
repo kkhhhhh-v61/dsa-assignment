@@ -35,16 +35,14 @@ public class DataManager {
                 String[] data = line.split("\\|");
                 if (data.length == 7) {
                     Medicine medicine = new Medicine(
-                            data[0], // medicineId
                             data[1], // name
-                            MedicineCategory.valueOf(data[2]), // category
-                            Double.parseDouble(data[3]), // price
-                            Integer.parseInt(data[4]), // stockQuantity
-                            Integer.parseInt(data[5]) // reorderLevel
+                            data[2], // description
+                            MedicineCategory.valueOf(data[3]), // category
+                            Double.parseDouble(data[4]), // price
+                            Integer.parseInt(data[5]), // stockQuantity
+                            Integer.parseInt(data[6])  // reorderLevel
                     );
-                    // Assuming medicineId is already set by the constructor if it's the first element
-                    // If not, it should be explicitly set: medicine.setMedicineId(data[0]);
-                    // The constructor for Medicine seems to take medicineId as the first argument, so it should be fine.
+                    medicine.setMedicineId(data[0]); // Set the original medicineId
                     medicineList.add(medicine);
                 }
             }

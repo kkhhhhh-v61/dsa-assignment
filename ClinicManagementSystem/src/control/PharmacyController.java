@@ -25,7 +25,7 @@ public class PharmacyController {
 
     public Medicine getMedicineById(String medicineId) {
         for (int i = 0; i < medicineList.size(); i++) {
-            Medicine medicine = medicineList.getEntry(i);
+            Medicine medicine = medicineList.getEntry(i + 1);
             if (medicine.getMedicineId().equals(medicineId)) {
                 return medicine;
             }
@@ -46,9 +46,9 @@ public class PharmacyController {
 
     public boolean updateMedicine(Medicine updatedMedicine) {
         for (int i = 0; i < medicineList.size(); i++) {
-            Medicine medicine = medicineList.getEntry(i);
+            Medicine medicine = medicineList.getEntry(i + 1);
             if (medicine.getMedicineId().equals(updatedMedicine.getMedicineId())) {
-                medicineList.replace(i, updatedMedicine);
+                medicineList.replace(i + 1, updatedMedicine);
                 DataManager.saveMedicines(medicineList); // Save after updating
                 return true;
             }
@@ -58,9 +58,9 @@ public class PharmacyController {
 
     public boolean deleteMedicine(String medicineId) {
         for (int i = 0; i < medicineList.size(); i++) {
-            Medicine medicine = medicineList.getEntry(i);
+            Medicine medicine = medicineList.getEntry(i + 1);
             if (medicine.getMedicineId().equals(medicineId)) {
-                boolean removed = medicineList.remove(i);
+                boolean removed = medicineList.remove(i + 1);
                 if (removed) {
                     DataManager.saveMedicines(medicineList); // Save after deleting
                 }
@@ -78,7 +78,7 @@ public class PharmacyController {
     public boolean dispenseMedicines(ListInterface<PrescribedMedicine> prescribedMedicines) {
         boolean allDispensed = true;
         for (int i = 0; i < prescribedMedicines.size(); i++) {
-            PrescribedMedicine pm = prescribedMedicines.getEntry(i);
+            PrescribedMedicine pm = prescribedMedicines.getEntry(i + 1); // Corrected index
             Medicine medicine = getMedicineById(pm.getMedicineId());
 
             if (medicine != null) {
@@ -114,7 +114,7 @@ public class PharmacyController {
 
         boolean foundLowStock = false;
         for (int i = 0; i < medicineList.size(); i++) {
-            Medicine medicine = medicineList.getEntry(i);
+            Medicine medicine = medicineList.getEntry(i + 1);
             if (medicine.getStockQuantity() < medicine.getReorderLevel()) {
                 report.append(String.format("%-15s %-25s %-15d %-15d\n",
                         medicine.getMedicineId(),
@@ -151,7 +151,7 @@ public class PharmacyController {
             report.append("------------------------------------------------------------\n");
             boolean foundInCategory = false;
             for (int i = 0; i < medicineList.size(); i++) {
-                Medicine medicine = medicineList.getEntry(i);
+                Medicine medicine = medicineList.getEntry(i + 1);
                 if (medicine.getCategory() == category) {
                     report.append(String.format("%-15s %-25s %-10.2f %-10d\n",
                             medicine.getMedicineId(),

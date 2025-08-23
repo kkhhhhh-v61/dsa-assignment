@@ -30,7 +30,7 @@ public class Medicine {
     this.description = description;
     this.category = category;
     this.price = price;
-    this.stockQuantity = stockQuantity;
+    this.stockQuantity = (stockQuantity >= 0) ? stockQuantity : 0; // Ensure stock is not negative
     this.reorderLevel = reorderLevel;
   }
   
@@ -79,7 +79,12 @@ public class Medicine {
   }
 
   public void setStockQuantity(int stockQuantity) {
-    this.stockQuantity = stockQuantity;
+    if (stockQuantity >= 0) {
+      this.stockQuantity = stockQuantity;
+    } else {
+      System.out.println("Warning: Stock quantity cannot be negative. Setting to 0.");
+      this.stockQuantity = 0;
+    }
   }
 
   public int getReorderLevel() {

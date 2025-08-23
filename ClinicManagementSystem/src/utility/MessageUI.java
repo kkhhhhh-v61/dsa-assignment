@@ -91,8 +91,10 @@ public class MessageUI {
         System.out.println("+------------------------------------------------------------------------------------------------------------------+");
     }
 
+    private static Scanner continueScanner = new Scanner(System.in); // Static scanner for continue message
+
     public static void displayContinueMessage() {
         System.out.println("Press Enter to continue...");
-        new Scanner(System.in).nextLine(); // Wait for user to press Enter
+        continueScanner.nextLine(); // Use the static scanner
     }
 }
