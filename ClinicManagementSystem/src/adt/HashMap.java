@@ -1,6 +1,11 @@
 package adt;
 
 /**
+ * 
+ * @author Tan Kai Hao
+ */
+
+/**
  * Hash table based implementation of the MapInterface with chaining for collision resolution.
  * 
  * @param <K> the type of keys maintained by this map

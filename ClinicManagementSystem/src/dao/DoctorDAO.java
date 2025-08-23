@@ -30,14 +30,18 @@ public class DoctorDAO {
     public static <T> void saveToFile(String fileName, ListInterface<T> list) {
         try (PrintWriter writer = new PrintWriter(new FileWriter("./data/" + fileName))) {
             for (int i = 1; i <= list.size(); i++) {
-                // Assumes the object has a toFileString() method that returns a pipe-delimited string
-                writer.println(list.get(i).getClass().getMethod("toFileString").invoke(list.get(i)));
+                T item = list.get(i);
+                if (item instanceof entity.Doctor) {
+                    writer.println(((entity.Doctor) item).toFileStringComplete());
+                } else if (item instanceof entity.Schedule) {
+                    writer.println(((entity.Schedule) item).toFileString());
+                } else {
+                    writer.println(item.toString());
+                }
             }
             System.out.println("Data successfully saved to " + fileName);
         } catch (IOException e) {
             System.err.println("Error writing to file: " + fileName + " - " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println("An unexpected error occurred during file save: " + e.getMessage());
         }
     }
 
@@ -49,24 +53,24 @@ public class DoctorDAO {
      * @param list     The list to populate with the loaded data.
      * @param parser   A function that takes a string array (from a split line) and returns an object of type T.
      */
-    public static <T> void loadFromFile(String fileName, ListInterface<T> list, Function<String[], T> parser) {
+    public static <T> ListInterface<T> loadFromFile(String fileName, ListInterface<T> list, Function<String[], T> parser) {
         try (BufferedReader reader = new BufferedReader(new FileReader("./data/" + fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
-                    String[] data = line.split("\\|"); // Split by the pipe character
-                    T object = parser.apply(data);
+                    // The line is already in the correct format from toFileStringComplete()
+                    // Just pass it to the parser which will handle the splitting
+                    T object = parser.apply(line.split("\\|"));
                     if (object != null) {
                         list.add(object);
                     }
                 }
             }
             System.out.println("Data successfully loaded from " + fileName);
+            return list;
         } catch (IOException e) {
             System.err.println("Could not find or read file: " + fileName + ". A new file will be created on save.");
-        } catch (Exception e) {
-            System.err.println("An error occurred parsing the file " + fileName + ": " + e.getMessage());
-            e.printStackTrace();
+            return list;
         }
     }
 }

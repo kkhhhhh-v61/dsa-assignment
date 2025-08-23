@@ -18,6 +18,7 @@ import utility.Validation;
 public class PatientController {
   
   PatientUI patientUI = new PatientUI();
+
   PatientDAO patientDAO = new PatientDAO();
   PatientInitializer patientInitializer = new PatientInitializer();
 
@@ -63,6 +64,7 @@ public class PatientController {
                     if (vResponse[1].equals("1")) {
                       patientMap.clear();
                       patientDAO.clearFile();
+                      patientDAO.saveToFile(patientMap);
                       Patient.setLastId(0);
                       System.out.println("Patient records cleared.");
                       Utilities.wait(1000);
@@ -465,6 +467,8 @@ public class PatientController {
     int page = 1;
     
     do {
+      patientMap = patientDAO.retrieveFromFile();
+
       System.out.println();
 
       Utilities.clearScreen();
@@ -522,6 +526,8 @@ public class PatientController {
     String[] vResponse;
 
     do {
+      patientMap = patientDAO.retrieveFromFile();
+
       System.out.println();
 
       Utilities.clearScreen();
@@ -556,6 +562,8 @@ public class PatientController {
     String ui = "left";
 
     do {
+      patientMap = patientDAO.retrieveFromFile();
+
       System.out.println();
 
       Utilities.clearScreen();

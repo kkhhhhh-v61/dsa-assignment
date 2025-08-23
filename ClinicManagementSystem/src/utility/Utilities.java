@@ -19,6 +19,11 @@ public class Utilities {
     }
   }
 
+  public static void pressAnyKey() {
+    System.out.println("Press any key to continue...");
+    getUserInput().nextLine();
+  }
+
   // Clear screen using escape sequence (for full system consoles)
   public static void clearScreen() {
     System.out.print("\033[H\033[2J");

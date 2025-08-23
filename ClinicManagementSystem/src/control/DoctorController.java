@@ -27,20 +27,39 @@ public class DoctorController {
     }
 
     private void loadData() {
-        // Corrected Parser for Doctor
+        // Parser for Doctor - handles the file format from doctors.txt
         DoctorDAO.loadFromFile(DOCTORS_FILE, doctorList, data -> {
             if (data.length >= 10) {
-                String ic = data[1];
-                String name = data[2];
-                Gender gender = Gender.valueOf(data[3]);
-                LocalDate birthDate = LocalDate.parse(data[4]);
-                String contact = data[5];
-                String email = data[6];
-                String address = data[7];
-                LocalDate regDate = LocalDate.parse(data[8]);
-                Specialization spec = Specialization.valueOf(data[9]);
-                // We are not loading the record lists from the file in this simple version
-                return new Doctor(ic, name, gender, birthDate, contact, email, address, regDate, spec, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                // The format in doctors.txt is:
+                // doctorId|ic|name|gender|birthDate|age|contact|email|address|regDate|specialization|yearsOfExperience|dutySchedule|appointmentRecords|consultationRecords|treatmentRecords
+                try {
+                    String doctorId = data[0];
+                    String ic = data[1];
+                    String name = data[2];
+                    Gender gender = Gender.valueOf(data[3]);
+                    LocalDate birthDate = LocalDate.parse(data[4]);
+                    // Skip age (data[5]) as it can be calculated from birthDate
+                    String contact = data[6];
+                    String email = data[7];
+                    String address = data[8];
+                    LocalDate regDate = LocalDate.parse(data[9]);
+                    Specialization spec = Specialization.valueOf(data[10]);
+                    int yearsOfExp = data.length > 11 ? Integer.parseInt(data[11]) : 0;
+                    
+                    // Create the doctor with empty lists for records (we'll load the actual records separately)
+                    Doctor doctor = new Doctor(ic, name, gender, birthDate, contact, email, address, regDate, spec, 
+                        new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    
+                    // Set the doctor ID and years of experience
+                    doctor.setDoctorId(doctorId);
+                    doctor.setYearsOfExperience(yearsOfExp);
+                    
+                    return doctor;
+                } catch (Exception e) {
+                    System.err.println("Error parsing doctor data: " + String.join("|", data));
+                    e.printStackTrace();
+                    return null;
+                }
             }
             return null; // Return null if the data format is incorrect
         });

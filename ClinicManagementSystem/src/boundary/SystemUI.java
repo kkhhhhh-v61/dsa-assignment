@@ -1,5 +1,6 @@
 package boundary;
 
+import entity.Patient;
 import utility.Utilities;
 
 /**
@@ -63,6 +64,43 @@ public class SystemUI {
 
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
+  }
+
+  public String[] inputPatientId() {
+
+    final char[] INPUT_OPTIONS = { '0' };
+
+    System.out.println();
+
+    Utilities.clearScreen();
+
+    System.out.println("+------------------------+");
+    System.out.println("| LOG IN WITH PATIENT ID |");
+    System.out.println("+------------------------+");
+
+    System.out.println();
+
+    System.out.println("[FORMAT] PXXXX");
+    System.out.println("[0] Exit");
+
+    System.out.print("> P");
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
+  }
+
+  public void loginSuccess(Patient patient) {
+
+    System.out.println();
+
+    Utilities.clearScreen();
+
+    System.out.println("+------------------+ ");
+    System.out.println("| LOGIN SUCCESSFUL | ");
+    System.out.println("+------------------+ ");
+
+    System.out.println();
+
+    System.out.println("Welcome " + patient.getPatientId() + " : " + patient.getName());
+    Utilities.pressAnyKey();
   }
   
   public String[] runStudentMenu() {

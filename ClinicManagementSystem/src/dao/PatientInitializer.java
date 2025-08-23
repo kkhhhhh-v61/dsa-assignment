@@ -15,6 +15,8 @@ public class PatientInitializer {
 
   public RedBlackTreeMap<String, Patient> initializeSamplePatients() {
     RedBlackTreeMap<String, Patient> patientMap = new RedBlackTreeMap<>();
+
+    Patient.setLastId(0);
     
     for (int i = 1; i <= SAMPLE_SIZE; i++) {
       Patient newPatient = new Patient();

@@ -1,1 +1,1 @@
-S0001|D0001|Wednesday|09:00|16:00|true
+S0001|D0001|Monday|09:00|18:00|true
