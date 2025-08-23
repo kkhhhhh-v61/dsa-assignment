@@ -15,7 +15,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -44,7 +44,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -89,7 +89,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -123,7 +123,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -158,7 +158,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -192,7 +192,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -221,7 +221,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -245,7 +245,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -269,7 +269,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
@@ -293,7 +293,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
@@ -317,7 +317,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
@@ -341,7 +341,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -386,7 +386,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -425,7 +425,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -465,7 +465,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -504,7 +504,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -538,7 +538,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -582,7 +582,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 
@@ -606,7 +606,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
@@ -630,7 +630,7 @@ public class PatientValidation {
     boolean valid = false;
     String response = userInput;
 
-    if (userInput != "") {
+    if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
         char option = userInput.charAt(0);
 

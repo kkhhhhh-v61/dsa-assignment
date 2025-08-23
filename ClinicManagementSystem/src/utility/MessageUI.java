@@ -98,4 +98,34 @@ public class MessageUI {
     System.out.println("Error! Input must be different from the current value.");
     Utilities.wait(1000);
   }
+
+  public static void notValidDate() {
+    invalidInput();
+    System.out.println("Error! Input must be a valid date with the format of 'YYYY-MM-DD'.");
+    Utilities.wait(1000);
+  }
+
+  public static void notFutureDate() {
+    invalidInput();
+    System.out.println("Error! Input must be a future date.");
+    Utilities.wait(1000);
+  }
+
+  public static void notWithinTimeFrame() {
+    invalidInput();
+    System.out.println("Error! Input must be within the time frame of not exceeding 1 year from the current date.");
+    Utilities.wait(1000);
+  }
+
+  public static void notValidTime(String startTime, String endTime) {
+    invalidInput();
+    System.out.println("Error! Input must be within the time range of " + startTime + " to " + endTime + ".");
+    Utilities.wait(1000);
+  }
+
+  public static void mustBeLength(int length) {
+    invalidInput();
+    System.out.println("Error! Input must be " + length + " characters long.");
+    Utilities.wait(1000);
+  }
 }

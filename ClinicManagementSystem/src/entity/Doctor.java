@@ -31,7 +31,8 @@ public class Doctor extends Person {
   }
   
   public Doctor(String icNumber, String name, Gender gender, LocalDate birthDate, String contactNumber, String email,
-      String address, LocalDate registrationDate, Specialization specialization, ArrayList<String> dutySchedule, ArrayList<String> appointmentRecords, ArrayList<String> consultationRecords, ArrayList<String> treatmentRecords) {
+      String address, LocalDate registrationDate, Specialization specialization, ArrayList<String> dutySchedule,
+      ArrayList<String> appointmentRecords, ArrayList<String> consultationRecords, ArrayList<String> treatmentRecords) {
     super(icNumber, name, gender, birthDate, contactNumber, email, address, registrationDate);
     this.doctorId = "D" + String.format("%04d", ++lastId);
     this.specialization = specialization;
@@ -40,6 +41,10 @@ public class Doctor extends Person {
     this.appointmentRecords = appointmentRecords;
     this.consultationRecords = consultationRecords;
     this.treatmentRecords = treatmentRecords;
+  }
+  
+  public static void setLastId(int lastId) {
+    Doctor.lastId = lastId;
   }
   
   public String getDoctorId() {

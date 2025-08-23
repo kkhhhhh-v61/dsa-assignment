@@ -4,6 +4,8 @@ package utility;
 // import java.awt.Robot;
 // import java.awt.event.KeyEvent;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  *
@@ -84,5 +86,18 @@ public class Utilities {
       }
     }
     return contactNumber;
+  }
+
+  public static LocalDate formatDate(String date) {
+    int year = Integer.parseInt(date.substring(0, 4));
+    int month = Integer.parseInt(date.substring(4, 6));
+    int day = Integer.parseInt(date.substring(6, 8));
+    return LocalDate.of(year, month, day);
+  }
+
+  public static LocalTime formatTime(String time) {
+    int hour = Integer.parseInt(time.substring(0, 2));
+    int minute = Integer.parseInt(time.substring(2, 4));
+    return LocalTime.of(hour, minute);
   }
 }

@@ -140,7 +140,7 @@ public class DoctorController {
     // Schedule CRUD and Availability Tracking (with saveData calls)
     // ==================================================================
     public ListInterface<String> addSchedule(Schedule newSchedule) {
-        ListInterface<Schedule> existingSchedules = getSchedulesForDoctor(newSchedule.doctorId());
+        ListInterface<Schedule> existingSchedules = getSchedulesForDoctor(newSchedule.getDoctorId());
         ListInterface<String> errors = DoctorValidator.validateSchedule(newSchedule, existingSchedules);
         
         if (errors.isEmpty()) {
@@ -154,7 +154,7 @@ public class DoctorController {
         ListInterface<Schedule> doctorSchedules = new ArrayList<>();
         for (int i = 1; i <= scheduleList.size(); i++) {
             Schedule currentSchedule = scheduleList.get(i);
-            if (currentSchedule.doctorId().equals(doctorId)) {
+            if (currentSchedule.getDoctorId().equals(doctorId)) {
                 doctorSchedules.add(currentSchedule);
             }
         }
@@ -184,7 +184,7 @@ public class DoctorController {
     private void deleteSchedulesForDoctor(String doctorId) {
         boolean changed = false;
         for (int i = scheduleList.size() - 1; i >= 0; i--) {
-            if (scheduleList.get(i).doctorId().equals(doctorId)) {
+            if (scheduleList.get(i).getDoctorId().equals(doctorId)) {
                 scheduleList.remove(i);
                 changed = true;
             }
@@ -236,7 +236,7 @@ public class DoctorController {
         for (int i = 0; i < scheduleList.size(); i++) {
             Schedule schedule = scheduleList.get(i);
             if (schedule.getDay() == day && schedule.getIsAvailable()) {
-                Doctor doctor = getDoctorById(schedule.doctorId());
+                Doctor doctor = getDoctorById(schedule.getDoctorId());
                 if (doctor != null) {
                     found = true;
                     System.out.printf("%-10s | %-20s | %-15s | %s - %s\n",

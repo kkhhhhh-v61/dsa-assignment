@@ -84,4 +84,8 @@ public class Validation {
   public static boolean isEmailFormat(String input) {
     return input.matches("^[\\w-\\+]+(\\.[\\w]+)*@([\\w-]+\\.)+[\\w-]{2,4}$");
   }
+
+  public static boolean isEqualsLength(String input, int length) {
+    return input.length() == length;
+  }
 }

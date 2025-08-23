@@ -1,2 +1,6 @@
-S0003|D0001|Monday|09:00|18:00|true
-S0004|D0001|Tuesday|09:00|20:00|true
+S0006|D0001|Monday|09:00|18:00|true
+S0007|D0001|Tuesday|09:00|20:00|true
+S0008|D0001|Wednesday|09:00|13:00|true
+S0009|D0001|Thursday|09:00|20:00|true
+S0010|D0001|Friday|09:00|18:00|true
+S0011|D0001|Saturday|13:00|17:00|true

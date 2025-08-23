@@ -1,15 +1,19 @@
 package control;
 
 import adt.ArrayList;
-import adt.ListInterface;
 import adt.RedBlackTreeMap;
 import boundary.AppointmentUI;
-import dao.PatientDAO;
+import dao.AppointmentDAO;
+import dao.DoctorScheduleDAO;
+import entity.Appointment;
 import entity.Doctor;
-import entity.Patient;
 import entity.Schedule;
+import utility.Enum.Status;
 import utility.MessageUI;
+import utility.Utilities;
 import utility.Validation;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  *
@@ -19,16 +23,27 @@ public class AppointmentController {
 
   AppointmentUI appointmentUI = new AppointmentUI();
 
-  DoctorController doctorController = new DoctorController();
-  
-  PatientDAO patientDAO = new PatientDAO();
+  AppointmentDAO appointmentDAO = new AppointmentDAO();
+  DoctorScheduleDAO doctorScheduleDAO = new DoctorScheduleDAO();
 
-  RedBlackTreeMap<String, Patient> patientMap = new RedBlackTreeMap<>();
-  ListInterface<Doctor> doctorList = new ArrayList<>();
-  ListInterface<Schedule> scheduleList = new ArrayList<>();
-  ArrayList<String[]> doctorData = new ArrayList<>();
+  private RedBlackTreeMap<String, Doctor> doctorMap;
+  private RedBlackTreeMap<String, Schedule> scheduleMap;
+  private RedBlackTreeMap<String, Appointment> appointmentMap;
   
-  public void runStudentAppointment() {
+  private ArrayList<Doctor> doctorList;
+  private ArrayList<Schedule> scheduleList;
+  private ArrayList<String[]> doctorData;
+  
+  public AppointmentController() {
+    doctorMap = new RedBlackTreeMap<>();
+    scheduleMap = new RedBlackTreeMap<>();
+    appointmentMap = new RedBlackTreeMap<>();
+    doctorList = new ArrayList<>();
+    scheduleList = new ArrayList<>();
+    doctorData = getRequiredDoctorRecordListData();
+  }
+
+  public void runStudentAppointment(String patientId) {
 
     boolean exit = false;
     String[] response;
@@ -46,7 +61,7 @@ public class AppointmentController {
           if (Validation.isValidOption(userInput, inputOptions)) {
             switch (userInput) {
               case '1':
-                runAppointmentBooking();
+                runAppointmentBooking(patientId);
                 break;
               case '2':
                 break;
@@ -66,56 +81,148 @@ public class AppointmentController {
     } while (!exit);
   }
   
-  public void runAppointmentBooking() {
+  @SuppressWarnings("unchecked")
+  public void runAppointmentBooking(String patientId) {
+
+    doctorList = (ArrayList<Doctor>) doctorScheduleDAO.retrieveFromFile("doctor");
 
     boolean exit = false;
     String[] response;
     String[] vResponse;
     int page = 1;
+    boolean complete = false;
+
+    appointmentMap = appointmentDAO.retrieveFromFile();
+    ArrayList<String> keys = appointmentMap.getKeys();
+    
+    if (!keys.isEmpty()) {
+      String lastKey = keys.get(keys.size());
+      String lastId = lastKey.substring(1);
+      Appointment.setLastId(Integer.parseInt(lastId));
+    }
+
+    Appointment newAppointment = new Appointment();
 
     if(doctorData.isEmpty()) {
       doctorData = getRequiredDoctorRecordListData();
     }
 
     do {
+      newAppointment.setPatientId(patientId);
       appointmentUI.runDoctorRecordListMenu(doctorData, page);
-      response = appointmentUI.runAppointmentBookingMenu();
-      vResponse = AppointmentValidation.validateDoctorIdExistence(doctorList, response[0], response[1].toCharArray());
+      response = appointmentUI.inputDoctorId();
+      vResponse = AppointmentValidation.validateDoctorIdExistence(doctorMap, response[0], response[1].toCharArray());
 
       if (Boolean.parseBoolean(vResponse[0])) {
         if (vResponse[1].equals("0")) {
           exit = true;
         } else {
-          // TODO: implement appointment booking
+          newAppointment.setDoctorId(vResponse[1]);
+
+          do {
+            response = appointmentUI.inputAppointmentDate();
+            vResponse = AppointmentValidation.validateAppointmentDate(doctorMap, newAppointment.getDoctorId(),
+                response[0], response[1].toCharArray());
+          } while (!Boolean.parseBoolean(vResponse[0]));
+
+          if (vResponse[1].equals("0")) {
+            exit = true;
+          } else {
+            newAppointment.setAppointmentDate(LocalDate.parse(vResponse[1]));
+
+            do {
+              response = appointmentUI.inputAppointmentTime();
+              vResponse = AppointmentValidation.validateAppointmentTime(scheduleMap, newAppointment.getDoctorId(),
+                  newAppointment.getAppointmentDate(), response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
+            } while (!Boolean.parseBoolean(vResponse[0]));
+
+            if (vResponse[1].equals("0")) {
+              exit = true;
+            } else {
+              newAppointment.setAppointmentTime(LocalTime.parse(vResponse[1]));
+
+              do {
+                response = appointmentUI.inputReason();
+                vResponse = AppointmentValidation.validateReason(response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
+              } while (!Boolean.parseBoolean(vResponse[0]));
+
+              if (vResponse[1].equals("0")) {
+                exit = true;
+              } else {
+                newAppointment.setReason(vResponse[1]);
+                complete = true;
+              }
+            }
+          }
         }
+      }
+
+      if (complete) {
+        boolean exit1 = false;
+
+        do {
+          response = appointmentUI.confirmAppointment(newAppointment);
+          vResponse = AppointmentValidation.validateConfirmAppointment(response[0], response[1].toCharArray());
+
+          if (Boolean.parseBoolean(vResponse[0])) {
+            switch (vResponse[1]) {
+              case "1":
+                newAppointment.setStatus(Status.Pending);
+                appointmentMap.put(newAppointment.getAppointmentId(), newAppointment);
+                appointmentDAO.saveToFile(appointmentMap);
+                System.out.println();
+                System.out.println("Appointment booked successfully.");
+                Utilities.wait(1000);
+                exit1 = true;
+                exit = true;
+                break;
+              case "0":
+                exit1 = true;
+                exit = true;
+                break;
+            }
+          }
+        } while (!exit1);
       }
     } while (!exit);
   }
   
+  @SuppressWarnings("unchecked")
   public ArrayList<String[]> getRequiredDoctorRecordListData() {
-    
-    doctorList = doctorController.getAllDoctors();
-    
+
+    doctorData = new ArrayList<>();
+
+    doctorList = (ArrayList<Doctor>) doctorScheduleDAO.retrieveFromFile("doctor");
+    scheduleList = (ArrayList<Schedule>) doctorScheduleDAO.retrieveFromFile("schedule");
+
     for (int i = 1; i <= doctorList.size(); i++) {
       Doctor doctor = doctorList.get(i);
-      ListInterface<Schedule> schedules = doctorController.getSchedulesForDoctor(doctor.getDoctorId());
-      
-      if (schedules.size() > 0) {
-        for (int j = 1; j <= schedules.size(); j++) {
-          Schedule schedule = schedules.get(j);
+      doctorMap.put(doctor.getDoctorId(), doctor);
+    }
+
+    for (int i = 1; i <= scheduleList.size(); i++) {
+      Schedule schedule = scheduleList.get(i);
+      scheduleMap.put(schedule.getScheduleId(), schedule);
+    }
+
+    ArrayList<String> doctorKeys = doctorMap.getKeys();
+
+    for (int i = 1; i <= doctorKeys.size(); i++) {
+      for (int j = 1; j <= scheduleList.size(); j++) {
+        if (doctorKeys.get(i).equals(scheduleList.get(j).getDoctorId())) {
           String[] entry = {
-            doctor.getDoctorId(),
-            doctor.getName(),
-            schedule.getDay().toString(),
-            schedule.getStartTime().toString(),
-            schedule.getEndTime().toString(),
-            String.valueOf(schedule.getIsAvailable() ? "Available" : "Unavailable")
+              doctorKeys.get(i),
+              doctorMap.get(doctorKeys.get(i)).getName(),
+              scheduleList.get(j).getDay().toString(),
+              scheduleList.get(j).getStartTime().toString(),
+              scheduleList.get(j).getEndTime().toString(),
+              String.valueOf(scheduleList.get(j).getIsAvailable() ? "Available" : "Unavailable")
           };
           doctorData.add(entry);
         }
       }
     }
-    
+
     return doctorData;
   }
 }

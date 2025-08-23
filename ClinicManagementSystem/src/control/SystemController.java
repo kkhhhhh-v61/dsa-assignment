@@ -70,6 +70,7 @@ public class SystemController {
   public void runStudentPortal() {
     
     patientMap = patientDAO.retrieveFromFile();
+    String patientId = "";
     
     boolean exit = false;
     String[] response;
@@ -80,7 +81,14 @@ public class SystemController {
     do {
       response = systemUI.inputPatientId();
       vResponse = AppointmentValidation.validatePatientIdExistence(patientMap, response[0], response[1].toCharArray());
-    } while (!Boolean.parseBoolean(vResponse[0]));
+
+      if (Boolean.parseBoolean(vResponse[0])) {
+        if (!vResponse[1].equals("0")) {
+          patientId = vResponse[1];
+        }
+        exit = true;
+      }
+    } while (!exit);
 
     if (vResponse[1].equals("0")) {
       return;
@@ -89,6 +97,8 @@ public class SystemController {
     }
 
     do {
+      exit = false;
+      
       response = systemUI.runStudentMenu();
       inputOptions = response[1].toCharArray();
 
@@ -99,7 +109,7 @@ public class SystemController {
           if (Validation.isValidOption(userInput, inputOptions)) {
             switch (userInput) {
               case '1':
-                appointmentController.runStudentAppointment();
+                appointmentController.runStudentAppointment(patientId);
                 break;
               case '2':
                 break;

@@ -37,6 +37,8 @@ public class SystemUI {
     System.out.println("| [0] Exit                |");
     System.out.println("+-------------------------+");
 
+    System.out.println();
+
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
@@ -83,6 +85,8 @@ public class SystemUI {
     System.out.println("[FORMAT] PXXXX");
     System.out.println("[0] Exit");
 
+    System.out.println();
+
     System.out.print("> P");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
@@ -105,7 +109,7 @@ public class SystemUI {
   
   public String[] runStudentMenu() {
 
-    final char[] INPUT_OPTIONS = { '1', '2', '0' };
+    final char[] INPUT_OPTIONS = { '1', '2', '3', '0' };
 
     System.out.println();
 

@@ -1,6 +1,8 @@
 package entity;
 
 import utility.Enum.Status;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -8,7 +10,8 @@ import java.time.LocalTime;
  *
  * @author Tan Kai Hao
  */
-public class Appointment {
+public class Appointment implements Serializable {
+  private static final long serialVersionUID = 1L;
   private static int lastId = 0;
 
   private String appointmentId;
@@ -38,6 +41,10 @@ public class Appointment {
     this.appointmentTime = appointmentTime;
     this.reason = reason;
     this.status = status;
+  }
+
+  public static void setLastId(int lastId) {
+    Appointment.lastId = lastId;
   }
   
   public String getAppointmentId() {

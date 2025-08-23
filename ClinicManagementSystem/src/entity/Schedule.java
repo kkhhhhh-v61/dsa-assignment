@@ -44,7 +44,7 @@ public class Schedule {
     this.scheduleId = scheduleId;
   }
 
-  public String doctorId() {
+  public String getDoctorId() {
     return doctorId;
   }
 

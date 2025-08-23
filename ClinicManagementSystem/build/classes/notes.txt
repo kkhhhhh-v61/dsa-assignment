@@ -1,7 +1,9 @@
 [TODO]
-- student appointment booking
+- student appointment booking (in-progress)
+  - fix time frame logic error
 - student view appointment
 - student view upcoming appointment
 - student cancel appointment
 - staff view and manage appointment
 - integrate with consultation
+- display a visual timetable of available appointment time for the chosen date based on doctor existing consultations (extremely low priority)
