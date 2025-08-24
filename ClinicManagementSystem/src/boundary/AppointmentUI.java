@@ -130,7 +130,6 @@ public class AppointmentUI {
     System.out.println();
 
     System.out.println("[FORMAT] HH:MM");
-    System.out.println("[DURATION] Fixed 1 hour");
     System.out.println("[0] Exit");
 
     System.out.println();
@@ -174,17 +173,17 @@ public class AppointmentUI {
 
     System.out.println();
 
-    System.out.println("+-----------------------------------------------+");
-    System.out.println("|                CONFIRM APPOINTMENT                |");
-    System.out.println("+-----------------------------------------------+");
+    System.out.println("+----------------------------------------------------+");
+    System.out.println("|              APPOINTMENT CONFIRMATION              |");
+    System.out.println("+----------------------------------------------------+");
 
-    System.out.printf("| %-16s : %-30s |\n", "Patient ID", newAppointment.getPatientId());
-    System.out.printf("| %-16s : %-30s |\n", "Doctor ID", newAppointment.getDoctorId());
-    System.out.printf("| %-16s : %-30s |\n", "Appointment Date", newAppointment.getAppointmentDate());
-    System.out.printf("| %-16s : %-30s |\n", "Appointment Time", newAppointment.getAppointmentTime());
-    System.out.printf("| %-16s : %-30s |\n", "Reason", newAppointment.getReason());
+    System.out.printf("| %-17s : %-30s |\n", "Patient ID", newAppointment.getPatientId());
+    System.out.printf("| %-17s : %-30s |\n", "Doctor ID", newAppointment.getDoctorId());
+    System.out.printf("| %-17s : %-30s |\n", "Appointment Date", newAppointment.getAppointmentDate());
+    System.out.printf("| %-17s : %-30s |\n", "Appointment Time", newAppointment.getAppointmentTime());
+    System.out.printf("| %-17s : %-30s |\n", "Reason", newAppointment.getReason());
 
-    System.out.println("+-----------------------------------------------+");
+    System.out.println("+---------------------------------------------------+");
 
     System.out.println();
 

@@ -8,6 +8,7 @@ import entity.Schedule;
 import utility.MessageUI;
 import utility.Utilities;
 import utility.Validation;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -184,19 +185,18 @@ public class AppointmentValidation {
     boolean valid = false;
     String response = input;
 
-    LocalTime startTime = null;
-    LocalTime endTime = null;
+    String startTime = null;
+    String endTime = null;
+    String appointmentDay = appointmentDate.getDayOfWeek().name();
 
     // this possibly null
     if (scheduleMap != null) {
       ArrayList<String> keys = scheduleMap.getKeys();
       for (int i = 1; i <= keys.size(); i++) {
-        String key = keys.get(i);
-        Schedule schedule = scheduleMap.get(key);
-        if (schedule != null && schedule.getDoctorId().equals(doctorId)
-            && schedule.getDay().name().equals(appointmentDate.getDayOfWeek().name())) {
-          startTime = schedule.getStartTime();
-          endTime = schedule.getEndTime();
+        Schedule schedule = scheduleMap.get(keys.get(i));
+        if (schedule.getDoctorId().equals(doctorId) && schedule.getDay().name().equalsIgnoreCase(appointmentDay)) {
+          startTime = schedule.getStartTime().toString();
+          endTime = schedule.getEndTime().toString();
           break;
         }
       }
@@ -216,11 +216,12 @@ public class AppointmentValidation {
           input = input.replaceAll("[\\s:]", "");
           if (Validation.isNumeric(input)) {
             if (Validation.isEqualsLength(input, maxLength)) {
-              if (isWithinTimeRange(input, startTime, endTime)) {
-                response = String.valueOf(Utilities.formatTime(input));
+              input = Utilities.formatTime(input).toString();
+              if (isWithinTimeRange(LocalTime.parse(input), LocalTime.parse(startTime), LocalTime.parse(endTime))) {
+                response = input;
                 valid = true;
               } else {
-                MessageUI.notValidTime(String.valueOf(Utilities.formatTime(String.valueOf(startTime))), String.valueOf(Utilities.formatTime(String.valueOf(endTime)))); // error occur here due to null
+                MessageUI.notValidTime(LocalTime.parse(startTime), LocalTime.parse(endTime));
                 valid = false;
               }
             } else {
@@ -234,20 +235,15 @@ public class AppointmentValidation {
         }
       }
     }
-
+    
     return new String[] { String.valueOf(valid), response };
   }
   
-  public static boolean isWithinTimeRange(String input, LocalTime startTime, LocalTime endTime) {
-    if (!input.equals("") || startTime == null || endTime == null) {
+  public static boolean isWithinTimeRange(LocalTime input, LocalTime startTime, LocalTime endTime) {
+    if (input == null || startTime == null || endTime == null) {
       return false;
     }
-    try {
-      LocalTime time = LocalTime.parse(input);
-      return !time.isBefore(startTime) && time.isBefore(endTime);
-    } catch (Exception e) {
-      return false;
-    }
+    return !input.isBefore(startTime) && input.isBefore(endTime);
   }
 
   public static String[] validateReason(String input, char[] inputOptions, int maxLength) {

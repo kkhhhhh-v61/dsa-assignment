@@ -1,5 +1,7 @@
 package utility;
 
+import java.time.LocalTime;
+
 /**
  *
  * @author Tan Kai Hao
@@ -117,9 +119,9 @@ public class MessageUI {
     Utilities.wait(1000);
   }
 
-  public static void notValidTime(String startTime, String endTime) {
+  public static void notValidTime(LocalTime startTime, LocalTime endTime) {
     invalidInput();
-    System.out.println("Error! Input must be within the time range of " + startTime + " to " + endTime + ".");
+    System.out.println("Error! Input must be within the time range of " + startTime.toString() + " to " + endTime.toString() + ". (Does not include " + endTime.toString() + " itself)");
     Utilities.wait(1000);
   }
 

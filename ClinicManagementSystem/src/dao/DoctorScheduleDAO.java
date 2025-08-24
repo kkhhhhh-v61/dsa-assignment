@@ -14,8 +14,17 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-/** This class is specifically created for the Appointment module because the existing Doctor
- *  module consists of errors that interfere with it.
+/** This class is specifically created for the Appointment module because I like to use my own code and
+ *  can't be bothered to understand the Doctor module. :)
+ * 
+ *  PS: The actual reason is that I was frustrated because when I was initially trying to retrieve the
+ *  required data, but it keeps giving the wrong result. I suspect there's probably a bug in the Doctor
+ *  module, but I don't have the time to fix it + it's not my assigned module. :)
+ * 
+ *  If anyone sees this and wants to fix it, please do so. Although I will still be using this even if
+ *  the Doctor module is fixed. :)
+ * 
+ *  TL;DR: I'm lazy.
  *
  * @author Tan Kai Hao
  */
