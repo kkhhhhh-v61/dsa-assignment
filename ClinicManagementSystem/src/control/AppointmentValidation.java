@@ -47,10 +47,11 @@ public class AppointmentValidation {
     return new String[] { String.valueOf(valid), response };
   }
   
-  public static String[] validateDoctorIdExistence(RedBlackTreeMap<String, Doctor> doctorMap, String input,
-      char[] inputOptions) {
+  public static String[] validateDoctorIdExistence(RedBlackTreeMap<String, Doctor> doctorMap, ArrayList<String[]> doctorData, String appointmentDay, String input, char[] inputOptions) {
     boolean valid = false;
     String response = input;
+
+    // verify if the doctor exists on the day of appointment
 
     if (!input.equals("")) {
       if (Validation.isSingleChar(input)) {
@@ -77,7 +78,7 @@ public class AppointmentValidation {
     return new String[] { String.valueOf(valid), response };
   }
   
-  public static String[] validateAppointmentDate(RedBlackTreeMap<String, Doctor> doctorMap, String doctorId, String input, char[] inputOptions) {
+  public static String[] validateAppointmentDate(String input, char[] inputOptions) {
     boolean valid = false;
     String response = input;
 
@@ -93,32 +94,27 @@ public class AppointmentValidation {
           valid = false;
         }
       } else {
-        if (Validation.isValidId(doctorMap, doctorId)) {
-          input = input.replaceAll("\\s-", "");
-          if (Validation.isNumeric(input)) {
-            if (isValidDate(input)) {
-              if (isNotPastDate(input)) {
-                if (isWithinTimeFrame(input)) {
-                  response = String.valueOf(Utilities.formatDate(input));
-                  valid = true;
-                } else {
-                  MessageUI.notWithinTimeFrame();
-                  valid = false;
-                }
+        input = input.replaceAll("\\s-", "");
+        if (Validation.isNumeric(input)) {
+          if (isValidDate(input)) {
+            if (isNotPastDate(input)) {
+              if (isWithinTimeFrame(input)) {
+                response = String.valueOf(Utilities.formatDate(input));
+                valid = true;
               } else {
-                MessageUI.notFutureDate();
+                MessageUI.notWithinTimeFrame();
                 valid = false;
               }
             } else {
-              MessageUI.notValidDate();
+              MessageUI.notFutureDate();
               valid = false;
             }
           } else {
-            MessageUI.notNumeric();
+            MessageUI.notValidDate();
             valid = false;
           }
         } else {
-          MessageUI.notValidId(doctorId);
+          MessageUI.notNumeric();
           valid = false;
         }
       }

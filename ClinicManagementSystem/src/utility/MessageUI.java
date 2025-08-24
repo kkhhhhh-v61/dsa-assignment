@@ -26,7 +26,7 @@ public class MessageUI {
   public static void notSingleChar() {
     invalidInput();
     System.out.println("Error! Input must be a single character.");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void notValidOption(char[] options) {
@@ -38,96 +38,96 @@ public class MessageUI {
 
     invalidInput();
     System.out.println("Error! Input must be one of these options: " + optionString);
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void notValidId(String id) {
     invalidInput();
     System.out.println("Error! Unable to find ID: " + id);
-    Utilities.wait(1000);
+    pressAnyKey();
   }
  
   public static void notIcNumberFormat() {
     invalidInput();
     System.out.println("Error! IC Number must follow the format of 'YYMMDD-XX-XXXX'");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void notNumeric() {
     invalidInput();
     System.out.println("Error! Input must be numeric.");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void notUniqueValue(String attribute, String value) {
     invalidInput();
     System.out.println("Error! " + attribute + ": " + value + " already exists.");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void notValidIcBirthDate() {
     invalidInput();
     System.out.println("Error! The first 6 digits of the IC Number must be a valid birth date.");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void exceedLength(int maxLength) {
     invalidInput();
     System.out.println("Error! Input must not exceed " + maxLength + " characters.");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void notValidName() {
     invalidInput();
     System.out.println("Error! Input can only contain alphabet characters and spaces.");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void notContactNumberFormat() {
     invalidInput();
     System.out.println("Error! Contact Number must follow the format of '01X-XXX XXXX'.");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void notEmailFormat() {
     invalidInput();
     System.out.println("Error! Email must follow the format of 'username@mailserver.domain'.");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void sameAsCurrent() {
     invalidInput();
     System.out.println("Error! Input must be different from the current value.");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void notValidDate() {
     invalidInput();
     System.out.println("Error! Input must be a valid date with the format of 'YYYY-MM-DD'.");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void notFutureDate() {
     invalidInput();
     System.out.println("Error! Input must be a future date.");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void notWithinTimeFrame() {
     invalidInput();
     System.out.println("Error! Input must be within the time frame of not exceeding 1 year from the current date.");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void notValidTime(LocalTime startTime, LocalTime endTime) {
     invalidInput();
     System.out.println("Error! Input must be within the time range of " + startTime.toString() + " to " + endTime.toString() + ". (Does not include " + endTime.toString() + " itself)");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 
   public static void mustBeLength(int length) {
     invalidInput();
     System.out.println("Error! Input must be " + length + " characters long.");
-    Utilities.wait(1000);
+    pressAnyKey();
   }
 }

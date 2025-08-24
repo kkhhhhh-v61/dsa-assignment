@@ -87,7 +87,7 @@ public class DoctorValidator {
     }
 
     public static boolean isIcUnique(String icNumber, ListInterface<Doctor> doctors) {
-        for (int i = 0; i < doctors.size(); i++) {
+        for (int i = 1; i <= doctors.size(); i++) {
             if (doctors.get(i).getIcNumber().equals(icNumber)) {
                 return false;
             }

@@ -97,8 +97,6 @@ public class DoctorController {
     }
 
     public ListInterface<Doctor> getAllDoctors() {
-        doctorList.clear();
-        loadData();
         return doctorList;
     }
 
@@ -207,7 +205,7 @@ public class DoctorController {
             }
         }
 
-        for (int i = 0; i < doctorList.size(); i++) {
+        for (int i = 1; i <= doctorList.size(); i++) {
             Doctor doctor = doctorList.get(i);
             Specialization spec = doctor.getSpecialization();
             if (spec != Specialization.Unknown) {
@@ -233,7 +231,7 @@ public class DoctorController {
         System.out.println("----------------------------------------------------------------------");
 
         boolean found = false;
-        for (int i = 0; i < scheduleList.size(); i++) {
+        for (int i = 1; i <= scheduleList.size(); i++) {
             Schedule schedule = scheduleList.get(i);
             if (schedule.getDay() == day && schedule.getIsAvailable()) {
                 Doctor doctor = getDoctorById(schedule.getDoctorId());

@@ -109,50 +109,89 @@ public class AppointmentController {
 
     do {
       newAppointment.setPatientId(patientId);
-      appointmentUI.runDoctorRecordListMenu(doctorData, page);
-      response = appointmentUI.inputDoctorId();
-      vResponse = AppointmentValidation.validateDoctorIdExistence(doctorMap, response[0], response[1].toCharArray());
+      response = appointmentUI.inputAppointmentDate();
+      vResponse = AppointmentValidation.validateAppointmentDate(response[0], response[1].toCharArray());
 
       if (Boolean.parseBoolean(vResponse[0])) {
         if (vResponse[1].equals("0")) {
           exit = true;
         } else {
+          String appointmentDay = LocalDate.parse(vResponse[1]).getDayOfWeek().toString();
+          newAppointment.setAppointmentDate(LocalDate.parse(vResponse[1]));
+
+          boolean exit1 = false;
+          do {
+            do {
+              appointmentUI.runDoctorRecordListMenu(doctorData, "", appointmentDay, page);
+              response = appointmentUI.inputDoctorId();
+              vResponse = AppointmentValidation.validateDoctorIdExistence(doctorMap, doctorData, appointmentDay, response[0], response[1].toCharArray());
+            } while (!Boolean.parseBoolean(vResponse[0]));
+
+            if (vResponse[1].equals("0") || vResponse[1].equals("Q") || vResponse[1].equals("E")) {
+              switch (vResponse[1]) {
+                case "Q":
+                  if (page > 1) {
+                    page--;
+                  }
+                  break;
+                case "E":
+                  if (page < (doctorData.size() + 9) / 10) {
+                    page++;
+                  }
+                  break;
+                case "0":
+                  exit1 = true;
+                  break;
+              }
+            } else {
+              exit1 = true;
+            }
+          } while (!exit1);
+
           newAppointment.setDoctorId(vResponse[1]);
 
+          boolean exit2 = false;
           do {
-            response = appointmentUI.inputAppointmentDate();
-            vResponse = AppointmentValidation.validateAppointmentDate(doctorMap, newAppointment.getDoctorId(),
-                response[0], response[1].toCharArray());
-          } while (!Boolean.parseBoolean(vResponse[0]));
-
-          if (vResponse[1].equals("0")) {
-            exit = true;
-          } else {
-            newAppointment.setAppointmentDate(LocalDate.parse(vResponse[1]));
-
             do {
+              appointmentUI.runDoctorRecordListMenu(doctorData, newAppointment.getDoctorId(), appointmentDay, page);
               response = appointmentUI.inputAppointmentTime();
               vResponse = AppointmentValidation.validateAppointmentTime(scheduleMap, newAppointment.getDoctorId(),
                   newAppointment.getAppointmentDate(), response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
             } while (!Boolean.parseBoolean(vResponse[0]));
 
-            if (vResponse[1].equals("0")) {
-              exit = true;
-            } else {
-              newAppointment.setAppointmentTime(LocalTime.parse(vResponse[1]));
-
-              do {
-                response = appointmentUI.inputReason();
-                vResponse = AppointmentValidation.validateReason(response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
-              } while (!Boolean.parseBoolean(vResponse[0]));
-
-              if (vResponse[1].equals("0")) {
-                exit = true;
-              } else {
-                newAppointment.setReason(vResponse[1]);
-                complete = true;
+            if (vResponse[1].equals("0") || vResponse[1].equals("Q") || vResponse[1].equals("E")) {
+              switch (vResponse[1]) {
+                case "Q":
+                  if (page > 1) {
+                    page--;
+                  }
+                  break;
+                case "E":
+                  if (page < (doctorData.size() + 9) / 10) {
+                    page++;
+                  }
+                  break;
+                case "0":
+                  exit2 = true;
+                  break;
               }
+            } else {
+              exit2 = true;
             }
+          } while (!exit2);
+
+          newAppointment.setAppointmentTime(LocalTime.parse(vResponse[1]));
+
+          do {
+            response = appointmentUI.inputReason();
+            vResponse = AppointmentValidation.validateReason(response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
+          } while (!Boolean.parseBoolean(vResponse[0]));
+
+          if (vResponse[1].equals("0")) {
+            exit = true;
+          } else {
+            newAppointment.setReason(vResponse[1]);
+            complete = true;
           }
         }
       }
@@ -209,14 +248,14 @@ public class AppointmentController {
 
     for (int i = 1; i <= doctorKeys.size(); i++) {
       for (int j = 1; j <= scheduleList.size(); j++) {
-        if (doctorKeys.get(i).equals(scheduleList.get(j).getDoctorId())) {
+        if (doctorKeys.get(i).equals(scheduleList.get(j).getDoctorId()) && scheduleList.get(j).getIsAvailable()) {
           String[] entry = {
               doctorKeys.get(i),
               doctorMap.get(doctorKeys.get(i)).getName(),
               scheduleList.get(j).getDay().toString(),
               scheduleList.get(j).getStartTime().toString(),
               scheduleList.get(j).getEndTime().toString(),
-              String.valueOf(scheduleList.get(j).getIsAvailable() ? "Available" : "Unavailable")
+              "Available"
           };
           doctorData.add(entry);
         }

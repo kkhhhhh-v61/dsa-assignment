@@ -2,7 +2,9 @@ package adt;
 
 import java.io.Serializable;
 
-/**
+/** NOTE: THIS IS A 1-BASED INDEXING ARRAY LIST!!!
+ *  NOTE: THIS IS A 1-BASED INDEXING ARRAY LIST!!!
+ *  NOTE: THIS IS A 1-BASED INDEXING ARRAY LIST!!!
  *
  * @author Tan Kai Hao
  */
