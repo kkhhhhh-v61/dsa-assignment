@@ -45,7 +45,7 @@ public class SystemUI {
   
   public String[] runClinicStaffMenu() {
 
-    final char[] INPUT_OPTIONS = { '1', '2', '0' };
+    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '5', '0' };
 
     System.out.println();
 

@@ -43,7 +43,7 @@ public class MessageUI {
 
   public static void notValidId(String id) {
     invalidInput();
-    System.out.println("Error! Unable to find ID: " + id);
+    System.out.println("Error! Invalid ID: " + id + ".");
     pressAnyKey();
   }
  

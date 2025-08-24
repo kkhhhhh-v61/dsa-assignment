@@ -14,7 +14,7 @@ public class PatientUI {
   
   public String[] runPatientMenu() {
 
-    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '0' };
+    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '5', '0' };
 
     System.out.println();
 
@@ -24,9 +24,10 @@ public class PatientUI {
     System.out.println("|     PATIENT MANAGEMENT     |");
     System.out.println("+----------------------------+");
     System.out.println("| [1] Patient Registration   |");
-    System.out.println("| [2] Patient Record List    |");
-    System.out.println("| [3] Clear Patient Record   |");
-    System.out.println("| [4] Initialize Patient     |");
+    System.out.println("| [2] Patient List           |");
+    System.out.println("| [3] Patient Search         |");
+    System.out.println("| [4] Patient Clearance      |");
+    System.out.println("| [5] Patient Initialization |");
     System.out.println("| [0] Return                 |");
     System.out.println("+----------------------------+");
 
@@ -36,7 +37,7 @@ public class PatientUI {
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };    
   }
   
-  public String[] inputPatientId() {
+  public String[] inputPatientSearch() {
 
     final char[] INPUT_OPTIONS = { '0' };
 
@@ -229,7 +230,7 @@ public class PatientUI {
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
 
-  public String[] runPatientRecordListMenu(RedBlackTreeMap<String, Patient> patientMap, String ui, int page) {
+  public String[] runPatientListMenu(RedBlackTreeMap<String, Patient> patientMap, String ui, int page) {
 
     final char[] INPUT_OPTIONS = { 'Q', 'E', 'W', '1', '2', '0' };
 
@@ -239,7 +240,7 @@ public class PatientUI {
 
     if (ui.equals("left")) {
       System.out.println("+===========================================================================================================+");
-      System.out.printf("|                                         [PT1] PATIENT LIST [PG%02d]                                         |\n", page);
+      System.out.printf("| [Part 1]                                      PATIENT LIST                                      [Page %02d] |\n", page);
       System.out.println("+===========================================================================================================+");
       System.out.println("|  PID  |       IC       |              FULL NAME              | GENDER | BIRTH DATE | AGE | CONTACT NUMBER |");
       System.out.println("+===========================================================================================================+");
@@ -261,7 +262,7 @@ public class PatientUI {
       System.out.println("+===========================================================================================================+");
     } else {
       System.out.println("+===============================================================================================================+");
-      System.out.printf("|                                           [PT2] PATIENT LIST [PG%02d]                                           |\n", page);
+      System.out.printf("| [Part 2]                                        PATIENT LIST                                        [Page %02d] |\n", page);
       System.out.println("+===============================================================================================================+");
       System.out.println("|  PID  |                EMAIL                |                    ADDRESS                    |  REG DATE  | BT |");
       System.out.println("+===============================================================================================================+");
@@ -302,7 +303,7 @@ public class PatientUI {
 
     if (ui.equals("left")) {
       System.out.println("+===========================================================================================================+");
-      System.out.println("|                                         [PT1] PATIENT LIST                                                |");
+      System.out.println("| [Part 1]                                      PATIENT LIST                                                |");
       System.out.println("+===========================================================================================================+");
       System.out.println("|  PID  |       IC       |              FULL NAME              | GENDER | BIRTH DATE | AGE | CONTACT NUMBER |");
       System.out.println("+===========================================================================================================+");
@@ -314,7 +315,7 @@ public class PatientUI {
       System.out.println("+===========================================================================================================+");
     } else {
       System.out.println("+===============================================================================================================+");
-      System.out.println("|                                           [PT2] PATIENT LIST                                                  |");
+      System.out.println("| [Part 2]                                        PATIENT LIST                                                  |");
       System.out.println("+===============================================================================================================+");
       System.out.println("|  PID  |                EMAIL                |                    ADDRESS                    |  REG DATE  | BT |");
       System.out.println("+===============================================================================================================+");
@@ -330,6 +331,8 @@ public class PatientUI {
     System.out.println("+----------------------+");
     System.out.println("| SELECT FIELD TO EDIT |");
     System.out.println("+----------------------+");
+
+    System.out.println();
 
     System.out.println("[1] IC Number | [2] Name | [3] Contact Number | [4] Email | [5] Address | [6] Blood Type");
     System.out.println("[W] Switch Part View | [0] Return");
@@ -472,9 +475,9 @@ public class PatientUI {
 
     Utilities.clearScreen();
 
-    System.out.println("+----------------+");
-    System.out.println("|   BLOOD TYPE   |");
-    System.out.println("+----------------+");
+    System.out.println("+------------------+");
+    System.out.println("|    BLOOD TYPE    |");
+    System.out.println("+------------------+");
 
     System.out.println();
 
@@ -488,7 +491,7 @@ public class PatientUI {
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
-  public String[] confirmEdit(String field, String oldValue, String newValue) {
+  public String[] confirmEdit(String field, String currentValue, String newValue) {
 
     final char[] INPUT_OPTIONS = { '1', '0' };
 
@@ -502,7 +505,7 @@ public class PatientUI {
 
     System.out.println();
 
-    System.out.println(field + ": " + oldValue + " -> " + newValue);
+    System.out.println(field + ": " + currentValue + " -> " + newValue);
     System.out.println("[1] Confirm | [0] Cancel");
 
     System.out.println();
@@ -521,7 +524,7 @@ public class PatientUI {
 
     if (ui.equals("left")) {
       System.out.println("+===========================================================================================================+");
-      System.out.println("|                                         [PT1] PATIENT LIST                                                |");
+      System.out.println("| [Part 1]                                      PATIENT LIST                                                |");
       System.out.println("+===========================================================================================================+");
       System.out.println("|  PID  |       IC       |              FULL NAME              | GENDER | BIRTH DATE | AGE | CONTACT NUMBER |");
       System.out.println("+===========================================================================================================+");
@@ -533,7 +536,7 @@ public class PatientUI {
       System.out.println("+===========================================================================================================+");
     } else {
       System.out.println("+===============================================================================================================+");
-      System.out.println("|                                           [PT2] PATIENT LIST                                                  |");
+      System.out.println("| [Part 2]                                        PATIENT LIST                                                  |");
       System.out.println("+===============================================================================================================+");
       System.out.println("|  PID  |                EMAIL                |                    ADDRESS                    |  REG DATE  | BT |");
       System.out.println("+===============================================================================================================+");

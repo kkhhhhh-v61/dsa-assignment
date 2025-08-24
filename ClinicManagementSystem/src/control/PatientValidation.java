@@ -11,13 +11,16 @@ import utility.Validation;
  * @author Tan Kai Hao
  */
 public class PatientValidation {
-  public static String[] validatePatientId(RedBlackTreeMap<String, Patient> patientMap, String userInput, char[] inputOptions) {
+
+  public static String[] validatePatientSearch(RedBlackTreeMap<String, Patient> patientMap, String userInput,
+      char[] inputOptions) {
+    
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -40,13 +43,15 @@ public class PatientValidation {
     return new String[] { String.valueOf(valid), response };
   }
 
-  public static String[] validateIcNumber(RedBlackTreeMap<String, Patient> patientMap, String userInput, char[] inputOptions) {
+  public static String[] validateIcNumber(RedBlackTreeMap<String, Patient> patientMap, String userInput,
+      char[] inputOptions) {
+    
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -86,12 +91,13 @@ public class PatientValidation {
   }
   
   public static String[] validateName(String userInput, char[] inputOptions, int maxLength) {
+
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -120,12 +126,13 @@ public class PatientValidation {
   }
   
   public static String[] validateContactNumber(String userInput, char[] inputOptions) {
+
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -155,12 +162,13 @@ public class PatientValidation {
   }
 
   public static String[] validateEmail(String userInput, char[] inputOptions, int maxLength) {
+
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -189,12 +197,13 @@ public class PatientValidation {
   }
 
   public static String[] validateAddress(String userInput, char[] inputOptions, int maxLength) {
+
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -218,12 +227,13 @@ public class PatientValidation {
   }
 
   public static String[] validateBloodType(String userInput, char[] inputOptions) {
+
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -242,12 +252,13 @@ public class PatientValidation {
   }
 
   public static String[] validateConfirmRegistration(String userInput, char[] inputOptions) {
+
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -266,6 +277,7 @@ public class PatientValidation {
   }
 
   public static String[] validateRegistrationEdit(String userInput, char[] inputOptions) {
+
     boolean valid = false;
     String response = userInput;
 
@@ -289,7 +301,8 @@ public class PatientValidation {
     return new String[] { String.valueOf(valid), response };
   }
 
-  public static String[] validateRecordList(String userInput, char[] inputOptions) {
+  public static String[] validatePatientListMenu(String userInput, char[] inputOptions) {
+
     boolean valid = false;
     String response = userInput;
 
@@ -313,7 +326,8 @@ public class PatientValidation {
     return new String[] { String.valueOf(valid), response };
   }
 
-  public static String[] validateEditMenu(String userInput, char[] inputOptions) {
+  public static String[] validatePatientEditMenu(String userInput, char[] inputOptions) {
+
     boolean valid = false;
     String response = userInput;
 
@@ -338,12 +352,13 @@ public class PatientValidation {
   }
 
   public static String[] validateEditIcNumber(String userInput, char[] inputOptions, String icNumber) {
+
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -383,12 +398,13 @@ public class PatientValidation {
   }
 
   public static String[] validateEditName(String userInput, char[] inputOptions, int maxLength, String name) {
+
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -422,12 +438,13 @@ public class PatientValidation {
   }
   
   public static String[] validateEditContactNumber(String userInput, char[] inputOptions, String contactNumber) {
+    
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -462,12 +479,13 @@ public class PatientValidation {
   }
   
   public static String[] validateEditEmail(String userInput, char[] inputOptions, int maxLength, String email) {
+
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -501,12 +519,13 @@ public class PatientValidation {
   }
   
   public static String[] validateEditAddress(String userInput, char[] inputOptions, int maxLength, String address) {
+
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -535,12 +554,13 @@ public class PatientValidation {
   }
   
   public static String[] validateEditBloodType(String userInput, char[] inputOptions, String bloodType) {
+
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           String bt = "";
@@ -579,12 +599,13 @@ public class PatientValidation {
   }
   
   public static String[] validateConfirmEdit(String userInput, char[] inputOptions) {
+
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
@@ -603,6 +624,7 @@ public class PatientValidation {
   }
 
   public static String[] validateDeleteMenu(String userInput, char[] inputOptions) {
+
     boolean valid = false;
     String response = userInput;
 
@@ -627,12 +649,13 @@ public class PatientValidation {
   }
 
   public static String[] validatePatientClearance(String userInput, char[] inputOptions) {
+    
     boolean valid = false;
     String response = userInput;
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
-        char option = userInput.charAt(0);
+        char option = Character.toUpperCase(userInput.charAt(0));
 
         if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);

@@ -48,6 +48,7 @@ public class SystemController {
                 doctorUI.showDoctorMenu();
                 break;
               case '3':
+                appointmentController.runAppointmentManagement();
                 break;
               case '4':
                 break;
