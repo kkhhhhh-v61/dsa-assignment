@@ -83,6 +83,9 @@ public class SystemUI {
     System.out.println();
 
     System.out.println("[FORMAT] PXXXX");
+
+    System.out.println();
+    
     System.out.println("[0] Exit");
 
     System.out.println();

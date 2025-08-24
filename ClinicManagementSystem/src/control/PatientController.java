@@ -202,7 +202,7 @@ public class PatientController {
                 patientDAO.saveToFile(patientMap);
                 System.out.println();
                 System.out.println("Patient registered successfully.");
-                Utilities.wait(1000);
+                Utilities.pressAnyKey();
                 exit1 = true;
                 exit = true;
                 break;
@@ -769,6 +769,46 @@ public class PatientController {
 
   public void runPatientSearch() {
 
+    boolean exit = false;
+    String[] response;
+    String[] vResponse;
+    String ui = "left";
+    
+    do {
+      response = patientUI.inputPatientSearch();
+      vResponse = PatientValidation.validatePatientSearch(patientMap, response[0], response[1].toCharArray());
+    } while (!Boolean.parseBoolean(vResponse[0]));
+    
+    if (!vResponse[1].equals("0")) {
+      String patientId = vResponse[1];
+      do {
+        response = patientUI.runPatientSearchMenu(patientMap.get(patientId), ui);
+        vResponse = PatientValidation.validatePatientSearchMenu(response[0], response[1].toCharArray());
+
+        if (Boolean.parseBoolean(vResponse[0])) {
+          switch (vResponse[1]) {
+            case "W":
+              if (ui.equals("left")) {
+                ui = "right";
+              } else {
+                ui = "left";
+              }
+              break;
+            case "1":
+              runPatientEdit(vResponse[1]);
+              break;
+            case "2":
+              runPatientDelete(vResponse[1]);
+              break;
+            case "0":
+              exit = true;
+              break;
+            default:
+              break;
+          }
+        }
+      } while (!exit);
+    }
   }
 
   public void runPatientClearance() {

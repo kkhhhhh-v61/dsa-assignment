@@ -93,6 +93,8 @@ public class AppointmentUI {
     }
 
     System.out.println("+===========================================================================================+");
+    System.out.println("| NAVIGATION | [Q] Previous Page | [E] Next Page |                             | [0] Return |");
+    System.out.println("+===========================================================================================+");
   }
 
   public String[] inputAppointmentListMenu() {
@@ -101,8 +103,14 @@ public class AppointmentUI {
 
     System.out.println();
 
-    System.out.println("[Q] Previous Page | [E] Next Page");
-    System.out.println("[1] Edit | [2] Delete | [0] Exit");
+    System.out.println("+------------------+");
+    System.out.println("| SELECT AN ACTION |");
+    System.out.println("+------------------+");
+
+    System.out.println();
+
+    System.out.println("[1] Edit");
+    System.out.println("[2] Delete");
 
     System.out.println();
 
@@ -116,8 +124,13 @@ public class AppointmentUI {
 
     System.out.println();
 
-    System.out.println("[Q] Previous Page | [E] Next Page");
-    System.out.println("[0] Exit");
+    System.out.println("+------------------+");
+    System.out.println("|  APPOINTMENT ID  |");
+    System.out.println("+------------------+");
+
+    System.out.println();
+
+    System.out.println("[0] Cancel");
 
     System.out.println();
 
@@ -145,6 +158,8 @@ public class AppointmentUI {
         appointment.getStatus()));
 
     System.out.println("+===========================================================================================+");
+    System.out.println("| NAVIGATION |                                                                 | [0] Return |");
+    System.out.println("+===========================================================================================+");
 
     System.out.println();
 
@@ -154,8 +169,10 @@ public class AppointmentUI {
 
     System.out.println();
 
-    System.out.println("[1] Doctor ID | [2] Appointment Date | [3] Appointment Time | [4] Status");
-    System.out.println("[0] Return");
+    System.out.println("[1] Doctor ID");
+    System.out.println("[2] Appointment Date");
+    System.out.println("[3] Appointment Time");
+    System.out.println("[4] Status");
 
     System.out.println();
 
@@ -172,7 +189,7 @@ public class AppointmentUI {
     Utilities.clearScreen();
 
     System.out.println("+========================================================================================+");
-    System.out.printf("|                                  DOCTOR SCHEDULE LIST                          [Page %02d] |\n", page);
+    System.out.printf("|                                  DOCTOR SCHEDULE LIST                        [Page %02d] |\n", page);
     System.out.println("+========================================================================================+");
     System.out.println("|  DID  |             DOCTOR NAME             |    DAY    | SCHEDULE TIME | AVAILABILITY |");
     System.out.println("+========================================================================================+");
@@ -191,15 +208,15 @@ public class AppointmentUI {
       }
     }
     System.out.println("+========================================================================================+");
-
-    System.out.println();
-
-    System.out.println("[Q] Previous Page | [E] Next Page");
-    System.out.println("[0] Exit");
+    System.out.println("| NAVIGATION | [Q] Previous Page | [E] Next Page |                          | [0] Return |");
+    System.out.println("+========================================================================================+");
 
     System.out.println();
 
     System.out.println("Current Doctor ID: " + doctorId);
+
+    System.out.println();
+
     System.out.print("> D");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
@@ -219,11 +236,17 @@ public class AppointmentUI {
     System.out.println();
 
     System.out.println("[FORMAT] YYYY-MM-DD");
+
+    System.out.println();
+
     System.out.println("[0] Exit");
 
     System.out.println();
 
     System.out.println("Current Appointment Date: " + appointmentDate);
+
+    System.out.println();
+
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
@@ -235,8 +258,6 @@ public class AppointmentUI {
 
     System.out.println();
 
-    Utilities.clearScreen();
-
     System.out.println("+------------------+");
     System.out.println("| APPOINTMENT TIME |");
     System.out.println("+------------------+");
@@ -244,11 +265,17 @@ public class AppointmentUI {
     System.out.println();
 
     System.out.println("[FORMAT] HH:MM");
+
+    System.out.println();
+
     System.out.println("[0] Exit");
 
     System.out.println();
 
     System.out.println("Current Appointment Time: " + appointmentTime);
+
+    System.out.println();
+
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
   }
@@ -262,17 +289,22 @@ public class AppointmentUI {
     Utilities.clearScreen();
 
     System.out.println("+------------------+");
-    System.out.println("| APPOINTMENT TIME |");
+    System.out.println("|      STATUS      |");
     System.out.println("+------------------+");
 
     System.out.println();
 
-    System.out.println("[1] Approved | [2] Rejected | [3] Cancelled");
-    System.out.println("[0] Exit");
+    System.out.println("[1] Approved");
+    System.out.println("[2] Rejected");
+    System.out.println("[3] Cancelled");
+    System.out.println("[0] Cancel");
 
     System.out.println();
 
     System.out.println("Current Status: " + status);
+
+    System.out.println();
+
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
@@ -292,13 +324,55 @@ public class AppointmentUI {
     System.out.println();
 
     System.out.println(field + ": " + currentValue + " -> " + newValue);
-    System.out.println("[1] Confirm | [0] Cancel");
+
+    System.out.println();
+
+    System.out.println("[1] Confirm");
+    System.out.println("[0] Cancel");
 
     System.out.println();
 
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
-    
+
+  }
+  
+  public String[] runAppointmentDeleteMenu(Appointment appointment) {
+
+    final char[] INPUT_OPTIONS = { '1', '0' };
+
+    System.out.println();
+
+    Utilities.clearScreen();
+
+    System.out.println("+===========================================================================================+");
+    System.out.println("|                                      APPOINTMENT LIST                                     |");
+    System.out.println("+===========================================================================================+");
+    System.out.println("|  AID  |  PID  |  DID  |    DATE    |  TIME  |             REASON             |   STATUS   |");
+    System.out.println("+===========================================================================================+");
+
+    System.out.println(String.format("| %-5s | %-5s | %-5s | %10s | %6s | %-30s | %10s |",
+        appointment.getAppointmentId(), appointment.getPatientId(), appointment.getDoctorId(),
+        appointment.getAppointmentDate(), appointment.getAppointmentTime(), appointment.getReason(),
+        appointment.getStatus()));
+
+    System.out.println("+===========================================================================================+");
+
+    System.out.println();
+
+    System.out.println("+---------------------+");
+    System.out.println("| Delete Confirmation |");
+    System.out.println("+---------------------+");
+
+    System.out.println();
+
+    System.out.println("[1] Confirm");
+    System.out.println("[0] Cancel");
+
+    System.out.println();
+
+    System.out.print("> ");
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] runStudentAppointmentMenu() {
@@ -324,67 +398,55 @@ public class AppointmentUI {
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
 
-  public void runDoctorRecordListMenu(ArrayList<String[]> doctorData, String doctorId, String appointmentDay, int page) {
-
+  public ArrayList<String[]> runDoctorRecordListMenu(ArrayList<String[]> doctorData, String doctorId, String appointmentDay, int page) {
     System.out.println();
-
     Utilities.clearScreen();
 
-    int itemsPerPage = 10;
-    int startIndex = (page - 1) * itemsPerPage + 1;
-    int endIndex = Math.min(startIndex + itemsPerPage - 1, doctorData.size());
     ArrayList<String[]> filteredDoctorData = new ArrayList<>();
-
     if (!doctorData.isEmpty()) {
-      if (!doctorId.isEmpty() && !appointmentDay.isEmpty()) { // for display of time for the selected doctor and date
-        for (int i = startIndex; i <= endIndex; i++) {
-          if (i <= doctorData.size()) {
-            String[] data = doctorData.get(i);
-            if (data[0].equalsIgnoreCase(doctorId) && data[2].equalsIgnoreCase(appointmentDay)) {
-              filteredDoctorData.add(data);
-            }
-          }
-        }
-      } else if (doctorId.isEmpty() && !appointmentDay.isEmpty()) { // for display of all doctors available on the selected date
-        for (int i = startIndex; i <= endIndex; i++) {
-          if (i <= doctorData.size()) {
-            String[] data = doctorData.get(i);
-            if (data[2].equalsIgnoreCase(appointmentDay)) {
-              filteredDoctorData.add(data);
-            }
-          }
+      for (int i = 1; i <= doctorData.size(); i++) {
+        String[] data = doctorData.get(i);
+        boolean matchesDay = appointmentDay.isEmpty() || data[2].equalsIgnoreCase(appointmentDay);
+        boolean matchesDoctor = doctorId.isEmpty() || data[0].equalsIgnoreCase(doctorId);
+        
+        if (matchesDay && matchesDoctor) {
+          filteredDoctorData.add(data);
         }
       }
     }
 
+    int itemsPerPage = 10;
+    int totalPages = (int) Math.ceil((double) filteredDoctorData.size() / itemsPerPage);
+    page = Math.max(1, Math.min(page, totalPages));
+    
+    int startIndex = (page - 1) * itemsPerPage + 1;
+    int endIndex = Math.min(startIndex + itemsPerPage, filteredDoctorData.size());
+
     System.out.println("+========================================================================================+");
-    System.out.printf("|                                  DOCTOR SCHEDULE LIST                          [Page %02d] |\n", page);
+    System.out.printf("|                                  DOCTOR SCHEDULE LIST                        [Page %02d] |\n", page);
     System.out.println("+========================================================================================+");
     System.out.println("|  DID  |             DOCTOR NAME             |    DAY    | SCHEDULE TIME | AVAILABILITY |");
     System.out.println("+========================================================================================+");
     
-    if (filteredDoctorData.isEmpty() || appointmentDay.isEmpty()) {
+    if (filteredDoctorData.isEmpty()) {
       System.out.println("|                                   No schedules found.                                  |");
     } else {
       for (int i = startIndex; i <= endIndex; i++) {
-        if (i <= filteredDoctorData.size()) {
-          String[] data = filteredDoctorData.get(i);
-          System.out.println(String.format("| %-5s | %-35s | %9s | %5s - %5s | %12s |", 
-            data[0], data[1], data[2], data[3], data[4], data[5]));
-        }
+        String[] data = filteredDoctorData.get(i);
+        System.out.println(String.format("| %-5s | %-35s | %9s | %5s - %5s | %12s |", 
+          data[0], data[1], data[2], data[3], data[4], data[5]));
       }
     }
     System.out.println("+========================================================================================+");
+    System.out.println("| NAVIGATION | [Q] Previous Page | [E] Next Page |                          | [0] Return |");
+    System.out.println("+========================================================================================+");
+
+    return filteredDoctorData;
   }
   
   public String[] inputDoctorId() {
 
     final char[] INPUT_OPTIONS = { 'Q', 'E', '0' };
-
-    System.out.println();
-
-    System.out.println("[Q] Previous Page | [E] Next Page");
-    System.out.println("[0] Exit");
 
     System.out.println();
 
@@ -415,7 +477,10 @@ public class AppointmentUI {
     System.out.println();
 
     System.out.println("[FORMAT] YYYY-MM-DD");
-    System.out.println("[0] Exit");
+
+    System.out.println();
+
+    System.out.println("[0] Cancel");
 
     System.out.println();
 
@@ -437,7 +502,10 @@ public class AppointmentUI {
     System.out.println();
 
     System.out.println("[FORMAT] HH:MM");
-    System.out.println("[0] Exit");
+
+    System.out.println();
+
+    System.out.println("[0] Cancel");
 
     System.out.println();
 
@@ -462,7 +530,7 @@ public class AppointmentUI {
 
     System.out.println();
 
-    System.out.println("[0] Exit");
+    System.out.println("[0] Cancel");
 
     System.out.println();
 
@@ -476,7 +544,7 @@ public class AppointmentUI {
 
     Utilities.clearScreen();
 
-    final char[] INPUT_OPTIONS = { '1', '2', '0' };
+    final char[] INPUT_OPTIONS = { '1', '0' };
 
     System.out.println();
 
@@ -490,11 +558,12 @@ public class AppointmentUI {
     System.out.printf("| %-17s : %-30s |\n", "Appointment Time", newAppointment.getAppointmentTime());
     System.out.printf("| %-17s : %-30s |\n", "Reason", newAppointment.getReason());
 
-    System.out.println("+---------------------------------------------------+");
+    System.out.println("+----------------------------------------------------+");
 
     System.out.println();
 
-    System.out.println("[1] Confirm | [0] Cancel");
+    System.out.println("[1] Confirm");
+    System.out.println("[0] Cancel");
 
     System.out.println();
 

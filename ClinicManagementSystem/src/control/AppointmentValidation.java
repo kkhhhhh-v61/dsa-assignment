@@ -1,6 +1,7 @@
 package control;
 
 import adt.ArrayList;
+import adt.ListInterface;
 import adt.RedBlackTreeMap;
 import entity.Appointment;
 import entity.Doctor;
@@ -141,7 +142,16 @@ public class AppointmentValidation {
           valid = false;
         }
       } else {
-        if (Validation.isValidId(doctorData, "D" + userInput)) {
+        ListInterface<String> doctorIds = new ArrayList<>();
+        for (int i = 1; i <= doctorData.size(); i++) {
+          String[] doctor = doctorData.get(i);
+          if (doctor[0].equals("D" + userInput)) {
+            if (!doctorIds.contains("D" + userInput)) {
+              doctorIds.add("D" + userInput);
+            }
+          }
+        }
+        if (Validation.isValidId(doctorIds, "D" + userInput)) {
           response = "D" + userInput;
           valid = true;
         } else {
@@ -194,31 +204,6 @@ public class AppointmentValidation {
           MessageUI.notNumeric();
           valid = false;
         }
-      }
-    }
-
-    return new String[] { String.valueOf(valid), response };
-  }
-  
-  public static String[] validateConfirmEdit(String userInput, char[] userInputOptions) {
-    
-    boolean valid = false;
-    String response = userInput;
-
-    if (!userInput.equals("")) {
-      if (Validation.isSingleChar(userInput)) {
-        char option = Character.toUpperCase(userInput.charAt(0));
-
-        if (Validation.isValidOption(option, userInputOptions)) {
-          response = String.valueOf(option);
-          valid = true;
-        } else {
-          MessageUI.notValidOption(userInputOptions);
-          valid = false;
-        }
-      } else {
-        MessageUI.notSingleChar();
-        valid = false;
       }
     }
 
@@ -308,6 +293,56 @@ public class AppointmentValidation {
 
     return new String[] { String.valueOf(valid), response };
   }
+  
+  public static String[] validateConfirmEdit(String userInput, char[] userInputOptions) {
+
+    boolean valid = false;
+    String response = userInput;
+
+    if (!userInput.equals("")) {
+      if (Validation.isSingleChar(userInput)) {
+        char option = Character.toUpperCase(userInput.charAt(0));
+
+        if (Validation.isValidOption(option, userInputOptions)) {
+          response = String.valueOf(option);
+          valid = true;
+        } else {
+          MessageUI.notValidOption(userInputOptions);
+          valid = false;
+        }
+      } else {
+        MessageUI.notSingleChar();
+        valid = false;
+      }
+    }
+
+    return new String[] { String.valueOf(valid), response };
+  }
+  
+  public static String[] vaidateAppointmentDeleteMenu(String userInput, char[] userInputOptions) {
+
+    boolean valid = false;
+    String response = userInput;
+
+    if (!userInput.equals("")) {
+      if (Validation.isSingleChar(userInput)) {
+        char option = Character.toUpperCase(userInput.charAt(0));
+
+        if (Validation.isValidOption(option, userInputOptions)) {
+          response = String.valueOf(option);
+          valid = true;
+        } else {
+          MessageUI.notValidOption(userInputOptions);
+          valid = false;
+        }
+      } else {
+        MessageUI.notSingleChar();
+        valid = false;
+      }
+    }
+
+    return new String[] { String.valueOf(valid), response };
+  }
 
   public static String[] validatePatientIdExistence(RedBlackTreeMap<String, Patient> patientMap, String userInput,
       char[] userInputOptions) {
@@ -345,8 +380,6 @@ public class AppointmentValidation {
     
     boolean valid = false;
     String response = userInput;
-
-    // verify if the doctor exists on the day of appointment
 
     if (!userInput.equals("")) {
       if (Validation.isSingleChar(userInput)) {
