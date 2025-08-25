@@ -404,7 +404,13 @@ public class DoctorUI {
         } while (choice != 0);
     }
 
-   private void addScheduleUI(String doctorId) {
+    private void addScheduleUI(String doctorId) {
+        // get last id from schedules.txt
+        ListInterface<Schedule> scheduleList = doctorController.getAllSchedules();
+        String lastId = scheduleList.get(scheduleList.size()).getScheduleId();
+        int lastIdInt = Integer.parseInt(lastId.substring(1));
+        Schedule.setLastId(lastIdInt);
+
         DayOfWeek day;
         LocalTime start;
         LocalTime end;

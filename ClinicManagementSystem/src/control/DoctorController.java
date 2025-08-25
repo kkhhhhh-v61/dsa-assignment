@@ -140,12 +140,16 @@ public class DoctorController {
     public ListInterface<String> addSchedule(Schedule newSchedule) {
         ListInterface<Schedule> existingSchedules = getSchedulesForDoctor(newSchedule.getDoctorId());
         ListInterface<String> errors = DoctorValidator.validateSchedule(newSchedule, existingSchedules);
-        
+
         if (errors.isEmpty()) {
             scheduleList.add(newSchedule);
             saveData();
         }
         return errors;
+    }
+    
+    public ListInterface<Schedule> getAllSchedules() {
+        return scheduleList;
     }
 
     public ListInterface<Schedule> getSchedulesForDoctor(String doctorId) {

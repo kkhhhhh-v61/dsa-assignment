@@ -35,6 +35,10 @@ public class Schedule {
     this.endTime = endTime;
     this.isAvailable = isAvailable;
   }
+
+  public static void setLastId(int lastId) {
+    Schedule.lastId = lastId;
+  }
   
   public String getScheduleId() {
     return scheduleId;
