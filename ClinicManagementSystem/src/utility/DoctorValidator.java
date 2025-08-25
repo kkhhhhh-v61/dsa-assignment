@@ -9,6 +9,7 @@ import adt.ListInterface;
 import entity.Doctor;
 import entity.Schedule;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.regex.Pattern;
 import utility.Enum.Gender;
 
@@ -18,6 +19,9 @@ import utility.Enum.Gender;
  */
 public class DoctorValidator {
 
+    // Define the required rest period between schedules
+    private static final int REQUIRED_REST_HOURS = 1;
+    
     // Email Validation
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,6}$");
@@ -28,14 +32,6 @@ public class DoctorValidator {
     // Phone Number Validation
     private static final Pattern PHONE_PATTERN = Pattern.compile("^01[0-9]-\\d{7,8}$");
 
-    /**
-     * Validates a Doctor object.
-     *
-     * @param doctor The doctor to validate.
-     * @param doctorList The list of existing doctors to check for duplicates.
-     * @return A list of error messages. An empty list means the doctor is
-     * valid.
-     */
     public static String validateNewIcNumber(String icNumber, ListInterface<Doctor> doctorList) {
         if (icNumber == null || icNumber.trim().isEmpty()) {
             return "Error: IC Number cannot be empty.";
@@ -149,36 +145,38 @@ public class DoctorValidator {
         }
     }
 
-    /**
-     * Validates a Schedule object.
-     *
-     * @param schedule The schedule to validate.
-     * @param doctorSchedules The list of existing schedules for the doctor.
-     * @return A list of error messages. An empty list means the schedule is
-     * valid.
-     */
-    public static ListInterface<String> validateSchedule(Schedule schedule, ListInterface<Schedule> doctorSchedules) {
+
+    public static ListInterface<String> validateSchedule(Schedule newSchedule, ListInterface<Schedule> doctorSchedules) {
         ListInterface<String> errors = new ArrayList<>();
 
-        // Time Validation
-        if (schedule.getStartTime().isAfter(schedule.getEndTime()) || schedule.getStartTime().equals(schedule.getEndTime())) {
+        // 1. Basic Time Validation
+        if (newSchedule.getStartTime().isAfter(newSchedule.getEndTime()) || newSchedule.getStartTime().equals(newSchedule.getEndTime())) {
             errors.add("End time must be after the start time.");
+            return errors; // No need to check further if times are invalid
         }
 
-        // Overlap Validation
-        for (int i = 1; i <= doctorSchedules.size(); i++) {
-            Schedule existing = doctorSchedules.get(i);
-            if (schedule.getDay() == existing.getDay()) {
-                // Check for time overlap: (StartA < EndB) and (EndA > StartB)
-                if (schedule.getStartTime().isBefore(existing.getEndTime())
-                        && schedule.getEndTime().isAfter(existing.getStartTime())) {
-                    errors.add("The new schedule overlaps with an existing slot on " + schedule.getDay()
-                            + " (" + existing.getStartTime() + " - " + existing.getEndTime() + ").");
-                    break;
+        // 2. Overlap and Rest Period Validation
+        for (int i = 1; i < doctorSchedules.size(); i++) {
+            Schedule existingSchedule = doctorSchedules.get(i);
+
+            // Only compare with schedules on the same day
+            if (newSchedule.getDay() == existingSchedule.getDay()) {
+                
+                // Define the "no-go zone" for the new schedule.
+                // This is the existing schedule's time plus the required rest period on both ends.
+                LocalTime noGoZoneStart = existingSchedule.getStartTime().minusHours(REQUIRED_REST_HOURS);
+                LocalTime noGoZoneEnd = existingSchedule.getEndTime().plusHours(REQUIRED_REST_HOURS);
+
+                // Check for overlap with the "no-go zone"
+                // A conflict exists if: (newStart < noGoEnd) AND (newEnd > noGoStart)
+                if (newSchedule.getStartTime().isBefore(noGoZoneEnd) && newSchedule.getEndTime().isAfter(noGoZoneStart)) {
+                    errors.add("Schedule conflicts with an existing slot on " + newSchedule.getDay() 
+                            + " (" + existingSchedule.getStartTime() + " - " + existingSchedule.getEndTime() + "). "
+                            + "There must be at least a " + REQUIRED_REST_HOURS + "-hour gap between schedules.");
+                    break; // One conflict is enough, no need to check further
                 }
             }
         }
-
         return errors;
     }
 }

@@ -31,10 +31,10 @@ public class DoctorUI {
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public void showDoctorMenu() {
-        int choice;
+        int choice = -1; // Initialize to a non-exit value
         do {
             System.out.println("\n+-----------------------------------+");
-            System.out.println("|         Doctor Management         |");
+            System.out.println("|        Doctor Management        |");
             System.out.println("+-----------------------------------+");
             System.out.println("| 1. Add New Doctor                 |");
             System.out.println("| 2. View All Doctors               |");
@@ -46,36 +46,43 @@ public class DoctorUI {
             System.out.println("| 0. Back to Main Menu              |");
             System.out.println("+-----------------------------------+");
             System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            
+            // IMPROVED: Handle non-integer input gracefully
+            String input = scanner.nextLine();
+            try {
+                choice = Integer.parseInt(input);
 
-            switch (choice) {
-                case 1:
-                    addDoctorUI();
-                    break;
-                case 2:
-                    viewAllDoctorsUI();
-                    break;
-                case 3:
-                    searchDoctorUI();
-                    break;
-                case 4:
-                    updateDoctorUI();
-                    break;
-                case 5:
-                    deleteDoctorUI();
-                    break;
-                case 6:
-                    showScheduleMenu();
-                    break;
-                case 7:
-                    showReportMenu();
-                    break;
-                case 0:
-                    System.out.println("Returning to main menu...");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
+                switch (choice) {
+                    case 1:
+                        addDoctorUI();
+                        break;
+                    case 2:
+                        viewAllDoctorsUI();
+                        break;
+                    case 3:
+                        searchDoctorUI();
+                        break;
+                    case 4:
+                        updateDoctorUI();
+                        break;
+                    case 5:
+                        deleteDoctorUI();
+                        break;
+                    case 6:
+                        showScheduleMenu();
+                        break;
+                    case 7:
+                        showReportMenu();
+                        break;
+                    case 0:
+                        System.out.println("Returning to main menu...");
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                choice = -1; // Reset choice to continue the loop
             }
         } while (choice != 0);
     }
@@ -98,10 +105,10 @@ public class DoctorUI {
             }
             System.out.println(error);
         }
-        
+
         birthDate = DoctorValidator.getBirthDateFromIc(icNumber);
         gender = DoctorValidator.getGenderFromIc(icNumber);
-        
+
         System.out.println("IC Number accepted.");
         System.out.println("Derived Birth Date: " + birthDate.format(dateFormatter));
         System.out.println("Derived Gender: " + gender);
@@ -116,8 +123,8 @@ public class DoctorUI {
             }
             System.out.println("Error: " + error); // Show error and repeat loop
         }
-   
-        // Contack  Number
+
+        // Contact  Number
         while (true) {
             System.out.print("Enter Contact Number (e.g., 012-3456789): ");
             contactNumber = scanner.nextLine();
@@ -200,19 +207,38 @@ public class DoctorUI {
         }
     }
 
-    private void searchDoctorUI() {
+     private void searchDoctorUI() {
         System.out.print("\nEnter Doctor ID to search: ");
         String docId = scanner.nextLine();
         Doctor doc = doctorController.getDoctorById(docId);
+
         if (doc != null) {
-            System.out.println("\n--- Doctor Details ---");
-            System.out.println(doc.toStringComplete());
+            // IMPROVED: Formatted output for single doctor details
+            System.out.println("\n--- Doctor Details [" + doc.getDoctorId() + "] ---");
+            System.out.println("+-------------------------+--------------------------------+");
+            System.out.printf("| %-23s | %-30s |\n", "Field", "Value");
+            System.out.println("+-------------------------+--------------------------------+");
+            System.out.printf("| %-23s | %-30s |\n", "Name", doc.getName());
+            System.out.printf("| %-23s | %-30s |\n", "IC Number", doc.getIcNumber());
+            System.out.printf("| %-23s | %-30s |\n", "Gender", doc.getGender());
+            System.out.printf("| %-23s | %-30s |\n", "Birth Date", doc.getBirthDate().format(dateFormatter));
+            System.out.printf("| %-23s | %-30d |\n", "Age", doc.getAge());
+            System.out.printf("| %-23s | %-30s |\n", "Contact No.", doc.getContactNumber());
+            System.out.printf("| %-23s | %-30s |\n", "Email", doc.getEmail());
+            System.out.printf("| %-23s | %-30s |\n", "Address", doc.getAddress());
+            System.out.println("+-------------------------+--------------------------------+");
+            System.out.printf("| %-23s | %-30s |\n", "Specialization", doc.getSpecialization());
+            System.out.printf("| %-23s | %-30d |\n", "Years of Experience", doc.getYearsOfExperience());
+            System.out.printf("| %-23s | %-30s |\n", "Registration Date", doc.getRegistrationDate().format(dateFormatter));
+            System.out.println("+-------------------------+--------------------------------+");
+
         } else {
             System.out.println("Doctor with ID " + docId + " not found.");
         }
     }
 
     private void updateDoctorUI() {
+        viewAllDoctorsUI();
         System.out.print("\nEnter Doctor ID to update (e.g., D0001): ");
         String docId = scanner.nextLine();
         Doctor doc = doctorController.getDoctorById(docId);
@@ -317,14 +343,15 @@ public class DoctorUI {
     }
 
     private void deleteDoctorUI() {
+        viewAllDoctorsUI();
         System.out.print("\nEnter Doctor ID to delete: ");
         String docId = scanner.nextLine();
         Doctor doc = doctorController.getDoctorById(docId);
 
         if (doc != null) {
-            System.out.print("Are you sure you want to delete Dr. " + doc.getName() + " (Y/N)? ");
+            System.out.print("Are you sure you want to delete Dr. " + doc.getName() + " (Y-Yes)? ");
             String confirm = scanner.nextLine();
-            if (confirm.equalsIgnoreCase("Y")) {
+            if (confirm.equalsIgnoreCase("Y") | confirm.equalsIgnoreCase("y")) {
                 doctorController.deleteDoctor(docId);
                 System.out.println("Doctor deleted successfully.");
             } else {
@@ -344,85 +371,161 @@ public class DoctorUI {
             return;
         }
 
-        int choice;
+        int choice = -1;
         do {
             System.out.println("\n--- Schedule Management for Dr. " + doc.getName() + " ---");
             System.out.println("1. Add Schedule");
             System.out.println("2. View Schedules");
             System.out.println("3. Delete Schedule");
             System.out.println("0. Back");
-            choice = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (choice) {
-                case 1 ->
-                    addScheduleUI(docId);
-                case 2 ->
-                    viewSchedulesUI(docId);
-                case 3 ->
-                    deleteScheduleUI(docId);
+            System.out.print("Enter your choice: ");
+            
+            String input = scanner.nextLine();
+            try {
+                choice = Integer.parseInt(input);
+                switch (choice) {
+                    case 1 -> addScheduleUI(docId);
+                    case 2 -> viewSchedulesUI(docId);
+                    case 3 -> deleteScheduleUI(docId);
+                    case 0 -> System.out.println("Returning to Doctor Menu...");
+                    default -> System.out.println("Invalid choice. Please try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                choice = -1;
             }
         } while (choice != 0);
     }
 
-    private void addScheduleUI(String doctorId) {
-        try {
-            System.out.print("Enter Day of Week (e.g., Monday): ");
-            DayOfWeek day = DayOfWeek.valueOf(scanner.nextLine());
-            System.out.print("Enter Start Time (HH:mm): ");
-            LocalTime start = LocalTime.parse(scanner.nextLine(), timeFormatter);
-            System.out.print("Enter End Time (HH:mm): ");
-            LocalTime end = LocalTime.parse(scanner.nextLine(), timeFormatter);
+   private void addScheduleUI(String doctorId) {
+        DayOfWeek day;
+        LocalTime start;
+        LocalTime end;
 
-            Schedule newSchedule = new Schedule(doctorId, day, start, end, true);
+        // IMPROVED: Loop for Day of Week selection
+        while (true) {
+            System.out.println("\nSelect Day of the Week:");
+            DayOfWeek[] days = DayOfWeek.values();
+            for (int i = 0; i < days.length; i++) {
+                System.out.printf("%d. %s\n", (i + 1), days[i]);
+            }
+            System.out.print("Enter your choice (1-" + days.length + "): ");
+            try {
+                int choice = Integer.parseInt(scanner.nextLine());
+                if (choice >= 1 && choice <= days.length) {
+                    day = days[choice - 1];
+                    break; // Exit loop
+                } else {
+                    System.out.println("Error: Invalid choice. Please enter a number between 1 and " + days.length + ".");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Please enter a valid number.");
+            }
+        }
+
+        // IMPROVED: Loop for Start Time with validation
+        while (true) {
+            System.out.print("Enter Start Time (HH:mm): ");
+            try {
+                start = LocalTime.parse(scanner.nextLine(), timeFormatter);
+                break; // Exit loop
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid time format. Please use HH:mm.");
+            }
+        }
+
+        // IMPROVED: Loop for End Time with validation
+        while (true) {
+            System.out.print("Enter End Time (HH:mm): ");
+            try {
+                end = LocalTime.parse(scanner.nextLine(), timeFormatter);
+                break; // Exit loop
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid time format. Please use HH:mm.");
+            }
+        }
+
+        Schedule newSchedule = new Schedule(doctorId, day, start, end, true);
+        
+        ListInterface<String> errors = DoctorValidator.validateSchedule(newSchedule, doctorController.getSchedulesForDoctor(doctorId));
+        if (errors.isEmpty()) {
             doctorController.addSchedule(newSchedule);
             System.out.println("Schedule added successfully!");
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid time format. Please use HH:mm.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid Day of Week. Please enter a valid day.");
+        } else {
+            System.out.println("Error adding schedule:");
+            for (int i = 0; i < errors.size(); i++) {
+                System.out.println("- " + errors.get(i));
+            }
         }
     }
 
     private void viewSchedulesUI(String doctorId) {
-        System.out.println("\n--- Schedules for Doctor " + doctorId + " ---");
+        Doctor doc = doctorController.getDoctorById(doctorId);
+        System.out.println("\n--- Schedules for Dr. " + doc.getName() + " ---");
         ListInterface<Schedule> schedules = doctorController.getSchedulesForDoctor(doctorId);
         if (schedules.isEmpty()) {
             System.out.println("No schedules found for this doctor.");
             return;
         }
-        for (int i = 1; i <= schedules.size(); i++) {
-            System.out.println(schedules.get(i).toString());
+
+        // IMPROVED: Formatted table output
+        String topBorder = "+------------+-----------+-------------+-----------+-------------+";
+        String header = "| Schedule ID| Day       | Start Time  | End Time  | Status      |";
+
+        System.out.println(topBorder);
+        System.out.println(header);
+        System.out.println(topBorder);
+
+        for (int i = 1; i < schedules.size(); i++) {
+            Schedule s = schedules.get(i);
+            String status = s.getIsAvailable() ? "Available" : "Booked";
+            System.out.printf("| %-10s | %-9s | %-11s | %-9s | %-11s |\n",
+                    s.getScheduleId(),
+                    s.getDay(),
+                    s.getStartTime().format(timeFormatter),
+                    s.getEndTime().format(timeFormatter),
+                    status);
         }
+        System.out.println(topBorder);
     }
 
     private void deleteScheduleUI(String doctorId) {
         viewSchedulesUI(doctorId);
         System.out.print("\nEnter Schedule ID to delete: ");
         String scheduleId = scanner.nextLine();
-        // Here you would ideally check if the schedule belongs to the doctor first
         doctorController.deleteSchedule(scheduleId);
         System.out.println("Schedule deleted successfully (if it existed).");
     }
 
     private void showReportMenu() {
-        int choice;
+        int choice = -1;
         do {
             System.out.println("\n--- Reports Menu ---");
             System.out.println("1. Doctor Specialization Report");
             System.out.println("2. Doctor Availability Report");
             System.out.println("0. Back");
-            choice = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (choice) {
-                case 1 ->
-                    doctorController.generateDoctorSpecializationReport();
-                case 2 -> {
-                    System.out.print("Enter Day of Week (e.g., Monday): ");
-                    DayOfWeek day = DayOfWeek.valueOf(scanner.nextLine());
-                    doctorController.generateDoctorAvailabilityReport(day);
+            System.out.print("Enter your choice: ");
+            
+            String input = scanner.nextLine();
+            try {
+                choice = Integer.parseInt(input);
+                switch (choice) {
+                    case 1 -> doctorController.generateDoctorSpecializationReport();
+                    case 2 -> {
+                        System.out.print("Enter Day of Week (e.g., Monday): ");
+                        try {
+                            DayOfWeek day = DayOfWeek.valueOf(scanner.nextLine());
+                            doctorController.generateDoctorAvailabilityReport(day);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Error: Invalid day of the week.");
+                        }
+                    }
+                    case 0 -> System.out.println("Returning to Doctor Menu...");
+                    default -> System.out.println("Invalid choice. Please try again.");
                 }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                choice = -1;
             }
         } while (choice != 0);
     }
