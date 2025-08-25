@@ -1,0 +1,1 @@
+D0001|041002-05-0234|2003-10-12|Female|2004-10-02|21|012-3455678|jason@gmail.com|TARUMT|2025-08-25|Cardiology|0|adt.ArrayList@41cf53f9|adt.ArrayList@5a10411|adt.ArrayList@2ef1e4fa|adt.ArrayList@306a30c7
