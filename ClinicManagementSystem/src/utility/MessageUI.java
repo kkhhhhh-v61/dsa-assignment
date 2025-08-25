@@ -93,8 +93,28 @@ public class MessageUI {
 
     private static Scanner continueScanner = new Scanner(System.in); // Static scanner for continue message
 
+<<<<<<< Updated upstream
     public static void displayContinueMessage() {
         System.out.println("Press Enter to continue...");
         continueScanner.nextLine(); // Use the static scanner
     }
+=======
+  public static void searchValueNotFound(String category, String value) {
+    invalidInput();
+    System.out.println("Error! " + category + ": " + value + " not found.");
+    pressAnyKey();
+  }
+
+  public static void displayMessage(String message) {
+    System.out.println(message);
+  }
+
+  public static void displaySuccessMessage(String message) {
+    System.out.println("SUCCESS: " + message);
+  }
+
+  public static void displayErrorMessage(String message) {
+    System.err.println("ERROR: " + message);
+  }
+>>>>>>> Stashed changes
 }

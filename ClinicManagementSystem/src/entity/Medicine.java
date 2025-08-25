@@ -1,9 +1,19 @@
 package entity;
 
 import utility.Enum.MedicineCategory;
+import java.io.Serializable;
 
+<<<<<<< Updated upstream
 public class Medicine {
   private static int lastId = 0000;
+=======
+/**
+ *
+ * @author Tan Kai Hao
+ */
+public class Medicine implements Serializable {
+  private static int lastId = 0;
+>>>>>>> Stashed changes
 
   private String medicineId;
   private String name;
@@ -40,6 +50,10 @@ public class Medicine {
   
   public void setMedicineId(String medicineId) { /* Not recommended for use */
     this.medicineId = medicineId;
+  }
+
+  public static void setLastId(int id) {
+    lastId = id;
   }
 
   public String getName() {

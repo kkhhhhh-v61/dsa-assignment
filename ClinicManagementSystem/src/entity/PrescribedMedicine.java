@@ -1,34 +1,56 @@
 package entity;
 
+<<<<<<< Updated upstream
 public class PrescribedMedicine {
   private String medicineId;
+=======
+import java.io.Serializable;
+
+/**
+ *
+ 
+ */
+public class PrescribedMedicine implements Serializable {
+  private Medicine medicine;
+  private int quantity;
+>>>>>>> Stashed changes
   private String dosage;
   private int timesPerDay;
   private int duration;
   private String remarks;
 
   public PrescribedMedicine() {
-    this.medicineId = "";
+    this.medicine = null;
+    this.quantity = 0;
     this.dosage = "";
     this.timesPerDay = 0;
     this.duration = 0;
     this.remarks = "";
   }
 
-  public PrescribedMedicine(String medicineId, String dosage, int timesPerDay, int duration, String remarks) {
-    this.medicineId = medicineId;
+  public PrescribedMedicine(Medicine medicine, int quantity, String dosage, int timesPerDay, int duration, String remarks) {
+    this.medicine = medicine;
+    this.quantity = quantity;
     this.dosage = dosage;
     this.timesPerDay = timesPerDay;
     this.duration = duration;
     this.remarks = remarks;
   }
 
-  public String getMedicineId() {
-    return medicineId;
+  public Medicine getMedicine() {
+    return medicine;
   }
 
-  public void setMedicineId(String medicineId) {
-    this.medicineId = medicineId;
+  public void setMedicine(Medicine medicine) {
+    this.medicine = medicine;
+  }
+
+  public int getQuantity() {
+    return quantity;
+  }
+
+  public void setQuantity(int quantity) {
+    this.quantity = quantity;
   }
 
   public String getDosage() {
@@ -64,10 +86,15 @@ public class PrescribedMedicine {
   }
 
   public String toString() {
-    return "Medicine ID: " + medicineId + "\nDosage: " + dosage + "\nTimes Per Day: " + timesPerDay + "\nDuration: " + duration + "\nRemarks: " + remarks;
+    return "Medicine: " + medicine.getName() + " (ID: " + medicine.getMedicineId() + ")" +
+           "\nQuantity: " + quantity +
+           "\nDosage: " + dosage +
+           "\nTimes Per Day: " + timesPerDay +
+           "\nDuration: " + duration +
+           "\nRemarks: " + remarks;
   }
 
   public String toFileString() {
-    return medicineId + "|" + dosage + "|" + timesPerDay + "|" + duration + "|" + remarks;
+    return medicine.getMedicineId() + "|" + quantity + "|" + dosage + "|" + timesPerDay + "|" + duration + "|" + remarks;
   }
 }

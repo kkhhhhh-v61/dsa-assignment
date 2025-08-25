@@ -20,10 +20,16 @@ import utility.Validation;
  * @author khtan
  */
 public class ClinicManagementSystem {
+<<<<<<< Updated upstream
   private final static MainMenuUI mainMenuUI = new MainMenuUI();
   private final static MainMenuController mainMenu = new MainMenuController();
   // private final static MessageUI messageUI = new MessageUI(); // Now static
   private final static Validation validation = new Validation(); // Validation methods are not static, so keep instance
+=======
+  
+  private static SystemController systemController = new SystemController();
+  private static SystemUI systemUI = new SystemUI(systemController);
+>>>>>>> Stashed changes
   
   public static void main(String[] args) {
     String[] response;

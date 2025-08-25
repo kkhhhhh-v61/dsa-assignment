@@ -1,0 +1,18 @@
+Pharmacy Management Module - Added Files and Changes (Updated)
+
+This document outlines the files added and changes made to integrate the Pharmacy Management Module into the Clinic Management System, based on a comparison between the 'src' and 'src2' directories.
+
+1.  **New Files Added for Pharmacy Management:**
+
+    *   `src/entity/Medicine.java`: This file defines the `Medicine` entity, including attributes such as `medicineId`, `name`, `description`, `category` (an enum), `price`, `stockQuantity`, and `reorderLevel`. It provides constructors, getters, setters, `toString()`, and `toFileString()` methods.
+    *   `src/entity/PrescribedMedicine.java`: This file defines the `PrescribedMedicine` entity, which encapsulates a `Medicine` object along with `quantity`, `dosage`, `timesPerDay`, `duration`, and `remarks` for a specific prescription. It includes constructors, getters, setters, `toString()`, and `toFileString()` methods.
+    *   `src/dao/MedicineDAO.java`: This Data Access Object (DAO) manages the persistence of `Medicine` objects. It uses an `ArrayList` to store medicines and `DataManager` to load from and save to `data/medicines.dat`. It provides methods for `getAllMedicines()`, `getMedicineById()`, `addMedicine()`, `updateMedicine()`, and `deleteMedicine()`. It also includes initial sample data.
+    *   `src/control/PharmacyController.java`: This controller class implements the business logic for the pharmacy module. It interacts with `MedicineDAO` to perform operations like retrieving, adding, updating, and deleting medicines. Crucially, it includes `dispenseMedicines()` to manage stock levels during dispensing, `generateLowStockReport()`, and `generateMedicineByCategoryReport()`.
+    *   `src/boundary/PharmacyUI.java`: This class provides the command-line user interface for the pharmacy management module. It presents a menu with options to add, update, delete, view, and dispense medicines, as well as generate low stock and medicine by category reports. It handles user input and interacts with the `PharmacyController`.
+
+2.  **Changes in Existing Files (Inferred & Updated):**
+
+    *   `src/notes.txt`: The `notes.txt` file in `src` has been updated to include a "pharmacy management module (DONE)" section, detailing its functionalities: "manage medicine dispensing after doctor consultation and maintain medicine stock control" and "reporting feature (low stock report, medicine by category report)". This entry is absent in `src2/notes.txt`.
+    *   `src/utility/Enum.java`: It is highly probable that `src/utility/Enum.java` was modified to include the `MedicineCategory` enum, as `Medicine.java`, `MedicineDAO.java`, `PharmacyController.java`, and `PharmacyUI.java` all depend on it.
+    *   `src/control/SystemController.java` and `src/boundary/SystemUI.java`: These files would have been modified to integrate the `PharmacyUI` into the main application menu, allowing users to access the new pharmacy management functionalities.
+    *   `src/utility/DataManager.java`: This file would have been updated to handle the serialization and deserialization of `Medicine` objects to and from the `data/medicines.dat` file.

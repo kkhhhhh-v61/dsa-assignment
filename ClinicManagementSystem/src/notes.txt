@@ -1,0 +1,20 @@
+[TODO]
+- patient module reporting
+  - report 1
+    - patient demographic summary (categorized by age group and gender)
+  - report 2
+    - patient appointment summary (categorized by status and gender)
+- student appointment booking (DONE)
+  - add doctor specialization to the appointment booking menu (low priority, fix only if got time)
+  - fix bug where appointment booking only prevents booking at the end time but not 1 min before the end time
+    - suppose to allow at latest 1 hr before the end time
+- student view appointment
+- student view upcoming appointment
+- student cancel appointment
+- appointment initialization
+- integrate with consultation
+- pharmacy management module (DONE)
+  - manage medicine dispensing after doctor consultation and maintain medicine stock control
+  - reporting feature
+    - low stock report
+    - medicine by category report
