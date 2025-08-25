@@ -1,6 +1,7 @@
 package control;
 
 import adt.ArrayList;
+import adt.ListInterface;
 import adt.RedBlackTreeMap;
 import boundary.AppointmentUI;
 import dao.AppointmentDAO;
@@ -940,7 +941,103 @@ public class AppointmentController {
   }
 
   public void runAppointmentRecords(String patientId) {
+
+    appointmentMap = appointmentDAO.retrieveFromFile();
+
+    boolean exit = false;
+    String[] response;
+    String[] vResponse;
+    int page = 1;
+
+    do {
+      do {
+        appointmentUI.runAppointmentListMenu(appointmentMap, patientId, page);
+        response = appointmentUI.inputAppointmentRecordsMenu();
+        vResponse = AppointmentValidation.validateAppointmentRecordsMenu(response[0], response[1].toCharArray());
+      } while (!Boolean.parseBoolean(vResponse[0]));
+
+      if (vResponse[1].equals("0") || vResponse[1].equals("Q") || vResponse[1].equals("E")) {
+        switch (vResponse[1]) {
+          case "Q":
+            if (page > 1) {
+              page--;
+            }
+            break;
+          case "E":
+            if (page < (appointmentMap.size() + 9) / 10) {
+              page++;
+            }
+            break;
+          case "0":
+            exit = true;
+            break;
+        }
+      } else {
+        runAppointmentCancel(patientId);
+      }
+    } while (!exit);
+  }
+  
+  public void runAppointmentCancel(String patientId) {
+
+    appointmentMap = appointmentDAO.retrieveFromFile();
     
-    
+    boolean exit = false;
+    String[] response;
+    String[] vResponse;
+    int page = 1;
+
+    RedBlackTreeMap<String, Appointment> filteredAppointmentMap = new RedBlackTreeMap<>();
+    ListInterface<String> keys = appointmentMap.getKeys();
+    for (int i = 1; i <= keys.size(); i++) {
+      if (appointmentMap.get(keys.get(i)).getPatientId().equals(patientId)) {
+        filteredAppointmentMap.put(keys.get(i), appointmentMap.get(keys.get(i)));
+      }
+    }
+
+    do {
+      do {
+        appointmentUI.runAppointmentListMenu(appointmentMap, patientId, page);
+        response = appointmentUI.inputAppointmentCancellationSearch();
+        vResponse = AppointmentValidation.validateAppointmentCancellationSearch(filteredAppointmentMap, response[0], response[1].toCharArray());
+      } while (!Boolean.parseBoolean(vResponse[0]));
+
+      if (vResponse[1].equals("0") || vResponse[1].equals("Q") || vResponse[1].equals("E")) {
+        switch (vResponse[1]) {
+          case "Q":
+            if (page > 1) {
+              page--;
+            }
+            break;
+          case "E":
+            if (page < (appointmentMap.size() + 9) / 10) {
+              page++;
+            }
+            break;
+          case "0":
+            exit = true;
+            break;
+        }
+      } else {
+        boolean exit1 = false;
+        String userInput = vResponse[1];
+        do {
+          do {
+            response = appointmentUI.confirmAppointmentCancellation(appointmentMap.get(userInput));
+            vResponse = AppointmentValidation.validateAppointmentCancellation(response[0], response[1].toCharArray());
+          } while (!Boolean.parseBoolean(vResponse[0]));
+          
+          if (!vResponse[1].equals("0")) {
+            appointmentMap.get(userInput).setStatus(Status.Cancelled);
+            appointmentDAO.saveToFile(appointmentMap);
+            System.out.println();
+            System.out.println("Appointment cancelled successfully.");
+            Utilities.pressAnyKey();
+          }
+          exit1 = true;
+          exit = true;
+        } while (!exit1);
+      }
+    } while (!exit);
   }
 }

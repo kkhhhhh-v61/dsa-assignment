@@ -147,4 +147,10 @@ public class MessageUI {
     System.out.println("Error! " + category + ": " + value + " not found.");
     pressAnyKey();
   }
+
+  public static void notValidStatus(String status) {
+    invalidInput();
+    System.out.println("Error! Appointment with status '" + status + "' cannot be cancelled.");
+    pressAnyKey();
+  }
 }

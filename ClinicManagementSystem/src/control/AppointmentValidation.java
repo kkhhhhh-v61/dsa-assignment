@@ -967,7 +967,8 @@ public class AppointmentValidation {
     return new String[] { String.valueOf(valid), response };
   }
 
-  public static boolean validSearch(RedBlackTreeMap<String, Appointment> appointmentMap, String searchCategory, String userInput) {
+  public static boolean validSearch(RedBlackTreeMap<String, Appointment> appointmentMap, String searchCategory,
+      String userInput) {
     ArrayList<String> keys = appointmentMap.getKeys();
     for (int i = 1; i <= keys.size(); i++) {
       Appointment appointment = appointmentMap.get(keys.get(i));
@@ -995,8 +996,93 @@ public class AppointmentValidation {
         if (appointment.getStatus().equals(Status.valueOf(userInput))) {
           return true;
         }
-      } 
+      }
     }
     return false;
+  }
+  
+  public static String[] validateAppointmentRecordsMenu(String userInput, char[] inputOptions) {
+    
+    boolean valid = false;
+    String response = userInput;
+
+    if (!userInput.equals("")) {
+      if (Validation.isSingleChar(userInput)) {
+        char option = Character.toUpperCase(userInput.charAt(0));
+
+        if (Validation.isValidOption(option, inputOptions)) {
+          response = String.valueOf(option);
+          valid = true;
+        } else {
+          MessageUI.notValidOption(inputOptions);
+          valid = false;
+        }
+      }
+    }
+
+    return new String[] { String.valueOf(valid), response };
+  }
+
+  public static String[] validateAppointmentCancellation(String userInput, char[] inputOptions) {
+
+    boolean valid = false;
+    String response = userInput;
+
+    if (!userInput.equals("")) {
+      if (Validation.isSingleChar(userInput)) {
+        char option = Character.toUpperCase(userInput.charAt(0));
+
+        if (Validation.isValidOption(option, inputOptions)) {
+          response = String.valueOf(option);
+          valid = true;
+        } else {
+          MessageUI.notValidOption(inputOptions);
+          valid = false;
+        }
+      }
+    }
+
+    return new String[] { String.valueOf(valid), response };
+  }
+  
+  public static String[] validateAppointmentCancellationSearch(RedBlackTreeMap<String, Appointment> appointmentMap, String userInput,
+      char[] inputOptions) {
+
+    boolean valid = false;
+    String response = userInput;
+
+    if (!userInput.equals("")) {
+      if (Validation.isSingleChar(userInput)) {
+        char option = Character.toUpperCase(userInput.charAt(0));
+
+        if (Validation.isValidOption(option, inputOptions)) {
+          response = String.valueOf(option);
+          valid = true;
+        } else {
+          MessageUI.notValidOption(inputOptions);
+          valid = false;
+        }
+      } else {
+        if (Validation.isNumeric(userInput)) {
+          if (validSearch(appointmentMap, "Appointment ID", "A" + userInput)) {
+            if (appointmentMap.get("A" + userInput).getStatus().equals(Status.Pending)) {
+              response = "A" + userInput;
+              valid = true;
+            } else {
+              MessageUI.notValidStatus(appointmentMap.get("A" + userInput).getStatus().name());
+              valid = false;
+            }
+          } else {
+            MessageUI.searchValueNotFound("Appointment ID", "A" + userInput);
+            valid = false;
+          }
+        } else {
+          MessageUI.notNumeric();
+          valid = false;
+        }
+      }
+    }
+
+    return new String[] { String.valueOf(valid), response };
   }
 }
