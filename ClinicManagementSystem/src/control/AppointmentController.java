@@ -910,12 +910,6 @@ public class AppointmentController {
 
   public void runAppointmentRecords(String patientId) {
     
-    System.out.println();
-
-    Utilities.clearScreen();
-
-    System.out.println("This feature is currently not available yet.");
-
-    Utilities.pressAnyKey();
+    
   }
 }

@@ -181,7 +181,7 @@ public class DoctorController {
 
     private void deleteSchedulesForDoctor(String doctorId) {
         boolean changed = false;
-        for (int i = scheduleList.size() - 1; i >= 0; i--) {
+        for (int i = scheduleList.size(); i >= 1; i--) {
             if (scheduleList.get(i).getDoctorId().equals(doctorId)) {
                 scheduleList.remove(i);
                 changed = true;
