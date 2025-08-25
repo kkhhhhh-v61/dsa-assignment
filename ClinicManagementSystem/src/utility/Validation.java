@@ -26,6 +26,21 @@ public class Validation {
     }
   }
 
+  public static int getIntegerInputWithExit() {
+    while (true) {
+      try {
+        String inputStr = scanner.nextLine();
+        if (inputStr.equals("0")) {
+          return 0;
+        }
+        int input = Integer.parseInt(inputStr);
+        return input;
+      } catch (NumberFormatException e) {
+        System.err.println("[ERROR] Invalid input. Please enter an integer or '0' to exit.");
+      }
+    }
+  }
+
   public static double getDoubleInput() {
     while (true) {
       try {
@@ -35,6 +50,21 @@ public class Validation {
       } catch (InputMismatchException e) {
         System.err.println("[ERROR] Invalid input. Please enter a number.");
         scanner.nextLine(); // Consume the invalid input
+      }
+    }
+  }
+
+  public static double getDoubleInputWithExit() {
+    while (true) {
+      try {
+        String inputStr = scanner.nextLine();
+        if (inputStr.equals("0")) {
+          return 0.0;
+        }
+        double input = Double.parseDouble(inputStr);
+        return input;
+      } catch (NumberFormatException e) {
+        System.err.println("[ERROR] Invalid input. Please enter a number or '0' to exit.");
       }
     }
   }
