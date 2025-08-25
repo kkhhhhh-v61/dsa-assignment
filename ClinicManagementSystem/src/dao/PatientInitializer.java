@@ -11,14 +11,12 @@ import utility.Utilities;
  */
 public class PatientInitializer {
   
-  final int SAMPLE_SIZE = 50;
-
-  public RedBlackTreeMap<String, Patient> initializeSamplePatients() {
+  public RedBlackTreeMap<String, Patient> initializeSamplePatients(int sampleSize) {
     RedBlackTreeMap<String, Patient> patientMap = new RedBlackTreeMap<>();
 
     Patient.setLastId(0);
     
-    for (int i = 1; i <= SAMPLE_SIZE; i++) {
+    for (int i = 1; i <= sampleSize; i++) {
       Patient newPatient = new Patient();
 
       int year = (int) (Math.random() * 99);

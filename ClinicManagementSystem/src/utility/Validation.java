@@ -88,4 +88,25 @@ public class Validation {
   public static boolean isEqualsLength(String input, int length) {
     return input.length() == length;
   }
+
+  public static boolean isValidDate(String input) {
+    int year = Integer.parseInt(input.substring(0, 4));
+    int month = Integer.parseInt(input.substring(4, 6));
+    int day = Integer.parseInt(input.substring(6, 8));
+
+    int currentYear = LocalDate.now().getYear();
+    int century = (currentYear / 100) * 100;
+    year = year > (currentYear % 100) ? century - 100 + year : century + year;
+
+    if (month < 1 || month > 12) {
+      return false;
+    }
+
+    int daysInMonth = LocalDate.of(year, month, 1).lengthOfMonth();
+    if (day < 1 || day > daysInMonth) {
+      return false;
+    }
+
+    return true;
+  }
 }

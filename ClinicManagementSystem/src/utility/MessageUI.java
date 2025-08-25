@@ -130,4 +130,10 @@ public class MessageUI {
     System.out.println("Error! Input must be " + length + " characters long.");
     pressAnyKey();
   }
+
+  public static void searchValueNotFound(String category, String value) {
+    invalidInput();
+    System.out.println("Error! " + category + ": " + value + " not found.");
+    pressAnyKey();
+  }
 }

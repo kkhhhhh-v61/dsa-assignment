@@ -374,6 +374,10 @@ public class AppointmentUI {
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
+
+  public String[] runAppointmentSearchMenu() {
+    
+  }
   
   public String[] runStudentAppointmentMenu() {
 

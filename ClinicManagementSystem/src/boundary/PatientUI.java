@@ -37,7 +37,7 @@ public class PatientUI {
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };    
   }
   
-  public String[] inputPatientSearch() {
+  public String[] inputPatientId() {
 
     final char[] INPUT_OPTIONS = { '0' };
 
@@ -104,20 +104,94 @@ public class PatientUI {
 
     System.out.println();
 
-    System.out.println("[FORMAT] Only alphabet characters are allowed. Maximum length is " + MAX_LENGTH + " characters.");
+    System.out
+        .println("[FORMAT] Only alphabet characters are allowed. Maximum length is " + MAX_LENGTH + " characters.");
     System.out.println("[NOTE] Use capitalization or spaces to separate words for best results.");
     System.out.println("[EXAMPLE] 'Your Name', 'yourName', 'your name' are all acceptable.");
-    
+
     System.out.println();
-    
+
     System.out.println("[0] Cancel");
 
     System.out.println();
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS),
+        String.valueOf(MAX_LENGTH) };
   }
   
+  public String[] inputGender() {
+
+    final char[] INPUT_OPTIONS = { '1', '2', '0' };
+
+    System.out.println();
+
+    Utilities.clearScreen();
+
+    System.out.println("+------------------+");
+    System.out.println("|      GENDER      |");
+    System.out.println("+------------------+");
+
+    System.out.println();
+
+    System.out.println("[1] Male");
+    System.out.println("[2] Female");
+    System.out.println("[0] Cancel");
+
+    System.out.println();
+
+    System.out.print("> ");
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
+  }
+
+  public String[] inputBirthDate() {
+
+    final char[] INPUT_OPTIONS = { '0' };
+
+    System.out.println();
+
+    Utilities.clearScreen();
+
+    System.out.println("+------------------+");
+    System.out.println("|    BIRTH DATE    |");
+    System.out.println("+------------------+");
+
+    System.out.println();
+
+    System.out.println("[FORMAT] YYYY-MM-DD");
+
+    System.out.println();
+
+    System.out.println("[0] Cancel");
+
+    System.out.println();
+
+    System.out.print("> ");
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
+  }
+  
+  public String[] inputAge() {
+
+    final char[] INPUT_OPTIONS = { '0' };
+
+    System.out.println();
+
+    Utilities.clearScreen();
+
+    System.out.println("+-----------------+");
+    System.out.println("|       AGE       |");
+    System.out.println("+-----------------+");
+
+    System.out.println();
+
+    System.out.println("[0] Cancel");
+
+    System.out.println();
+
+    System.out.print("> ");
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
+  }
+
   public String[] inputContactNumber() {
 
     final char[] INPUT_OPTIONS = { '0' };
@@ -189,7 +263,34 @@ public class PatientUI {
     System.out.println();
 
     System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS), String.valueOf(MAX_LENGTH) };
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS),
+        String.valueOf(MAX_LENGTH) };
+  }
+  
+  public String[] inputRegistrationDate() {
+
+    final char[] INPUT_OPTIONS = { '0' };
+
+    System.out.println();
+
+    Utilities.clearScreen();
+
+    System.out.println("+-------------------+");
+    System.out.println("| REGISTRATION DATE |");
+    System.out.println("+-------------------+");
+
+    System.out.println();
+
+    System.out.println("[FORMAT] YYYY-MM-DD");
+
+    System.out.println();
+
+    System.out.println("[0] Cancel");
+
+    System.out.println();
+
+    System.out.print("> ");
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] inputBloodType() {
@@ -276,9 +377,10 @@ public class PatientUI {
       System.out.println("+===========================================================================================================+");
 
       if (patientMap.isEmpty()) {
-        System.out.println(
-            "|                                  No Patient records found in the system.                                  |");
-      } else {
+        System.out.println("|                                  No Patient records found in the system.                                  |");
+      } else if (page > (patientMap.size() + 9) / 10) {
+        System.out.println("|                                  No Patient records found in the system.                                  |");
+      }else {
         int startIndex = (page - 1) * 10 + 1;
         int endIndex = Math.min(startIndex + 9, patientMap.size());
         ListInterface<String> keys = patientMap.getKeys();
@@ -590,49 +692,33 @@ public class PatientUI {
     Utilities.clearScreen();
 
     if (ui.equals("left")) {
-      System.out.println(
-          "+===========================================================================================================+");
-      System.out.println(
-          "| [Part 1]                                      PATIENT LIST                                                |");
-      System.out.println(
-          "+===========================================================================================================+");
-      System.out.println(
-          "|  PID  |       IC       |              FULL NAME              | GENDER | BIRTH DATE | AGE | CONTACT NUMBER |");
-      System.out.println(
-          "+===========================================================================================================+");
+      System.out.println("+===========================================================================================================+");
+      System.out.println("| [Part 1]                                      PATIENT LIST                                                |");
+      System.out.println("+===========================================================================================================+");
+      System.out.println("|  PID  |       IC       |              FULL NAME              | GENDER | BIRTH DATE | AGE | CONTACT NUMBER |");
+      System.out.println("+===========================================================================================================+");
 
       System.out.println(String.format("| %-5s | %14s | %-35s | %6s | %10s | %3s | %-14s |", patient.getPatientId(),
           patient.getIcNumber(), patient.getName(), patient.getGender(), patient.getBirthDate(), patient.getAge(),
           patient.getContactNumber()));
 
-      System.out.println(
-          "+===========================================================================================================+");
-      System.out.println(
-          "| NAVIGATION | [W] Switch Part View |                                                          | [0] Return |");
-      System.out.println(
-          "+===========================================================================================================+");
+      System.out.println("+===========================================================================================================+");
+      System.out.println("| NAVIGATION | [W] Switch Part View |                                                          | [0] Return |");
+      System.out.println("+===========================================================================================================+");
 
     } else {
-      System.out.println(
-          "+===============================================================================================================+");
-      System.out.println(
-          "| [Part 2]                                        PATIENT LIST                                                  |");
-      System.out.println(
-          "+===============================================================================================================+");
-      System.out.println(
-          "|  PID  |                EMAIL                |                    ADDRESS                    |  REG DATE  | BT |");
-      System.out.println(
-          "+===============================================================================================================+");
+      System.out.println("+===============================================================================================================+");
+      System.out.println("| [Part 2]                                        PATIENT LIST                                                  |");
+      System.out.println("+===============================================================================================================+");
+      System.out.println("|  PID  |                EMAIL                |                    ADDRESS                    |  REG DATE  | BT |");
+      System.out.println("+===============================================================================================================+");
 
       System.out.println(String.format("| %-5s | %-35s | %-45s | %10s | %-2s |", patient.getPatientId(),
           patient.getEmail(), patient.getAddress(), patient.getRegistrationDate(), patient.getBloodType()));
 
-      System.out.println(
-          "+===============================================================================================================+");
-      System.out.println(
-          "| NAVIGATION | [W] Switch Part View |                                                                           |");
-      System.out.println(
-          "+===============================================================================================================+");
+      System.out.println("+===============================================================================================================+");
+      System.out.println("| NAVIGATION | [W] Switch Part View |                                                                           |");
+      System.out.println("+===============================================================================================================+");
     }
 
     System.out.println();
@@ -644,6 +730,39 @@ public class PatientUI {
     System.out.println();
 
     System.out.println("[1] Confirm");
+    System.out.println("[0] Cancel");
+
+    System.out.println();
+
+    System.out.print("> ");
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
+  }
+  
+  public String[] inputSearchCategory() {
+
+    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', '0' };
+
+    System.out.println();
+
+    Utilities.clearScreen();
+
+    System.out.println("+-------------------+");
+    System.out.println("|  Search Category  |");
+    System.out.println("+-------------------+");
+
+    System.out.println();
+
+    System.out.println("[1] Patient ID");
+    System.out.println("[2] IC Number");
+    System.out.println("[3] Name");
+    System.out.println("[4] Gender");
+    System.out.println("[5] Birth Date");
+    System.out.println("[6] Age");
+    System.out.println("[7] Contact Number");
+    System.out.println("[8] Email");
+    System.out.println("[9] Address");
+    System.out.println("[A] Registration Date");
+    System.out.println("[B] Blood Type");
     System.out.println("[0] Cancel");
 
     System.out.println();
@@ -727,5 +846,25 @@ public class PatientUI {
 
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
+  }
+
+  public int inputSampleSize() {
+    
+    System.out.println();
+
+    Utilities.clearScreen();
+
+    System.out.println("+-------------------+");
+    System.out.println("|    SAMPLE SIZE    |");
+    System.out.println("+-------------------+");
+
+    System.out.println();
+
+    System.out.println("[0] Cancel");
+
+    System.out.println();
+
+    System.out.print("> ");
+    return Integer.parseInt(Utilities.getUserInput().nextLine().trim());
   }
 }

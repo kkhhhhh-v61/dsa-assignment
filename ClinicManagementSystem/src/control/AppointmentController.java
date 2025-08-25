@@ -401,6 +401,21 @@ public class AppointmentController {
 
   public void runAppointmentSearch() {
     
+    boolean exit = true;
+    String[] response;
+    String[] vResponse;
+    
+    do {
+      response = appointmentUI.inputAppointmentSearch();
+      vResponse = AppointmentValidation.validateAppointmentSearch(appointmentMap, response[0], response[1].toCharArray());
+    } while (!Boolean.parseBoolean(vResponse[0]));
+    
+    if (!vResponse[1].equals("0")) {
+      String appointmentId = vResponse[1];
+      do {
+        
+      }
+    }
   }
 
   public void runAppointmentClearance() {
