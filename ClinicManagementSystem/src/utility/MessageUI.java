@@ -15,7 +15,12 @@ public class MessageUI {
 
   public static void noPatientRecord() {
     System.out.println("No existing Patient records found.");
-    Utilities.wait(1000);
+    Utilities.pressAnyKey();
+  }
+
+  public static void noAppointmentRecord() {
+    System.out.println("No existing Appointment records found.");
+    Utilities.pressAnyKey();
   }
 
   public static void invalidInput() {
@@ -104,6 +109,12 @@ public class MessageUI {
   public static void notValidDate() {
     invalidInput();
     System.out.println("Error! Input must be a valid date with the format of 'YYYY-MM-DD'.");
+    pressAnyKey();
+  }
+
+  public static void notValidTime() {
+    invalidInput();
+    System.out.println("Error! Input must be a valid time with the format of 'HH:MM'.");
     pressAnyKey();
   }
 

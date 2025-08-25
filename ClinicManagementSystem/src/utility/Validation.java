@@ -109,4 +109,16 @@ public class Validation {
 
     return true;
   }
+
+  public static boolean isValidTime(String input) {
+    int hour = Integer.parseInt(input.substring(0, 2));
+    int minute = Integer.parseInt(input.substring(2, 4));
+    if (hour < 0 || hour > 23) {
+      return false;
+    }
+    if (minute < 0 || minute > 59) {
+      return false;
+    }
+    return true;
+  }
 }

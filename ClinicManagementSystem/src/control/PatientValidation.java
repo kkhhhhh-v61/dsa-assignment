@@ -34,11 +34,16 @@ public class PatientValidation {
           valid = false;
         }
       } else {
-        if (Validation.isValidId(patientMap, "P" + userInput)) {
-          response = "P" + userInput;
-          valid = true;
+        if (Validation.isNumeric(userInput)) {
+          if (Validation.isValidId(patientMap, "P" + userInput)) {
+            response = "P" + userInput;
+            valid = true;
+          } else {
+            MessageUI.notValidId("P" + userInput);
+            valid = false;
+          }
         } else {
-          MessageUI.notValidId("P" + userInput);
+          MessageUI.notNumeric();
           valid = false;
         }
       }
@@ -695,11 +700,16 @@ public class PatientValidation {
           valid = false;
         }
       } else {
-        if (validSearch(patientMap, "Patient ID", "P" + userInput)) {
-          response = "P" + userInput;
-          valid = true;
+        if (Validation.isNumeric(userInput)) {
+          if (validSearch(patientMap, "Patient ID", "P" + userInput)) {
+            response = "P" + userInput;
+            valid = true;
+          } else {
+            MessageUI.searchValueNotFound("Patient ID", "P" + userInput);
+            valid = false;
+          }
         } else {
-          MessageUI.searchValueNotFound("Patient ID", "P" + userInput);
+          MessageUI.notNumeric();
           valid = false;
         }
       }

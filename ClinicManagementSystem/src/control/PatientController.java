@@ -996,7 +996,7 @@ public class PatientController {
     String[] vResponse;
     
     if (!patientMap.isEmpty()) {
-      response = patientUI.runPatientClearance();
+      response = patientUI.runPatientClearanceMenu();
       vResponse = PatientValidation.validatePatientClearance(response[0], response[1].toCharArray());
       if (Boolean.parseBoolean(vResponse[0])) {
         if (vResponse[1].equals("1")) {

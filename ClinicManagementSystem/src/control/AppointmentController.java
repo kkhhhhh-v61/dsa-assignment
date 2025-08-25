@@ -400,30 +400,208 @@ public class AppointmentController {
   }
 
   public void runAppointmentSearch() {
-    
-    boolean exit = true;
+
     String[] response;
     String[] vResponse;
-    
+
     do {
-      response = appointmentUI.inputAppointmentSearch();
-      vResponse = AppointmentValidation.validateAppointmentSearch(appointmentMap, response[0], response[1].toCharArray());
+      response = appointmentUI.inputSearchCategory();
+      vResponse = AppointmentValidation.validateSearchCategory(response[0], response[1].toCharArray());
     } while (!Boolean.parseBoolean(vResponse[0]));
-    
+
     if (!vResponse[1].equals("0")) {
-      String appointmentId = vResponse[1];
-      do {
-        
+      String userInput = vResponse[1];
+      String searchCategory = "Appointment ID";
+      switch (userInput) {
+        case "1":
+          searchCategory = "Appointment ID";
+          break;
+        case "2":
+          searchCategory = "Patient ID";
+          break;
+        case "3":
+          searchCategory = "Doctor ID";
+          break;
+        case "4":
+          searchCategory = "Date and Time";
+          break;
+        case "5":
+          searchCategory = "Status";
+          break;
+        case "0":
+          break;
       }
+
+      runSearchBy(searchCategory);
+    }
+  }
+  
+  public void runSearchBy(String searchCategory) {
+
+    boolean exit = false;
+    String[] response;
+    String[] vResponse = new String[] {};
+    int page = 1;
+
+    do {
+      switch (searchCategory) {
+        case "Appointment ID":
+          response = appointmentUI.inputAppointmentId();
+          vResponse = AppointmentValidation.validateAppointmentIdSearch(appointmentMap, response[0],
+              response[1].toCharArray());
+          break;
+        case "Patient ID":
+          response = appointmentUI.inputPatientId();
+          vResponse = AppointmentValidation.validatePatientIdSearch(appointmentMap, response[0],
+              response[1].toCharArray());
+          break;
+        case "Doctor ID":
+          response = appointmentUI.inputDoctorId();
+          vResponse = AppointmentValidation.validateDoctorIdSearch(appointmentMap, response[0],
+              response[1].toCharArray());
+          break;
+        case "Date and Time":
+          response = appointmentUI.inputDate();
+          vResponse = AppointmentValidation.validateDateSearch(appointmentMap, response[0], response[1].toCharArray());
+          break;
+        case "Status":
+          response = appointmentUI.inputStatus();
+          vResponse = AppointmentValidation.validateStatusSearch(appointmentMap, response[0],
+              response[1].toCharArray());
+          break;
+        case "0":
+          break;
+      }
+    } while (!Boolean.parseBoolean(vResponse[0]));
+
+    RedBlackTreeMap<String, Appointment> filteredAppointmentMap = new RedBlackTreeMap<>();
+    String[] vResponse2 = new String[] {};
+    if (!vResponse[1].equals("0")) {
+      if (searchCategory.equals("Date and Time")) {
+        vResponse2 = vResponse;
+        do {
+          response = appointmentUI.inputTime();
+          vResponse2 = AppointmentValidation.validateTimeSearch(appointmentMap, response[0], response[1].toCharArray());
+        } while (!Boolean.parseBoolean(vResponse[0]));
+        vResponse2 = new String[] { vResponse2[1], vResponse[1] };
+      }
+
+      ArrayList<String> keys = appointmentMap.getKeys();
+      String userInput = vResponse[1];
+      for (int i = 1; i <= keys.size(); i++) {
+        Appointment appointment = appointmentMap.get(keys.get(i));
+        switch (searchCategory) {
+          case "Appointment ID":
+            if (appointment.getAppointmentId().equals(userInput)) {
+              filteredAppointmentMap.put(appointment.getAppointmentId(), appointment);
+            }
+            break;
+          case "Patient ID":
+            if (appointment.getPatientId().equals(userInput)) {
+              filteredAppointmentMap.put(appointment.getAppointmentId(), appointment);
+            }
+            break;
+          case "Doctor ID":
+            if (appointment.getDoctorId().equals(userInput)) {
+              filteredAppointmentMap.put(appointment.getAppointmentId(), appointment);
+            }
+            break;
+          case "Date and Time":
+            if (!vResponse2[1].equals("0")) {
+              if (appointment.getAppointmentDate().equals(LocalDate.parse(userInput))
+                  && appointment.getAppointmentTime().equals(LocalTime.parse(vResponse2[1]))) {
+                filteredAppointmentMap.put(appointment.getAppointmentId(), appointment);
+              }
+            } else {
+              if (appointment.getAppointmentDate().equals(LocalDate.parse(userInput))) {
+                filteredAppointmentMap.put(appointment.getAppointmentId(), appointment);
+              }
+            }
+            break;
+          case "Status":
+            if (appointment.getStatus().equals(Status.valueOf(userInput))) {
+              filteredAppointmentMap.put(appointment.getAppointmentId(), appointment);
+            }
+            break;
+          case "0":
+            break;
+        }
+      }
+      
+      do {
+        do {
+          appointmentUI.runAppointmentListMenu(filteredAppointmentMap, "", page);
+          response = appointmentUI.inputAppointmentListMenu();
+          vResponse = AppointmentValidation.validateAppointmentListMenu(response[0], response[1].toCharArray());
+        } while (!Boolean.parseBoolean(vResponse[0]));
+
+        if (!vResponse[1].equals("0")) {
+          switch (vResponse[1]) {
+            case "Q":
+              if (page > 1) {
+                page--;
+              }
+              break;
+            case "E":
+              if (page < (filteredAppointmentMap.size() + 9) / 10) {
+                page++;
+              }
+              break;
+            case "1":
+              if (!filteredAppointmentMap.isEmpty()) {
+                runAppointmentAction("edit");
+              } else {
+                MessageUI.noAppointmentRecord();
+              }
+              break;
+            case "2":
+              if (!filteredAppointmentMap.isEmpty()) {
+                runAppointmentAction("delete");
+              } else {
+                MessageUI.noAppointmentRecord();
+              }
+              break;
+          }
+        } else {
+          exit = true;
+        }
+      } while (!exit);
     }
   }
 
   public void runAppointmentClearance() {
     
+    String[] response;
+    String[] vResponse;
+    
+    if (!appointmentMap.isEmpty()) {
+      response = appointmentUI.runAppointmentClearanceMenu();
+      vResponse = AppointmentValidation.validateAppointmentClearance(response[0], response[1].toCharArray());
+      if (Boolean.parseBoolean(vResponse[0])) {
+        if (vResponse[1].equals("1")) {
+          appointmentMap.clear();
+          appointmentDAO.clearFile();
+          appointmentDAO.saveToFile(appointmentMap);
+          Appointment.setLastId(0);
+          System.out.println("Appointment records cleared.");
+          Utilities.pressAnyKey();
+        }
+      }
+    } else {
+      System.out.println("Error! Clearance can only be performed when there are existing Appointment records.");
+      Utilities.pressAnyKey();
+    }
   }
 
   public void runAppointmentInitialization() {
     
+    System.out.println();
+
+    Utilities.clearScreen();
+
+    System.out.println("This feature is currently not available yet.");
+
+    Utilities.pressAnyKey();
   }
 
   public void runStudentAppointment(String patientId) {
@@ -507,7 +685,7 @@ public class AppointmentController {
           do {
             do {
               filteredDoctorData = appointmentUI.runDoctorRecordListMenu(doctorData, "", appointmentDay, page);
-              response = appointmentUI.inputDoctorId();
+              response = appointmentUI.inputBookDoctorId();
               vResponse = AppointmentValidation.validateDoctorIdExistence(doctorMap, doctorData, appointmentDay, response[0], response[1].toCharArray());
             } while (!Boolean.parseBoolean(vResponse[0]));
 
@@ -648,20 +826,13 @@ public class AppointmentController {
   }
 
   public void runAppointmentRecords(String patientId) {
+    
+    System.out.println();
 
-    boolean exit = false;
-    String[] response;
-    String[] vResponse;
-    int page = 1;
+    Utilities.clearScreen();
 
-    do {
+    System.out.println("This feature is currently not available yet.");
 
-      System.out.println();
-
-      Utilities.clearScreen();
-
-      exit = true;
-
-    } while (!exit);
+    Utilities.pressAnyKey();
   }
 }

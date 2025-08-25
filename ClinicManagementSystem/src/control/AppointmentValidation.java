@@ -7,6 +7,7 @@ import entity.Appointment;
 import entity.Doctor;
 import entity.Patient;
 import entity.Schedule;
+import utility.Enum.Status;
 import utility.MessageUI;
 import utility.Utilities;
 import utility.Validation;
@@ -20,7 +21,7 @@ import java.time.LocalTime;
  */
 public class AppointmentValidation {
 
-  public static String[] validateAppointmentMenu(String userInput, char[] userInputOptions) {
+  public static String[] validateAppointmentMenu(String userInput, char[] inputOptions) {
 
     boolean valid = false;
     String response = userInput;
@@ -29,11 +30,11 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       } else {
@@ -45,7 +46,7 @@ public class AppointmentValidation {
     return new String[] { String.valueOf(valid), response };
   }
 
-  public static String[] validateAppointmentListMenu(String userInput, char[] userInputOptions) {
+  public static String[] validateAppointmentListMenu(String userInput, char[] inputOptions) {
 
     boolean valid = false;
     String response = userInput;
@@ -54,11 +55,11 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       } else {
@@ -70,7 +71,7 @@ public class AppointmentValidation {
     return new String[] { String.valueOf(valid), response };
   }
   
-  public static String[] validateAppointmentSearch(RedBlackTreeMap<String, Appointment> appointmentMap, String userInput, char[] userInputOptions) {
+  public static String[] validateAppointmentSearch(RedBlackTreeMap<String, Appointment> appointmentMap, String userInput, char[] inputOptions) {
 
     boolean valid = false;
     String response = userInput;
@@ -79,19 +80,24 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       } else {
-        if (Validation.isValidId(appointmentMap, "A" + userInput)) {
-          response = "A" + userInput;
-          valid = true;
+        if (Validation.isNumeric(userInput)) {
+          if (Validation.isValidId(appointmentMap, "A" + userInput)) {
+            response = "A" + userInput;
+            valid = true;
+          } else {
+            MessageUI.notValidId("A" + userInput);
+            valid = false;
+          }
         } else {
-          MessageUI.notValidId("A" + userInput);
+          MessageUI.notNumeric();
           valid = false;
         }
       }
@@ -100,7 +106,7 @@ public class AppointmentValidation {
     return new String[] { String.valueOf(valid), response };
   }
   
-  public static String[] validateAppointmentEditMenu(String userInput, char[] userInputOptions) {
+  public static String[] validateAppointmentEditMenu(String userInput, char[] inputOptions) {
 
     boolean valid = false;
     String response = userInput;
@@ -109,11 +115,11 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       } else {
@@ -125,7 +131,7 @@ public class AppointmentValidation {
     return new String[] { String.valueOf(valid), response };
   }
 
-  public static String[] validateEditDoctorId(ArrayList<String[]> doctorData, String userInput, char[] userInputOptions) {
+  public static String[] validateEditDoctorId(ArrayList<String[]> doctorData, String userInput, char[] inputOptions) {
 
     boolean valid = false;
     String response = userInput;
@@ -134,28 +140,33 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       } else {
-        ListInterface<String> doctorIds = new ArrayList<>();
-        for (int i = 1; i <= doctorData.size(); i++) {
-          String[] doctor = doctorData.get(i);
-          if (doctor[0].equals("D" + userInput)) {
-            if (!doctorIds.contains("D" + userInput)) {
-              doctorIds.add("D" + userInput);
+        if (Validation.isNumeric(userInput)) {
+          ListInterface<String> doctorIds = new ArrayList<>();
+          for (int i = 1; i <= doctorData.size(); i++) {
+            String[] doctor = doctorData.get(i);
+            if (doctor[0].equals("D" + userInput)) {
+              if (!doctorIds.contains("D" + userInput)) {
+                doctorIds.add("D" + userInput);
+              }
             }
           }
-        }
-        if (Validation.isValidId(doctorIds, "D" + userInput)) {
-          response = "D" + userInput;
-          valid = true;
+          if (Validation.isValidId(doctorIds, "D" + userInput)) {
+            response = "D" + userInput;
+            valid = true;
+          } else {
+            MessageUI.notValidId("D" + userInput);
+            valid = false;
+          }
         } else {
-          MessageUI.notValidId("D" + userInput);
+          MessageUI.notNumeric();
           valid = false;
         }
       }
@@ -164,7 +175,7 @@ public class AppointmentValidation {
     return new String[] { String.valueOf(valid), response };
   }
   
-  public static String[] validateEditAppointmentDate(String userInput, char[] userInputOptions) {
+  public static String[] validateEditAppointmentDate(String userInput, char[] inputOptions) {
     
     boolean valid = false;
     String response = userInput;
@@ -173,11 +184,11 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       } else {
@@ -211,7 +222,7 @@ public class AppointmentValidation {
   }
 
   public static String[] validateEditAppointmentTime(RedBlackTreeMap<String, Schedule> scheduleMap, String doctorId,
-      LocalDate appointmentDate, String userInput, char[] userInputOptions, int maxLength) {
+      LocalDate appointmentDate, String userInput, char[] inputOptions, int maxLength) {
 
     boolean valid = false;
     String response = userInput;
@@ -235,11 +246,11 @@ public class AppointmentValidation {
         if (Validation.isSingleChar(userInput)) {
           char option = Character.toUpperCase(userInput.charAt(0));
 
-          if (Validation.isValidOption(option, userInputOptions)) {
+          if (Validation.isValidOption(option, inputOptions)) {
             response = String.valueOf(option);
             valid = true;
           } else {
-            MessageUI.notValidOption(userInputOptions);
+            MessageUI.notValidOption(inputOptions);
             valid = false;
           }
         } else {
@@ -269,7 +280,7 @@ public class AppointmentValidation {
     return new String[] { String.valueOf(valid), response };
   }
   
-  public static String[] validateEditStatus(String userInput, char[] userInputOptions) {
+  public static String[] validateEditStatus(String userInput, char[] inputOptions) {
     
     boolean valid = false;
     String response = userInput;
@@ -278,11 +289,11 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       } else {
@@ -294,7 +305,7 @@ public class AppointmentValidation {
     return new String[] { String.valueOf(valid), response };
   }
   
-  public static String[] validateConfirmEdit(String userInput, char[] userInputOptions) {
+  public static String[] validateConfirmEdit(String userInput, char[] inputOptions) {
 
     boolean valid = false;
     String response = userInput;
@@ -303,11 +314,11 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       } else {
@@ -319,7 +330,7 @@ public class AppointmentValidation {
     return new String[] { String.valueOf(valid), response };
   }
   
-  public static String[] vaidateAppointmentDeleteMenu(String userInput, char[] userInputOptions) {
+  public static String[] vaidateAppointmentDeleteMenu(String userInput, char[] inputOptions) {
 
     boolean valid = false;
     String response = userInput;
@@ -328,11 +339,305 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
+          valid = false;
+        }
+      } else {
+        MessageUI.notSingleChar();
+        valid = false;
+      }
+    }
+
+    return new String[] { String.valueOf(valid), response };
+  }
+
+  public static String[] validateSearchCategory(String userInput, char[] inputOptions) {
+
+    boolean valid = false;
+    String response = userInput;
+
+    if (!userInput.equals("")) {
+      if (Validation.isSingleChar(userInput)) {
+        char option = Character.toUpperCase(userInput.charAt(0));
+
+        if (Validation.isValidOption(option, inputOptions)) {
+          response = String.valueOf(option);
+          valid = true;
+        } else {
+          MessageUI.notValidOption(inputOptions);
+          valid = false;
+        }
+      } else {
+        MessageUI.notSingleChar();
+        valid = false;
+      }
+    }
+
+    return new String[] { String.valueOf(valid), response };
+  }
+
+  public static String[] validateAppointmentIdSearch(RedBlackTreeMap<String, Appointment> appointmentMap, String userInput,
+      char[] inputOptions) {
+
+    boolean valid = false;
+    String response = userInput;
+
+    if (!userInput.equals("")) {
+      if (Validation.isSingleChar(userInput)) {
+        char option = Character.toUpperCase(userInput.charAt(0));
+
+        if (Validation.isValidOption(option, inputOptions)) {
+          response = String.valueOf(option);
+          valid = true;
+        } else {
+          MessageUI.notValidOption(inputOptions);
+          valid = false;
+        }
+      } else {
+        if (Validation.isNumeric(userInput)) {
+          if (validSearch(appointmentMap, "Appointment ID", "A" + userInput)) {
+            response = "A" + userInput;
+            valid = true;
+          } else {
+            MessageUI.searchValueNotFound("Appointment ID", "A" + userInput);
+            valid = false;
+          }
+        } else {
+          MessageUI.notNumeric();
+          valid = false;
+        }
+      }
+    }
+
+    return new String[] { String.valueOf(valid), response };
+  }
+
+  public static String[] validatePatientIdSearch(RedBlackTreeMap<String, Appointment> appointmentMap, String userInput,
+      char[] inputOptions) {
+    
+    boolean valid = false;
+    String response = userInput;
+
+    if (!userInput.equals("")) {
+      if (Validation.isSingleChar(userInput)) {
+        char option = Character.toUpperCase(userInput.charAt(0));
+
+        if (Validation.isValidOption(option, inputOptions)) {
+          response = String.valueOf(option);
+          valid = true;
+        } else {
+          MessageUI.notValidOption(inputOptions);
+          valid = false;
+        }
+      } else {
+        if (Validation.isNumeric(userInput)) {
+          if (validSearch(appointmentMap, "Patient ID", "P" + userInput)) {
+            response = "P" + userInput;
+            valid = true;
+          } else {
+            MessageUI.searchValueNotFound("Patient ID", "P" + userInput);
+            valid = false;
+          }
+        } else {
+          MessageUI.notNumeric();
+          valid = false;
+        }
+      }
+    }
+
+    return new String[] { String.valueOf(valid), response };
+  }
+
+  public static String[] validateDoctorIdSearch(RedBlackTreeMap<String, Appointment> appointmentMap, String userInput,
+      char[] inputOptions) {
+
+    boolean valid = false;
+    String response = userInput;
+
+    if (!userInput.equals("")) {
+      if (Validation.isSingleChar(userInput)) {
+        char option = Character.toUpperCase(userInput.charAt(0));
+
+        if (Validation.isValidOption(option, inputOptions)) {
+          response = String.valueOf(option);
+          valid = true;
+        } else {
+          MessageUI.notValidOption(inputOptions);
+          valid = false;
+        }
+      } else {
+        if (Validation.isNumeric(userInput)) {
+          if (validSearch(appointmentMap, "Doctor ID", "D" + userInput)) {
+            response = "D" + userInput;
+            valid = true;
+          } else {
+            MessageUI.searchValueNotFound("Doctor ID", "D" + userInput);
+            valid = false;
+          }
+        } else {
+          MessageUI.notNumeric();
+          valid = false;
+        }
+      }
+    }
+
+    return new String[] { String.valueOf(valid), response };
+  }
+
+  public static String[] validateDateSearch(RedBlackTreeMap<String, Appointment> appointmentMap, String userInput,
+      char[] inputOptions) {
+
+    boolean valid = false;
+    String response = userInput;
+
+    if (!userInput.equals("")) {
+      if (Validation.isSingleChar(userInput)) {
+        char option = Character.toUpperCase(userInput.charAt(0));
+
+        if (Validation.isValidOption(option, inputOptions)) {
+          response = String.valueOf(option);
+          valid = true;
+        } else {
+          MessageUI.notValidOption(inputOptions);
+          valid = false;
+        }
+      } else {
+        userInput = userInput.replaceAll("\\s-", "");
+        if (Validation.isNumeric(userInput)) {
+          if (Validation.isValidDate(userInput)) {
+            userInput = String.valueOf(Utilities.formatDate(userInput));
+            if (validSearch(appointmentMap, "Date", userInput)) {
+              response = userInput;
+              valid = true;
+            } else {
+              MessageUI.searchValueNotFound("Appointment Date", userInput);
+              valid = false;
+            }
+          } else {
+            MessageUI.notValidDate();
+            valid = false;
+          }
+        } else {
+          MessageUI.notNumeric();
+          valid = false;
+        }
+      }
+    }
+
+    return new String[] { String.valueOf(valid), response };
+  }
+
+  public static String[] validateTimeSearch(RedBlackTreeMap<String, Appointment> appointmentMap, String userInput,
+      char[] inputOptions) {
+
+    boolean valid = false;
+    String response = userInput;
+
+    if (!userInput.equals("")) {
+      if (Validation.isSingleChar(userInput)) {
+        char option = Character.toUpperCase(userInput.charAt(0));
+
+        if (Validation.isValidOption(option, inputOptions)) {
+          response = String.valueOf(option);
+          valid = true;
+        } else {
+          MessageUI.notValidOption(inputOptions);
+          valid = false;
+        }
+      } else {
+        userInput = userInput.replaceAll("\\s:", "");
+        if (Validation.isNumeric(userInput)) {
+          if (Validation.isValidTime(userInput)) {
+            userInput = String.valueOf(Utilities.formatTime(userInput));
+            if (validSearch(appointmentMap, "Time", userInput)) {
+              response = userInput;
+              valid = true;
+            } else {
+              MessageUI.searchValueNotFound("Appointment Time", userInput);
+              valid = false;
+            }
+          } else {
+            MessageUI.notValidTime();
+            valid = false;
+          }
+        } else {
+          MessageUI.notNumeric();
+          valid = false;
+        }
+      }
+    }
+
+    return new String[] { String.valueOf(valid), response };
+  }
+
+  public static String[] validateStatusSearch(RedBlackTreeMap<String, Appointment> appointmentMap, String userInput,
+      char[] inputOptions) {
+
+    boolean valid = false;
+    String response = userInput;
+
+    if (!userInput.equals("")) {
+      if (Validation.isSingleChar(userInput)) {
+        char option = Character.toUpperCase(userInput.charAt(0));
+
+        if (Validation.isValidOption(option, inputOptions)) {
+          if (option != '0') {
+            switch (option) {
+              case '1':
+                userInput = "Approved";
+                break;
+              case '2':
+                userInput = "Rejected";
+                break;
+              case '3':
+                userInput = "Pending";
+                break;
+              case '4':
+                userInput = "Cancelled";
+                break;
+            }
+            if (validSearch(appointmentMap, "Status", userInput)) {
+              response = userInput;
+              valid = true;
+            } else {
+              MessageUI.searchValueNotFound("Status", userInput);
+              valid = false;
+            }
+          } else {
+            response = userInput;
+            valid = true;
+          }
+        } else {
+          MessageUI.notValidOption(inputOptions);
+          valid = false;
+        }
+      } else {
+        MessageUI.notSingleChar();
+        valid = false;
+      }
+    }
+
+    return new String[] { String.valueOf(valid), response };
+  }
+  
+  public static String[] validateAppointmentClearance(String userInput, char[] inputOptions) {
+
+    boolean valid = false;
+    String response = userInput;
+
+    if (!userInput.equals("")) {
+      if (Validation.isSingleChar(userInput)) {
+        char option = Character.toUpperCase(userInput.charAt(0));
+
+        if (Validation.isValidOption(option, inputOptions)) {
+          response = String.valueOf(option);
+          valid = true;
+        } else {
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       } else {
@@ -345,7 +650,7 @@ public class AppointmentValidation {
   }
 
   public static String[] validatePatientIdExistence(RedBlackTreeMap<String, Patient> patientMap, String userInput,
-      char[] userInputOptions) {
+      char[] inputOptions) {
 
     boolean valid = false;
     String response = userInput;
@@ -354,19 +659,24 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       } else {
-        if (Validation.isValidId(patientMap, "P" + userInput)) {
-          response = "P" + userInput;
-          valid = true;
+        if (Validation.isNumeric(userInput)) {
+          if (Validation.isValidId(patientMap, "P" + userInput)) {
+            response = "P" + userInput;
+            valid = true;
+          } else {
+            MessageUI.notValidId("P" + userInput);
+            valid = false;
+          }
         } else {
-          MessageUI.notValidId("P" + userInput);
+          MessageUI.notNumeric();
           valid = false;
         }
       }
@@ -376,7 +686,7 @@ public class AppointmentValidation {
   }
   
   public static String[] validateDoctorIdExistence(RedBlackTreeMap<String, Doctor> doctorMap,
-      ArrayList<String[]> doctorData, String appointmentDay, String userInput, char[] userInputOptions) {
+      ArrayList<String[]> doctorData, String appointmentDay, String userInput, char[] inputOptions) {
     
     boolean valid = false;
     String response = userInput;
@@ -385,19 +695,24 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       } else {
-        if (Validation.isValidId(doctorMap, "D" + userInput)) {
-          response = "D" + userInput;
-          valid = true;
+        if (Validation.isNumeric(userInput)) {
+          if (Validation.isValidId(doctorMap, "D" + userInput)) {
+            response = "D" + userInput;
+            valid = true;
+          } else {
+            MessageUI.notValidId("D" + userInput);
+            valid = false;
+          }
         } else {
-          MessageUI.notValidId("D" + userInput);
+          MessageUI.notNumeric();
           valid = false;
         }
       }
@@ -406,7 +721,7 @@ public class AppointmentValidation {
     return new String[] { String.valueOf(valid), response };
   }
   
-  public static String[] validateAppointmentDate(String userInput, char[] userInputOptions) {
+  public static String[] validateAppointmentDate(String userInput, char[] inputOptions) {
 
     boolean valid = false;
     String response = userInput;
@@ -415,11 +730,11 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       } else {
@@ -509,7 +824,7 @@ public class AppointmentValidation {
   }
 
   public static String[] validateAppointmentTime(RedBlackTreeMap<String, Schedule> scheduleMap, String doctorId,
-      LocalDate appointmentDate, String userInput, char[] userInputOptions, int maxLength) {
+      LocalDate appointmentDate, String userInput, char[] inputOptions, int maxLength) {
 
     boolean valid = false;
     String response = userInput;
@@ -533,11 +848,11 @@ public class AppointmentValidation {
         if (Validation.isSingleChar(userInput)) {
           char option = Character.toUpperCase(userInput.charAt(0));
 
-          if (Validation.isValidOption(option, userInputOptions)) {
+          if (Validation.isValidOption(option, inputOptions)) {
             response = String.valueOf(option);
             valid = true;
           } else {
-            MessageUI.notValidOption(userInputOptions);
+            MessageUI.notValidOption(inputOptions);
             valid = false;
           }
         } else {
@@ -575,7 +890,7 @@ public class AppointmentValidation {
     return !userInput.isBefore(startTime) && userInput.isBefore(endTime);
   }
 
-  public static String[] validateReason(String userInput, char[] userInputOptions, int maxLength) {
+  public static String[] validateReason(String userInput, char[] inputOptions, int maxLength) {
 
     boolean valid = false;
     String response = userInput;
@@ -584,11 +899,11 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       } else {
@@ -605,7 +920,7 @@ public class AppointmentValidation {
     return new String[] { String.valueOf(valid), response };
   }
 
-  public static String[] validateConfirmAppointment(String userInput, char[] userInputOptions) {
+  public static String[] validateConfirmAppointment(String userInput, char[] inputOptions) {
 
     boolean valid = false;
     String response = userInput;
@@ -614,16 +929,49 @@ public class AppointmentValidation {
       if (Validation.isSingleChar(userInput)) {
         char option = Character.toUpperCase(userInput.charAt(0));
 
-        if (Validation.isValidOption(option, userInputOptions)) {
+        if (Validation.isValidOption(option, inputOptions)) {
           response = String.valueOf(option);
           valid = true;
         } else {
-          MessageUI.notValidOption(userInputOptions);
+          MessageUI.notValidOption(inputOptions);
           valid = false;
         }
       }
     }
 
     return new String[] { String.valueOf(valid), response };
+  }
+
+  public static boolean validSearch(RedBlackTreeMap<String, Appointment> appointmentMap, String searchCategory, String userInput) {
+    ArrayList<String> keys = appointmentMap.getKeys();
+    for (int i = 1; i <= keys.size(); i++) {
+      Appointment appointment = appointmentMap.get(keys.get(i));
+      if (searchCategory.equals("Appointment ID")) {
+        if (appointment.getAppointmentId().equals(userInput)) {
+          return true;
+        }
+      } else if (searchCategory.equals("Patient ID")) {
+        if (appointment.getPatientId().equals(userInput)) {
+          return true;
+        }
+      } else if (searchCategory.equals("Doctor ID")) {
+        if (appointment.getDoctorId().equals(userInput)) {
+          return true;
+        }
+      } else if (searchCategory.equals("Date")) {
+        if (appointment.getAppointmentDate().equals(userInput)) {
+          return true;
+        }
+      } else if (searchCategory.equals("Time")) {
+        if (appointment.getAppointmentTime().equals(userInput)) {
+          return true;
+        }
+      } else if (searchCategory.equals("Status")) {
+        if (appointment.getStatus().equals(Status.valueOf(userInput))) {
+          return true;
+        }
+      } 
+    }
+    return false;
   }
 }

@@ -664,9 +664,9 @@ public class PatientUI {
 
     Utilities.clearScreen();
 
-    System.out.println("+----------------------+");
-    System.out.println("|   Edit Confimation   |");
-    System.out.println("+----------------------+");
+    System.out.println("+-------------------+");
+    System.out.println("| EDIT CONFIRMATION |");
+    System.out.println("+-------------------+");
 
     System.out.println();
 
@@ -724,7 +724,7 @@ public class PatientUI {
     System.out.println();
 
     System.out.println("+---------------------+");
-    System.out.println("| Delete Confirmation |");
+    System.out.println("| DELETE CONFIRMATION |");
     System.out.println("+---------------------+");
 
     System.out.println();
@@ -747,7 +747,7 @@ public class PatientUI {
     Utilities.clearScreen();
 
     System.out.println("+-------------------+");
-    System.out.println("|  Search Category  |");
+    System.out.println("|  SEARCH CATEGORY  |");
     System.out.println("+-------------------+");
 
     System.out.println();
@@ -825,7 +825,7 @@ public class PatientUI {
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
-  public String[] runPatientClearance() {
+  public String[] runPatientClearanceMenu() {
 
     final char[] INPUT_OPTIONS = { '1', '0' };
 
@@ -833,9 +833,9 @@ public class PatientUI {
 
     Utilities.clearScreen();
 
-    System.out.println("+----------------------+");
-    System.out.println("| Clear Patient Record |");
-    System.out.println("+----------------------+");
+    System.out.println("+-------------------+");
+    System.out.println("| PATIENT CLEARANCE |");
+    System.out.println("+-------------------+");
 
     System.out.println();
 
