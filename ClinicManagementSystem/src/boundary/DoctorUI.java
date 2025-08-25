@@ -88,6 +88,12 @@ public class DoctorUI {
     }
 
     private void addDoctorUI() {
+        // get last id from doctors.txt
+        ListInterface<Doctor> doctorList = doctorController.getAllDoctors();
+        String lastId = doctorList.get(doctorList.size()).getDoctorId();
+        int lastIdInt = Integer.parseInt(lastId.substring(1));
+        Doctor.setLastId(lastIdInt);
+
         String name, icNumber, contactNumber, email, address;
         Gender gender;
         LocalDate birthDate;
@@ -177,7 +183,8 @@ public class DoctorUI {
                     specialization = availableSpecs[choice - 1];
                     break;
                 } else {
-                    System.out.println("Error: Invalid choice. Please enter a number between 1 and " + choiceCount + ".");
+                    System.out
+                            .println("Error: Invalid choice. Please enter a number between 1 and " + choiceCount + ".");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Error: Please enter a valid number.");
