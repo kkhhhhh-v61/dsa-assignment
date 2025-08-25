@@ -1,6 +1,7 @@
 package control;
 
 import adt.RedBlackTreeMap;
+import boundary.ConsultationUI;
 import boundary.DoctorUI;
 import boundary.SystemUI;
 import dao.PatientDAO;
@@ -15,8 +16,10 @@ import utility.Validation;
 public class SystemController {
 
   SystemUI systemUI = new SystemUI();
+  ConsultationUI consultationUI = new ConsultationUI();
   
   AppointmentController appointmentController = new AppointmentController();
+  ConsultationController consultationController = new ConsultationController();
   PatientController patientController = new PatientController();
   DoctorUI doctorUI = new DoctorUI();
 
@@ -51,6 +54,8 @@ public class SystemController {
                 appointmentController.runAppointmentManagement();
                 break;
               case '4':
+                consultationController.syncConsultationsWithAppointments();
+                consultationUI.runMenu();
                 break;
               case '5':
                 break;
@@ -117,6 +122,7 @@ public class SystemController {
                 appointmentController.runStudentAppointment(patientId);
                 break;
               case '3':
+                consultationUI.runStudent(patientId);
                 break;
               case '4':
                 break;

@@ -4,8 +4,10 @@ import adt.ArrayList;
 import adt.RedBlackTreeMap;
 import boundary.AppointmentUI;
 import dao.AppointmentDAO;
+import dao.ConsultationDAO;
 import dao.DoctorScheduleDAO;
 import entity.Appointment;
+import entity.Consultation;
 import entity.Doctor;
 import entity.Schedule;
 import utility.Enum.Status;
@@ -477,6 +479,35 @@ public class AppointmentController {
         if (vResponse[1].equals("1")) {
           appointmentMap.get(appointmentId).setStatus(Status.valueOf(userInput));
           appointmentDAO.saveToFile(appointmentMap);
+          
+          if (userInput.equals(Status.Approved.toString())) {
+            ConsultationDAO consultationDAO = new ConsultationDAO();
+
+            // generate new consultation ID
+            int lastId = consultationDAO.getLastId();
+            String newId = String.format("C%04d", lastId + 1);
+
+            Appointment appt = appointmentMap.get(appointmentId);
+
+            adt.ArrayList<String> symptoms = new adt.ArrayList<>();
+            symptoms.add("none");  // default placeholder
+            adt.ArrayList<String> diagnosis = new adt.ArrayList<>();
+            diagnosis.add("none"); // default placeholder
+
+            Consultation newConsultation = new Consultation(
+                appt.getPatientId(),
+                appt.getDoctorId(),
+                appt.getAppointmentDate(),
+                appt.getAppointmentTime(),
+                symptoms,
+                diagnosis,
+                "",
+                Status.Unknown
+            );
+            newConsultation.setConsultationId(newId);
+
+            consultationDAO.addConsultation(newConsultation);
+          }
         }
       }
     }

@@ -2,6 +2,7 @@ package entity;
 
 import adt.ArrayList;
 import utility.Enum.Status;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -9,7 +10,7 @@ import java.time.LocalTime;
  *
  * @author Tan Kai Hao
  */
-public class Consultation {
+public class Consultation implements Serializable {
   private static int lastId = 0;
 
   private String consultationId;
@@ -120,10 +121,25 @@ public class Consultation {
   }
 
   public String toString() {
-    return "Consultation ID: " + consultationId + "\nPatient ID: " + patientId + "\nDoctor ID: " + doctorId + "\nConsultation Date: " + consultationDate + "\nConsultation Time: " + consultationTime + "\nSymptoms: " + symptoms + "\nDiagnosis: " + diagnosis + "\nNotes: " + notes + "\nStatus: " + status;
+    return "Consultation ID: " + consultationId + "\nPatient ID: " + patientId + "\nDoctor ID: " + doctorId + "\nConsultation Date: " + consultationDate + "\nConsultation Time: " + consultationTime + "\nSymptoms: " + formatList(symptoms) + "\nDiagnosis: " + formatList(diagnosis) + "\nNotes: " + notes + "\nStatus: " + status;
   }
 
   public String toFileString() {
-    return consultationId + "|" + patientId + "|" + doctorId + "|" + consultationDate + "|" + consultationTime + "|" + symptoms + "|" + diagnosis + "|" + notes + "|" + status;
+    return consultationId + "|" + patientId + "|" + doctorId + "|" + consultationDate + "|" + consultationTime + "|" + formatList(symptoms) + "|" + formatList(diagnosis) + "|" + notes + "|" + status;
+  }
+  
+  private String formatList(adt.ArrayList<String> list) {
+    if (list == null || list.isEmpty()) {
+        return "[]";
+    }
+    StringBuilder sb = new StringBuilder("[");
+    for (int i = 1; i <= list.size(); i++) {   // ✅ 1-based indexing
+        sb.append(list.get(i));
+        if (i < list.size()) {
+            sb.append(", ");
+        }
+    }
+    sb.append("]");
+    return sb.toString();
   }
 }
