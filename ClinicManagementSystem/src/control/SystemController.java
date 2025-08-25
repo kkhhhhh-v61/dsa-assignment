@@ -54,6 +54,8 @@ public class SystemController {
                 break;
               case '5':
                 break;
+              case '6':
+                break;
               case '0':
                 exit = true;
                 break;
@@ -110,11 +112,13 @@ public class SystemController {
           if (Validation.isValidOption(userInput, inputOptions)) {
             switch (userInput) {
               case '1':
-                appointmentController.runStudentAppointment(patientId);
                 break;
               case '2':
+                appointmentController.runStudentAppointment(patientId);
                 break;
               case '3':
+                break;
+              case '4':
                 break;
               case '0':
                 exit = true;

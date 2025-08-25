@@ -18,7 +18,7 @@ import java.time.LocalTime;
  *  can't be bothered to understand the Doctor module. :)
  * 
  *  PS: The actual reason is that I was frustrated because when I was initially trying to retrieve the
- *  required data, but it keeps giving the wrong result. I suspect there's probably a bug in the Doctor
+ *  required data using the Doctor DAO, but it kept giving the wrong result. I suspected there's probably a bug in the Doctor
  *  module, but I don't have the time to fix it + it's not my assigned module. :)
  * 
  *  If anyone sees this and wants to fix it, please do so. Although I will still be using this even if

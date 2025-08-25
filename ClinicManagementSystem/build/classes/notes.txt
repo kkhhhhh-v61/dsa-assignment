@@ -9,8 +9,5 @@
 - student view appointment
 - student view upcoming appointment
 - student cancel appointment
-- staff view and manage appointment
-  - appointment list (DONE)
-  - appointment search (in progress) 
-    - add search by category
+- appointment initialization
 - integrate with consultation

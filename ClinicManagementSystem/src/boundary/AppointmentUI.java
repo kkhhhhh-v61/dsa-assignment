@@ -610,9 +610,9 @@ public class AppointmentUI {
 
     Utilities.clearScreen();
 
-    System.out.println("+-------------------+");
+    System.out.println("+-----------------------+");
     System.out.println("| APPOINTMENT CLEARANCE |");
-    System.out.println("+-------------------+");
+    System.out.println("+-----------------------+");
 
     System.out.println();
 

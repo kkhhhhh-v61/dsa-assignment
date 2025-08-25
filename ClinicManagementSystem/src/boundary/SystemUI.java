@@ -45,7 +45,7 @@ public class SystemUI {
   
   public String[] runClinicStaffMenu() {
 
-    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '5', '0' };
+    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '5', '6', '0' };
 
     System.out.println();
 
@@ -59,6 +59,7 @@ public class SystemUI {
     System.out.println("| [3] Appointment Management  |");
     System.out.println("| [4] Consultation Management |");
     System.out.println("| [5] Treatment Management    |");
+    System.out.println("| [6] Report and Analytics    |");
     System.out.println("| [0] Return                  |");
     System.out.println("+-----------------------------+");
 
@@ -112,20 +113,21 @@ public class SystemUI {
   
   public String[] runStudentMenu() {
 
-    final char[] INPUT_OPTIONS = { '1', '2', '3', '0' };
+    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '0' };
 
     System.out.println();
 
     Utilities.clearScreen();
 
-    System.out.println("+--------------------+");
-    System.out.println("|   STUDENT PORTAL   |");
-    System.out.println("+--------------------+");
-    System.out.println("| [1] Appointments   |");
-    System.out.println("| [2] Consultations  |");
-    System.out.println("| [3] Treatments     |");
-    System.out.println("| [0] Return         |");
-    System.out.println("+--------------------+");
+    System.out.println("+----------------------+");
+    System.out.println("|    STUDENT PORTAL    |");
+    System.out.println("+----------------------+");
+    System.out.println("| [1] Get Queue Number |");
+    System.out.println("| [2] Appointments     |");
+    System.out.println("| [3] Consultations    |");
+    System.out.println("| [4] Treatments       |");
+    System.out.println("| [0] Return           |");
+    System.out.println("+----------------------+");
 
     System.out.println();
 
