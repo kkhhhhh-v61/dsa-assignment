@@ -17,7 +17,7 @@ public class AppointmentUI {
 
   public String[] runAppointmentMenu() {
 
-    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '0' };
+    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '5', '0' };
 
     System.out.println();
 
@@ -27,9 +27,10 @@ public class AppointmentUI {
     System.out.println("|        APPOINTMENT MENU        |");
     System.out.println("+--------------------------------+");
     System.out.println("| [1] Appointment List           |");
-    System.out.println("| [2] Appointment Search         |");
-    System.out.println("| [3] Appointment Clearance      |");
-    System.out.println("| [4] Appointment Initialization |");
+    System.out.println("| [2] Appointment Status Update  |");
+    System.out.println("| [3] Appointment Search         |");
+    System.out.println("| [4] Appointment Clearance      |");
+    System.out.println("| [5] Appointment Initialization |");
     System.out.println("| [0] Return                     |");
     System.out.println("+--------------------------------+");
 
@@ -334,7 +335,49 @@ public class AppointmentUI {
 
     System.out.print("> ");
     return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
+  }
 
+  public String[] runAppointmentStatusUpdateMenu(Appointment appointment) {
+
+    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '0' };
+
+    System.out.println();
+
+    Utilities.clearScreen();
+
+    System.out.println("+===========================================================================================+");
+    System.out.println("|                                      APPOINTMENT LIST                                     |");
+    System.out.println("+===========================================================================================+");
+    System.out.println("|  AID  |  PID  |  DID  |    DATE    |  TIME  |             REASON             |   STATUS   |");
+    System.out.println("+===========================================================================================+");
+
+    System.out.println(String.format("| %-5s | %-5s | %-5s | %10s | %6s | %-30s | %10s |",
+        appointment.getAppointmentId(), appointment.getPatientId(), appointment.getDoctorId(),
+        appointment.getAppointmentDate(), appointment.getAppointmentTime(), appointment.getReason(),
+        appointment.getStatus()));
+
+    System.out.println("+===========================================================================================+");
+    System.out.println("| NAVIGATION |                                                                 | [0] Return |");
+    System.out.println("+===========================================================================================+");
+
+    System.out.println();
+
+    System.out.println("+-------------------+");
+    System.out.println("|   UPDATE STATUS   |");
+    System.out.println("+-------------------+");
+
+    System.out.println();
+
+    System.out.println("[1] Approved");
+    System.out.println("[2] Rejected");
+    System.out.println("[3] Pending");
+    System.out.println("[4] Cancelled");
+    System.out.println("[0] Cancel");
+
+    System.out.println();
+
+    System.out.print("> ");
+    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
   }
   
   public String[] runAppointmentDeleteMenu(Appointment appointment) {

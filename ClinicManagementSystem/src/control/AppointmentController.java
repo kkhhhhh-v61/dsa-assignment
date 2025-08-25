@@ -84,12 +84,15 @@ public class AppointmentController {
             runAppointmentList();
             break;
           case "2":
-            runAppointmentSearch();
+            runAppointmentStatusManagement();
             break;
           case "3":
-            runAppointmentClearance();
+            runAppointmentSearch();
             break;
           case "4":
+            runAppointmentClearance();
+            break;
+          case "5":
             runAppointmentInitialization();
             break;
           case "0":
@@ -366,7 +369,7 @@ public class AppointmentController {
   }
 
   public void runAppointmentDelete(String appointmentId) {
-    
+
     boolean exit = false;
     String[] response;
     String[] vResponse;
@@ -397,6 +400,86 @@ public class AppointmentController {
         }
       }
     } while (!exit);
+  }
+  
+  public void runAppointmentStatusManagement() {
+
+    boolean exit = false;
+    String[] response;
+    String[] vResponse;
+    int page = 1;
+
+    do {
+      appointmentUI.runAppointmentListMenu(appointmentMap, "", page);
+      response = appointmentUI.inputAppointmentSearch();
+      vResponse = AppointmentValidation.validateAppointmentSearch(appointmentMap, response[0],
+          response[1].toCharArray());
+
+      if (Boolean.parseBoolean(vResponse[0])) {
+        if (vResponse[1].equals("0") || vResponse[1].equals("Q") || vResponse[1].equals("E")) {
+          switch (vResponse[1]) {
+            case "Q":
+              if (page > 1) {
+                page--;
+              }
+              break;
+            case "E":
+              if (page < (appointmentMap.size() + 9) / 10) {
+                page++;
+              }
+              break;
+            case "0":
+              exit = true;
+              break;
+          }
+        } else {
+          runAppointmentStatusUpdate(vResponse[1]);
+        }
+      }
+    } while (!exit);
+  }
+  
+  public void runAppointmentStatusUpdate(String appointmentId) {
+    
+    String[] response;
+    String[] vResponse;
+    
+    do {
+      response = appointmentUI.runAppointmentStatusUpdateMenu(appointmentMap.get(appointmentId));
+      vResponse = AppointmentValidation.validateAppointmentStatusUpdateMenu(response[0], response[1].toCharArray());
+    } while (!Boolean.parseBoolean(vResponse[0]));
+
+    if (!vResponse[1].equals("0")) {
+      String userInput = vResponse[1];
+      switch (userInput) {
+        case "1":
+          userInput = Status.Approved.toString();
+          break;
+        case "2":
+          userInput = Status.Rejected.toString();
+          break;
+        case "3":
+          userInput = Status.Pending.toString();
+          break;
+        case "4":
+          userInput = Status.Cancelled.toString();
+          break;
+        case "0":
+          break;
+      }
+
+      do {
+        response = appointmentUI.confirmEdit("Status", appointmentMap.get(appointmentId).getStatus().toString(), userInput);
+        vResponse = AppointmentValidation.validateConfirmEdit(response[0], response[1].toCharArray());
+      } while (!Boolean.parseBoolean(vResponse[0]));
+
+      if (Boolean.parseBoolean(vResponse[0])) {
+        if (vResponse[1].equals("1")) {
+          appointmentMap.get(appointmentId).setStatus(Status.valueOf(userInput));
+          appointmentDAO.saveToFile(appointmentMap);
+        }
+      }
+    }
   }
 
   public void runAppointmentSearch() {
