@@ -3,10 +3,8 @@ package adt;
 /**
  *
  * @author Tan Kai Hao
- */
-
-/**
- * Reference from: https://docs.oracle.com/javase/8/docs/api/java/util/List.html
+ * 
+ * Referenced from: https://docs.oracle.com/javase/8/docs/api/java/util/List.html
  */
 public interface ListInterface<T> {
   

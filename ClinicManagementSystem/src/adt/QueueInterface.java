@@ -3,11 +3,9 @@ package adt;
 /**
  *
  * @author Tan Kai Hao
+ * 
+ * Referenced from: https://docs.oracle.com/javase/8/docs/api/java/util/Queue.html
  */
-
-/**
-* Reference from: https://docs.oracle.com/javase/8/docs/api/java/util/Queue.html
-*/
 public interface QueueInterface<T> {
   
   /**

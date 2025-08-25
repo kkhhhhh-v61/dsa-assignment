@@ -6,6 +6,10 @@ import java.io.Serializable;
 /**
  *
  * @author Tan Kai Hao
+ * 
+ * Referenced from: 
+ * [1] https://www.geeksforgeeks.org/dsa/introduction-to-red-black-tree
+ * [2] https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html
  */
 public class RedBlackTreeMap<K extends Comparable<K>, V> implements MapInterface<K, V>, Serializable {
 
