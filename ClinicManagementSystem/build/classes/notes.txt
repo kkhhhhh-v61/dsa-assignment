@@ -1,7 +1,7 @@
 [TODO]
 - student view upcoming appointment (LOW PRIORITY)
 - appointment initialization
-- integrate with consultation (IN PROGRESS)
+- student queue registration (IN PROGRESS)
 
 - patient module reporting
   - report 1
@@ -12,3 +12,5 @@
   - add doctor specialization to the appointment booking menu (low priority, fix only if got time)
   - fix bug where appointment booking only prevents booking at the end time but not 1 min before the end time
     - suppose to allow at latest 1 hr before the end time
+- student queueing
+  - add display for number before turn

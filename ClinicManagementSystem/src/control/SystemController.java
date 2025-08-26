@@ -63,9 +63,9 @@ public class SystemController {
               case '5':
                 break;
               case '6':
+                pharmacyUI.displayPharmacyMenu();
                 break;
               case '7':
-                pharmacyUI.displayPharmacyMenu();
                 break;
               case '0':
                 exit = true;
@@ -132,6 +132,8 @@ public class SystemController {
                 consultationUI.runStudent(patientId);
                 break;
               case '4':
+                consultationController.syncConsultationsWithAppointments();
+                consultationUI.runStudent(patientId);
                 break;
               case '0':
                 exit = true;

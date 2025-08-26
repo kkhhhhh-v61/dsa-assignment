@@ -1,17 +1,13 @@
 package adt;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 /**
  * 
  * @author Tan Kai Hao
  */
-
-/**
- * Hash table based implementation of the MapInterface with chaining for collision resolution.
- * 
- * @param <K> the type of keys maintained by this map
- * @param <V> the type of mapped values
- */
-public class HashMap<K, V> implements MapInterface<K, V> {
+public class HashMap<K, V> implements MapInterface<K, V>, Iterable<HashMap.Entry<K, V>> {
     private static final int DEFAULT_CAPACITY = 16;
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;
     
@@ -20,30 +16,14 @@ public class HashMap<K, V> implements MapInterface<K, V> {
     private final float loadFactor;
     private int threshold;
 
-    /**
-     * Constructs an empty HashMap with the default initial capacity (16) and load factor (0.75).
-     */
     public HashMap() {
         this(DEFAULT_CAPACITY, DEFAULT_LOAD_FACTOR);
     }
 
-    /**
-     * Constructs an empty HashMap with the specified initial capacity and default load factor (0.75).
-     * 
-     * @param initialCapacity the initial capacity
-     * @throws IllegalArgumentException if the initial capacity is negative
-     */
     public HashMap(int initialCapacity) {
         this(initialCapacity, DEFAULT_LOAD_FACTOR);
     }
 
-    /**
-     * Constructs an empty HashMap with the specified initial capacity and load factor.
-     * 
-     * @param initialCapacity the initial capacity
-     * @param loadFactor the load factor
-     * @throws IllegalArgumentException if the initial capacity is negative or the load factor is nonpositive
-     */
     @SuppressWarnings("unchecked")
     public HashMap(int initialCapacity, float loadFactor) {
         if (initialCapacity < 0) {
@@ -58,20 +38,31 @@ public class HashMap<K, V> implements MapInterface<K, V> {
         this.threshold = (int) (this.table.length * loadFactor);
     }
 
-    /**
-     * Node class to store key-value pairs in the hash table.
-     */
-    private static class Entry<K, V> {
-        final K key;
-        V value;
-        Entry<K, V> next;
+    public static class Entry<K, V> {
+        public final K key;
+        public V value;
+        public Entry<K, V> next;
         final int hash;
 
-        Entry(int hash, K key, V value, Entry<K, V> next) {
+        public Entry(int hash, K key, V value, Entry<K, V> next) {
             this.hash = hash;
             this.key = key;
             this.value = value;
             this.next = next;
+        }
+        
+        public K getKey() {
+            return key;
+        }
+        
+        public V getValue() {
+            return value;
+        }
+        
+        public V setValue(V value) {
+            V oldValue = this.value;
+            this.value = value;
+            return oldValue;
         }
     }
 
@@ -118,7 +109,6 @@ public class HashMap<K, V> implements MapInterface<K, V> {
         int hash = hash(key);
         int index = indexFor(hash, table.length);
         
-        // Check if key already exists
         for (Entry<K, V> e = table[index]; e != null; e = e.next) {
             if (e.hash == hash && (key == e.key || key.equals(e.key))) {
                 V oldValue = e.value;
@@ -179,10 +169,6 @@ public class HashMap<K, V> implements MapInterface<K, V> {
         size = 0;
     }
     
-    /**
-     * Returns the entry associated with the specified key in the HashMap.
-     * Returns null if the HashMap contains no mapping for the key.
-     */
     private Entry<K, V> getEntry(Object key) {
         int hash = hash(key);
         int index = indexFor(hash, table.length);
@@ -195,9 +181,6 @@ public class HashMap<K, V> implements MapInterface<K, V> {
         return null;
     }
     
-    /**
-     * Adds a new entry with the specified key, value and hash code to the specified bucket.
-     */
     private void addEntry(int hash, K key, V value, int bucketIndex) {
         Entry<K, V> e = table[bucketIndex];
         table[bucketIndex] = new Entry<>(hash, key, value, e);
@@ -207,9 +190,6 @@ public class HashMap<K, V> implements MapInterface<K, V> {
         }
     }
     
-    /**
-     * Rehashes the contents of this map into a new array with a larger capacity.
-     */
     @SuppressWarnings("unchecked")
     private void resize(int newCapacity) {
         Entry<K, V>[] oldTable = table;
@@ -226,9 +206,6 @@ public class HashMap<K, V> implements MapInterface<K, V> {
         threshold = (int) (newCapacity * loadFactor);
     }
     
-    /**
-     * Transfers all entries from current table to new table.
-     */
     private void transfer(Entry<K, V>[] newTable) {
         int newCapacity = newTable.length;
         
@@ -243,23 +220,72 @@ public class HashMap<K, V> implements MapInterface<K, V> {
         }
     }
     
-    /**
-     * Returns index for hash code h.
-     */
     private static int indexFor(int h, int length) {
         return h & (length - 1);
     }
     
-    /**
-     * Applies a supplemental hash function to a given hashCode, which
-     * defends against poor quality hash functions.
-     */
     private static int hash(Object key) {
         int h = key.hashCode();
-        // This function ensures that hashCodes that differ only by
-        // constant multiples at each bit position have a bounded
-        // number of collisions (approximately 8 at default load factor).
         h ^= (h >>> 20) ^ (h >>> 12);
         return h ^ (h >>> 7) ^ (h >>> 4);
+    }
+    
+    @Override
+    public Iterator<Entry<K, V>> iterator() {
+        return new HashMapIterator();
+    }
+    
+    private class HashMapIterator implements Iterator<Entry<K, V>> {
+        private Entry<K, V> next;
+        private int index;
+        private Entry<K, V> current;
+        
+        HashMapIterator() {
+            current = null;
+            next = null;
+            index = 0;
+            // Find first non-empty bucket
+            if (size > 0) {
+                while (index < table.length && (next = table[index]) == null) {
+                    index++;
+                }
+            }
+        }
+        
+        @Override
+        public boolean hasNext() {
+            return next != null;
+        }
+        
+        @Override
+        public Entry<K, V> next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            
+            Entry<K, V> e = next;
+            next = e.next;
+            
+            if (next == null) {
+                index++;
+                while (index < table.length && (next = table[index]) == null) {
+                    index++;
+                }
+            }
+            
+            current = e;
+            return e;
+        }
+        
+        @Override
+        public void remove() {
+            if (current == null) {
+                throw new IllegalStateException("next() must be called before remove()");
+            }
+            
+            K k = current.key;
+            current = null;
+            HashMap.this.remove(k);
+        }
     }
 }

@@ -17,10 +17,16 @@ public class QueueController {
 
   QueueInterface<String[]> patientQueue;
   
+  int lastQueueNumber;
+  
   public QueueController() {
     patientQueue = new Queue<String[]>();
 
     patientQueue = queueDAO.retrieveFromFile();
+
+    if (!patientQueue.isEmpty()) {
+      // lastQueueNumber = Integer.parseInt(patientQueue.getLast()[0]);
+    }
   }
 
   public void runStudentQueue(String patientId) {
@@ -35,11 +41,42 @@ public class QueueController {
 
       if (Boolean.parseBoolean(vResponse[0])) {
         if (!vResponse[1].equals("0")) {
+          switch (vResponse[1]) {
+            case "1":
+              runGetQueueNumber(patientId);
+              break;
+            case "2":
+              runQueueNumberDisplay(patientId);
+              break;
+          }
+        }
+      } else {
+        
+      }
+    } while (!exit);
+  }
+
+  public void runGetQueueNumber(String patientId) {
+    
+    boolean exit = false;
+    String[] response;
+    String[] vResponse;
+
+    do {
+      response = queueUI.runGetQueueNumber();
+      vResponse = QueueValidation.validateQueueMenu(response[0], response[1].toCharArray());
+
+      if (Boolean.parseBoolean(vResponse[0])) {
+        if (!vResponse[1].equals("0")) {
           
         }
       } else {
         
       }
     } while (!exit);
+  }
+
+  public void runQueueNumberDisplay(String patientId) {
+    
   }
 }

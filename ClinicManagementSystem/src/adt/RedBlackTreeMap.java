@@ -1,6 +1,8 @@
 package adt;
 
 import entity.Patient;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.io.Serializable;
 
 /**
@@ -11,13 +13,13 @@ import java.io.Serializable;
  * [1] https://www.geeksforgeeks.org/dsa/introduction-to-red-black-tree
  * [2] https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html
  */
-public class RedBlackTreeMap<K extends Comparable<K>, V> implements MapInterface<K, V>, Serializable {
+public class RedBlackTreeMap<K extends Comparable<K>, V> implements MapInterface<K, V>, Iterable<RedBlackTreeMap.Node<K, V>>, Serializable {
 
   private static final boolean RED = false;
   private static final boolean BLACK = true;
 
   @SuppressWarnings("hiding")
-  public class Node<K, V> implements Serializable {
+  public static class Node<K, V> implements Serializable {
     K key;
     V value;
     Node<K, V> left, right, parent;
@@ -440,7 +442,7 @@ public class RedBlackTreeMap<K extends Comparable<K>, V> implements MapInterface
     }
   }
   
-  // Unique for Patient Management
+  // try to find replacement code for this
   public boolean containsUniqueValue(String attribute, String value) {
     if (root == null) {
       return false;
@@ -469,5 +471,64 @@ public class RedBlackTreeMap<K extends Comparable<K>, V> implements MapInterface
       }
     }
     return false;
+  }
+  
+  @Override
+  public Iterator<Node<K, V>> iterator() {
+    return new RedBlackTreeIterator();
+  }
+  
+  private class RedBlackTreeIterator implements Iterator<Node<K, V>> {
+    private Node<K, V> next;
+    
+    public RedBlackTreeIterator() {
+      next = root;
+      if (next == null) {
+        return;
+      }
+      
+      while (next.left != null) {
+        next = next.left;
+      }
+    }
+    
+    @Override
+    public boolean hasNext() {
+      return next != null;
+    }
+    
+    @Override
+    public Node<K, V> next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException("No more elements in the tree");
+      }
+      
+      Node<K, V> current = next;
+      
+      if (next.right != null) {
+        next = next.right;
+        while (next.left != null) {
+          next = next.left;
+        }
+        return current;
+      }
+      
+      while (true) {
+        if (next.parent == null) {
+          next = null;
+          return current;
+        }
+        if (next.parent.left == next) {
+          next = next.parent;
+          return current;
+        }
+        next = next.parent;
+      }
+    }
+    
+    @Override
+    public void remove() {
+      throw new UnsupportedOperationException("remove() is not supported by this iterator");
+    }
   }
 }

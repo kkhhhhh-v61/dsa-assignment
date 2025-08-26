@@ -1,5 +1,7 @@
 package adt;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.io.Serializable;
 
 /** NOTE: THIS IS A 1-BASED INDEXING ARRAY LIST!!!
@@ -8,7 +10,7 @@ import java.io.Serializable;
  *
  * @author Tan Kai Hao
  */
-public class ArrayList<T> implements ListInterface<T>, Serializable {
+public class ArrayList<T> implements ListInterface<T>, Iterable<T>, Serializable {
   
   private static final int DEFAULT_CAPACITY = 10;
   private int numberOfEntries;
@@ -162,5 +164,39 @@ public class ArrayList<T> implements ListInterface<T>, Serializable {
       newArray[i] = array[i];
     }
     array = newArray;
+  }
+  
+  @Override
+  public Iterator<T> iterator() {
+    return new ArrayListIterator();
+  }
+  
+  private class ArrayListIterator implements Iterator<T> {
+    private int currentIndex = 0;
+    private boolean canRemove = false;
+    
+    @Override
+    public boolean hasNext() {
+      return currentIndex < numberOfEntries;
+    }
+    
+    @Override
+    public T next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException("No more elements in the list");
+      }
+      canRemove = true;
+      return array[currentIndex++];
+    }
+    
+    @Override
+    public void remove() {
+      if (!canRemove) {
+        throw new IllegalStateException("next() must be called before remove()");
+      }
+      ArrayList.this.remove(currentIndex);
+      currentIndex--;
+      canRemove = false;
+    }
   }
 }

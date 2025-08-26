@@ -1,12 +1,13 @@
 package adt;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- *
+ * A linked list implementation of a queue.
  * @author Tan Kai Hao
  */
-public class LinkedQueue<T> implements QueueInterface<T> {
+public class LinkedQueue<T> implements QueueInterface<T>, Iterable<T> {
 
   private Node front;
   private Node back;
@@ -99,5 +100,63 @@ public class LinkedQueue<T> implements QueueInterface<T> {
     front = null;
     back = null;
     size = 0;
+  }
+  
+  @Override
+  public Iterator<T> iterator() {
+    return new LinkedQueueIterator();
+  }
+  
+  private class LinkedQueueIterator implements Iterator<T> {
+    private Node current = front;
+    private Node lastReturned = null;
+    private Node beforeLastReturned = null;
+    
+    @Override
+    public boolean hasNext() {
+      return current != null;
+    }
+    
+    @Override
+    public T next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException("No more elements in the queue");
+      }
+      beforeLastReturned = lastReturned;
+      lastReturned = current;
+      T data = current.data;
+      current = current.next;
+      return data;
+    }
+    
+    @Override
+    public void remove() {
+      if (lastReturned == null) {
+        throw new IllegalStateException("next() must be called before remove()");
+      }
+      
+      if (lastReturned == front) {
+        front = front.next;
+        if (front == null) {
+          back = null;
+        }
+      } else {
+        // Find the node before lastReturned
+        Node prev = front;
+        while (prev != null && prev.next != lastReturned) {
+          prev = prev.next;
+        }
+        if (prev != null) {
+          prev.next = lastReturned.next;
+          if (lastReturned == back) {
+            back = prev;
+          }
+        }
+      }
+      
+      size--;
+      lastReturned = null;
+      current = beforeLastReturned != null ? beforeLastReturned.next : front;
+    }
   }
 }

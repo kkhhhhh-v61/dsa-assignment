@@ -191,10 +191,25 @@ public class PharmacyUI {
         String medicineId = scanner.nextLine();
         if (medicineId.equals("0")) return;
 
-        if (pharmacyController.deleteMedicine(medicineId)) {
-            MessageUI.displaySuccessMessage("Medicine " + medicineId + " deleted successfully!");
+        Medicine medicineToDelete = pharmacyController.getMedicineById(medicineId);
+        if (medicineToDelete == null) {
+            MessageUI.displayErrorMessage("Medicine with ID " + medicineId + " not found.");
+            return;
+        }
+
+        System.out.print("Are you sure you want to delete medicine '" + medicineToDelete.getName() + "' (ID: " + medicineId + ")? (y/n): ");
+        String confirmation = scanner.nextLine();
+
+        if (confirmation.equalsIgnoreCase("y")) {
+            if (pharmacyController.deleteMedicine(medicineId)) {
+                MessageUI.displaySuccessMessage("Medicine " + medicineId + " deleted successfully!");
+            } else {
+                MessageUI.displayErrorMessage("Failed to delete medicine. An unexpected error occurred.");
+            }
+        } else if (confirmation.equalsIgnoreCase("n")) {
+            MessageUI.displayMessage("Medicine deletion cancelled.");
         } else {
-            MessageUI.displayErrorMessage("Failed to delete medicine. Medicine with ID " + medicineId + " not found.");
+            MessageUI.displayErrorMessage("Invalid input. Deletion cancelled.");
         }
     }
 
