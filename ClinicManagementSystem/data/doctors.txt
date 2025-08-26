@@ -1,0 +1,3 @@
+D0001|980101-02-3456|Koo|Female|1998-01-01|27|012-12345678|Koo@gmail.com|Tarumt|2025-08-25|Neurology|0|adt.ArrayList@61a52fbd|adt.ArrayList@233c0b17|adt.ArrayList@63d4e2ba|adt.ArrayList@7bb11784
+D0003|991212-01-2321|Lai|Male|1999-12-12|26|012-12345678|Lai@gmail.com|Granito|2025-08-25|Cardiology|0|adt.ArrayList@2aaf7cc2|adt.ArrayList@6e3c1e69|adt.ArrayList@1888ff2c|adt.ArrayList@35851384
+D0004|021225-04-1237|Chun|Male|2002-12-25|23|013-12345678|Chun@gmail.com|Kulim|2025-08-25|Surgery|0|adt.ArrayList@ea4a92b|adt.ArrayList@3c5a99da|adt.ArrayList@47f37ef1|adt.ArrayList@5a01ccaa

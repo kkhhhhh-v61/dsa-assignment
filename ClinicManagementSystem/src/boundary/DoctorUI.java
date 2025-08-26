@@ -411,10 +411,18 @@ public class DoctorUI {
             Schedule newSchedule = new Schedule(doctorId, day, start, end, true);
             doctorController.addSchedule(newSchedule);
             System.out.println("Schedule added successfully!");
+<<<<<<< Updated upstream
         } catch (DateTimeParseException e) {
             System.out.println("Invalid time format. Please use HH:mm.");
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid Day of Week. Please enter a valid day.");
+=======
+        } else {
+            System.out.println("Error adding schedule:");
+            for (int i = 1; i < errors.size(); i++) {
+                System.out.println("- " + errors.get(i));
+            }
+>>>>>>> Stashed changes
         }
     }
 
