@@ -153,4 +153,16 @@ public class MessageUI {
     System.out.println("Error! Appointment with status '" + status + "' cannot be cancelled.");
     pressAnyKey();
   }
+
+  public static void displayMessage(String message) {
+    System.out.println(message);
+  }
+
+  public static void displaySuccessMessage(String message) {
+    System.out.println("SUCCESS: " + message);
+  }
+
+  public static void displayErrorMessage(String message) {
+    System.err.println("ERROR: " + message);
+  }
 }

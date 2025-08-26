@@ -3,6 +3,8 @@ package utility;
 import adt.ListInterface;
 import adt.RedBlackTreeMap;
 import java.time.LocalDate;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 /**
  *
@@ -120,5 +122,47 @@ public class Validation {
       return false;
     }
     return true;
+  }
+
+  public static int getValidIntegerInput(Scanner scanner, String prompt) {
+    int input = -1;
+    boolean isValid = false;
+    do {
+      System.out.print(prompt);
+      try {
+        input = scanner.nextInt();
+        if (input >= 0) {
+          isValid = true;
+        } else {
+          MessageUI.displayErrorMessage("Input cannot be negative. Please try again.");
+        }
+      } catch (InputMismatchException e) {
+        MessageUI.displayErrorMessage("Invalid input. Please enter a whole number.");
+      } finally {
+        scanner.nextLine(); // Consume newline
+      }
+    } while (!isValid);
+    return input;
+  }
+
+  public static double getValidDoubleInput(Scanner scanner, String prompt) {
+    double input = -1.0;
+    boolean isValid = false;
+    do {
+      System.out.print(prompt);
+      try {
+        input = scanner.nextDouble();
+        if (input >= 0) {
+          isValid = true;
+        } else {
+          MessageUI.displayErrorMessage("Input cannot be negative. Please try again.");
+        }
+      } catch (InputMismatchException e) {
+        MessageUI.displayErrorMessage("Invalid input. Please enter a decimal number.");
+      } finally {
+        scanner.nextLine(); // Consume newline
+      }
+    } while (!isValid);
+    return input;
   }
 }

@@ -13,7 +13,7 @@ import utility.Enum.Status;
 public class ConsultationController {
     private ConsultationDAO consultationDAO;
     private AppointmentDAO appointmentDAO;
-    ArrayList<Consultation> consultations = new ArrayList();
+    ArrayList<Consultation> consultations = new ArrayList<Consultation>();
     public ConsultationController() {
         this.consultationDAO = new ConsultationDAO();
         this.appointmentDAO = new AppointmentDAO();

@@ -26,19 +26,19 @@ public class QueueController {
   public void runStudentQueue(String patientId) {
     
     boolean exit = false;
+    String[] response;
+    String[] vResponse;
 
     do {
-      String[] response = queueUI.runStudentQueueMenu();
-      String[] vResponse = QueueValidation.validateQueueMenu(response[0], response[1].toCharArray());
+      response = queueUI.runStudentQueueMenu();
+      vResponse = QueueValidation.validateQueueMenu(response[0], response[1].toCharArray());
 
-      if (!Boolean.parseBoolean(vResponse[0])) {
-        continue;
-      }
-
-      String choice = vResponse[1];
-      if (choice.equals("0")) {
-        exit = true;
-        continue;
+      if (Boolean.parseBoolean(vResponse[0])) {
+        if (!vResponse[1].equals("0")) {
+          
+        }
+      } else {
+        
       }
     } while (!exit);
   }

@@ -525,12 +525,27 @@ public class DoctorUI {
                 switch (choice) {
                     case 1 -> doctorController.generateDoctorSpecializationReport();
                     case 2 -> {
-                        System.out.print("Enter Day of Week (e.g., Monday): ");
-                        try {
-                            DayOfWeek day = DayOfWeek.valueOf(scanner.nextLine());
-                            doctorController.generateDoctorAvailabilityReport(day);
-                        } catch (IllegalArgumentException e) {
-                            System.out.println("Error: Invalid day of the week.");
+                        // IMPROVED: Allow user to select day from a list
+                        DayOfWeek day;
+                        while (true) {
+                            System.out.println("\nSelect Day for Availability Report:");
+                            DayOfWeek[] days = DayOfWeek.values();
+                            for (int i = 0; i < days.length; i++) {
+                                System.out.printf("%d. %s\n", (i + 1), days[i]);
+                            }
+                            System.out.print("Enter your choice (1-" + days.length + "): ");
+                            try {
+                                int dayChoice = Integer.parseInt(scanner.nextLine());
+                                if (dayChoice >= 1 && dayChoice <= days.length) {
+                                    day = days[dayChoice - 1];
+                                    doctorController.generateDoctorAvailabilityReport(day);
+                                    break; // Exit the day selection loop
+                                } else {
+                                    System.out.println("Error: Invalid choice. Please enter a number between 1 and " + days.length + ".");
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println("Error: Please enter a valid number.");
+                            }
                         }
                     }
                     case 0 -> System.out.println("Returning to Doctor Menu...");

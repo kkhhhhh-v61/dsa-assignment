@@ -1,12 +1,13 @@
 package entity;
 
 import utility.Enum.MedicineCategory;
+import java.io.Serializable;
 
 /**
  *
  * @author Tan Kai Hao
  */
-public class Medicine {
+public class Medicine implements Serializable {
   private static int lastId = 0;
 
   private String medicineId;
@@ -44,6 +45,10 @@ public class Medicine {
   
   public void setMedicineId(String medicineId) { /* Not recommended for use */
     this.medicineId = medicineId;
+  }
+
+  public static void setLastId(int id) {
+    lastId = id;
   }
 
   public String getName() {

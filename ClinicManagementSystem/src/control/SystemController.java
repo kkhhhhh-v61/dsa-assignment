@@ -3,6 +3,7 @@ package control;
 import adt.RedBlackTreeMap;
 import boundary.ConsultationUI;
 import boundary.DoctorUI;
+import boundary.PharmacyUI;
 import boundary.SystemUI;
 import dao.PatientDAO;
 import entity.Patient;
@@ -18,6 +19,7 @@ public class SystemController {
   SystemUI systemUI = new SystemUI();
   ConsultationUI consultationUI = new ConsultationUI();
   DoctorUI doctorUI = new DoctorUI();
+  PharmacyUI pharmacyUI = new PharmacyUI();
   
   AppointmentController appointmentController = new AppointmentController();
   ConsultationController consultationController = new ConsultationController();
@@ -61,6 +63,9 @@ public class SystemController {
               case '5':
                 break;
               case '6':
+                break;
+              case '7':
+                pharmacyUI.displayPharmacyMenu();
                 break;
               case '0':
                 exit = true;

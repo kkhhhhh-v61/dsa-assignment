@@ -45,7 +45,7 @@ public class SystemUI {
   
   public String[] runClinicStaffMenu() {
 
-    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '5', '6', '0' };
+    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '5', '6', '7', '0' };
 
     System.out.println();
 
@@ -59,7 +59,8 @@ public class SystemUI {
     System.out.println("| [3] Appointment Management  |");
     System.out.println("| [4] Consultation Management |");
     System.out.println("| [5] Treatment Management    |");
-    System.out.println("| [6] Report and Analytics    |");
+    System.out.println("| [6] Pharmacy Management     |");
+    System.out.println("| [7] Report and Analytics    |");
     System.out.println("| [0] Return                  |");
     System.out.println("+-----------------------------+");
 
