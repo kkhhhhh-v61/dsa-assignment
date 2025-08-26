@@ -19,6 +19,7 @@ public class ConsultationUI {
     }
 
     public void runMenu() {
+        
         while (true) {
             System.out.println("\n=== Consultation Management ===");
             System.out.println("1. Create Consultation");
@@ -37,7 +38,7 @@ public class ConsultationUI {
                 case 3: viewAllConsultations(); break;
                 case 4: editConsultation(); break;
                 case 5: deleteConsultation(); break;
-                case 0: return;
+                case 0: {controller.saveAllConsultations(); return;}
                 default: System.out.println("Invalid choice.");
             }
         }

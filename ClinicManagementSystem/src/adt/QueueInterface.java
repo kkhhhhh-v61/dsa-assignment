@@ -54,4 +54,23 @@ public interface QueueInterface<T> {
    * @return The entry at the front of this queue, or null if the queue is empty
    */
   public T peek();
+
+  /**
+   * Returns the number of entries in this queue.
+   * 
+   * @return The number of entries in this queue
+   */
+  public int size();
+
+  /**
+   * Returns true if this queue is empty, false otherwise.
+   * 
+   * @return True if this queue is empty, false otherwise
+   */
+  public boolean isEmpty();
+
+  /**
+   * Removes all entries from this queue.
+   */
+  public void clear();
 }

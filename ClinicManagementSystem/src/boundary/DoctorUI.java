@@ -34,7 +34,7 @@ public class DoctorUI {
         int choice = -1; // Initialize to a non-exit value
         do {
             System.out.println("\n+-----------------------------------+");
-            System.out.println("|        Doctor Management        |");
+            System.out.println("|         Doctor Management         |");
             System.out.println("+-----------------------------------+");
             System.out.println("| 1. Add New Doctor                 |");
             System.out.println("| 2. View All Doctors               |");

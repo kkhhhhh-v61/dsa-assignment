@@ -1,8 +1,8 @@
 package entity;
 
 import adt.ArrayList;
-import utility.Enum.Status;
 import java.io.Serializable;
+import utility.Enum.Status;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -10,10 +10,12 @@ import java.time.LocalTime;
  *
  * @author Tan Kai Hao
  */
-public class Consultation implements Serializable {
+public class Consultation implements Serializable{
+  private static final long serialVersionUID = 1L;
   private static int lastId = 0;
 
   private String consultationId;
+  private String appointmentId; 
   private String patientId;
   private String doctorId;
   private LocalDate consultationDate;
@@ -25,6 +27,7 @@ public class Consultation implements Serializable {
 
   public Consultation() {
     this.consultationId = "C" + String.format("%04d", ++lastId);
+    this.appointmentId = "";
     this.patientId = "";
     this.doctorId = "";
     this.consultationDate = LocalDate.now();
@@ -35,11 +38,12 @@ public class Consultation implements Serializable {
     this.status = Status.Unknown;
   }
 
-  public Consultation(String doctorId, String patientId, LocalDate consultationDate, LocalTime consultationTime,
+  public Consultation(String appointmentId, String doctorId, String patientId, LocalDate consultationDate, LocalTime consultationTime,
       ArrayList<String> symptoms, ArrayList<String> diagnosis, String notes, Status status) {
     this.consultationId = "C" + String.format("%04d", ++lastId);
-    this.patientId = patientId;
+    this.appointmentId = appointmentId;
     this.doctorId = doctorId;
+    this.patientId = patientId;
     this.consultationDate = consultationDate;
     this.consultationTime = consultationTime;
     this.symptoms = symptoms;
@@ -56,6 +60,13 @@ public class Consultation implements Serializable {
     this.consultationId = consultationId;
   }
 
+  public String getAppointmentId() { 
+    return appointmentId; 
+  }
+  public void setAppointmentId(String appointmentId) { 
+    this.appointmentId = appointmentId; 
+  }
+  
   public String getPatientId() {
     return patientId;
   }
@@ -121,11 +132,11 @@ public class Consultation implements Serializable {
   }
 
   public String toString() {
-    return "Consultation ID: " + consultationId + "\nPatient ID: " + patientId + "\nDoctor ID: " + doctorId + "\nConsultation Date: " + consultationDate + "\nConsultation Time: " + consultationTime + "\nSymptoms: " + formatList(symptoms) + "\nDiagnosis: " + formatList(diagnosis) + "\nNotes: " + notes + "\nStatus: " + status;
+    return "Consultation ID: " + consultationId + "\nAppointment ID: " + appointmentId + "\nPatient ID: " + doctorId + "\nDoctor ID: " + patientId + "\nConsultation Date: " + consultationDate + "\nConsultation Time: " + consultationTime + "\nSymptoms: " + formatList(symptoms) + "\nDiagnosis: " + formatList(diagnosis) + "\nNotes: " + notes + "\nStatus: " + status;
   }
 
   public String toFileString() {
-    return consultationId + "|" + patientId + "|" + doctorId + "|" + consultationDate + "|" + consultationTime + "|" + formatList(symptoms) + "|" + formatList(diagnosis) + "|" + notes + "|" + status;
+    return consultationId + "|" + appointmentId + "|" + patientId + "|" + doctorId + "|" + consultationDate + "|" + consultationTime + "|" + formatList(symptoms) + "|" + formatList(diagnosis) + "|" + notes + "|" + status;
   }
   
   private String formatList(adt.ArrayList<String> list) {
@@ -141,5 +152,5 @@ public class Consultation implements Serializable {
     }
     sb.append("]");
     return sb.toString();
-  }
+}
 }

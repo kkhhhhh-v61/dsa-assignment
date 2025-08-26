@@ -1,9 +1,8 @@
 package dao;
 
-// Author - Jason Tye
-
 import entity.Consultation;
 import adt.ArrayList;
+import entity.Appointment;
 import java.io.*;
 
 public class ConsultationDAO {
@@ -11,9 +10,10 @@ public class ConsultationDAO {
     private ArrayList<Consultation> consultations;
 
     public ConsultationDAO() {
-        consultations = new ArrayList<>();
-        loadFromFile();
+        consultations = loadFromFile(); // ✅ load at startup
     }
+
+    // ====== CRUD on in-memory consultations ======
 
     public ArrayList<Consultation> getAllConsultations() {
         return consultations;
@@ -30,18 +30,16 @@ public class ConsultationDAO {
     }
 
     public void addConsultation(Consultation consultation) {
-        consultations.add(consultation);
-        saveToFile();
+        consultations.add(consultation);  // ✅ only memory, no file yet
     }
 
     public void updateConsultation(Consultation consultation) {
         for (int i = 1; i <= consultations.size(); i++) {
             if (consultations.get(i).getConsultationId().equalsIgnoreCase(consultation.getConsultationId())) {
-                consultations.add(i, consultation); // ✅ use set instead of add
+                consultations.replace(i, consultation);
                 break;
             }
         }
-        saveToFile();
     }
 
     public void deleteConsultation(String id) {
@@ -51,14 +49,15 @@ public class ConsultationDAO {
                 break;
             }
         }
-        saveToFile();
     }
- 
+
+    // ====== File Operations ======
+
     @SuppressWarnings("unchecked")
     private ArrayList<Consultation> loadFromFile() {
-        File file = new File("consultations.dat");
+        File file = new File(FILE_NAME);
         if (!file.exists() || file.length() == 0) {
-            return new ArrayList<>(); // return empty if no file
+            return new ArrayList<>();
         }
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
@@ -69,40 +68,58 @@ public class ConsultationDAO {
         }
     }
 
-    private void saveToFile() {
+    // ✅ Explicit save method (call before exiting program)
+    public void saveAll() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
             oos.writeObject(consultations);
+            oos.flush();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
+    // ====== Helpers ======
+
     public int getLastId() {
-    int maxId = 0;
-    for (int i = 1; i <= consultations.size(); i++) {
-        String id = consultations.get(i).getConsultationId(); // e.g., "C0007"
-        try {
-            int num = Integer.parseInt(id.substring(1)); // remove "C" and parse
-            if (num > maxId) {
-                maxId = num;
+        int maxId = 0;
+        for (int i = 1; i <= consultations.size(); i++) {
+            String id = consultations.get(i).getConsultationId();
+            try {
+                int num = Integer.parseInt(id.substring(1));
+                if (num > maxId) maxId = num;
+            } catch (NumberFormatException e) {
+                // ignore malformed IDs
             }
-        } catch (NumberFormatException e) {
-            // ignore malformed IDs
         }
+        return maxId;
     }
-    return maxId;
-}
+
+    public void reload() {
+        consultations = loadFromFile();
+    }
     
     public ArrayList<Consultation> getConsultationsByUserId(String userId) {
-    ArrayList<Consultation> result = new ArrayList<>();
-    for (int i = 1; i <= consultations.size(); i++) {
-        Consultation c = consultations.get(i);
-        if (c.getPatientId().equalsIgnoreCase(userId) || c.getDoctorId().equalsIgnoreCase(userId)) {
-            result.add(c);
+        ArrayList<Consultation> result = new ArrayList<>();
+        for (int i = 1; i <= consultations.size(); i++) {
+            Consultation c = consultations.get(i);
+            if (c.getPatientId().equalsIgnoreCase(userId) ||
+                c.getDoctorId().equalsIgnoreCase(userId)) {
+                result.add(c);
+            }
         }
+        return result;
     }
-    return result;
-}
 
+    public boolean existsForAppointment(Appointment appt) {
+        for (int i = 1; i <= consultations.size(); i++) {
+            Consultation c = consultations.get(i);
+            if (c.getPatientId().equalsIgnoreCase(appt.getPatientId()) &&
+                c.getDoctorId().equalsIgnoreCase(appt.getDoctorId()) &&
+                c.getConsultationDate().isEqual(appt.getAppointmentDate()) &&
+                c.getConsuLocalTime().equals(appt.getAppointmentTime())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
-

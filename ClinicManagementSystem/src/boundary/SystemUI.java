@@ -119,15 +119,15 @@ public class SystemUI {
 
     Utilities.clearScreen();
 
-    System.out.println("+----------------------+");
-    System.out.println("|    STUDENT PORTAL    |");
-    System.out.println("+----------------------+");
-    System.out.println("| [1] Get Queue Number |");
-    System.out.println("| [2] Appointments     |");
-    System.out.println("| [3] Consultations    |");
-    System.out.println("| [4] Treatments       |");
-    System.out.println("| [0] Return           |");
-    System.out.println("+----------------------+");
+    System.out.println("+------------------------+");
+    System.out.println("|     STUDENT PORTAL     |");
+    System.out.println("+------------------------+");
+    System.out.println("| [1] Queue Registration |");
+    System.out.println("| [2] Appointments       |");
+    System.out.println("| [3] Consultations      |");
+    System.out.println("| [4] Treatments         |");
+    System.out.println("| [0] Return             |");
+    System.out.println("+------------------------+");
 
     System.out.println();
 

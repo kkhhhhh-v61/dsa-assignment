@@ -17,11 +17,12 @@ public class SystemController {
 
   SystemUI systemUI = new SystemUI();
   ConsultationUI consultationUI = new ConsultationUI();
+  DoctorUI doctorUI = new DoctorUI();
   
   AppointmentController appointmentController = new AppointmentController();
   ConsultationController consultationController = new ConsultationController();
   PatientController patientController = new PatientController();
-  DoctorUI doctorUI = new DoctorUI();
+  QueueController queueController = new QueueController();
 
   PatientDAO patientDAO = new PatientDAO();
 
@@ -117,6 +118,7 @@ public class SystemController {
           if (Validation.isValidOption(userInput, inputOptions)) {
             switch (userInput) {
               case '1':
+                queueController.runStudentQueue(patientId);
                 break;
               case '2':
                 appointmentController.runStudentAppointment(patientId);
