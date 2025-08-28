@@ -14,6 +14,7 @@ import java.io.Serializable;
  * [2] https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html
  */
 public class RedBlackTreeMap<K extends Comparable<K>, V> implements MapInterface<K, V>, Iterable<RedBlackTreeMap.Node<K, V>>, Serializable {
+  private static final long serialVersionUID = 1L;
 
   private static final boolean RED = false;
   private static final boolean BLACK = true;
