@@ -7,6 +7,7 @@ import java.io.Serializable;
  * @author Tan Kai Hao, modified by Lai Chee Kit
  */
 public class PrescribedMedicine implements Serializable {
+  private static final long serialVersionUID = 1L;
   private Medicine medicine;
   private int quantity;
   private String dosage;
