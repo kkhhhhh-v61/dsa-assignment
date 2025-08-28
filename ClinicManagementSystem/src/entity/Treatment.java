@@ -1,13 +1,16 @@
 package entity;
 
 import adt.ArrayList;
+import dao.ConsultationDAO;
+import java.io.Serializable;
 import utility.Enum.Status;
 
 /**
  *
  * @author Tan Kai Hao
  */
-public class Treatment {
+public class Treatment implements Serializable{
+  private static final long serialVersionUID = 1L;
   private static int lastId = 0;
 
   private String treatmentId;
@@ -95,9 +98,37 @@ public class Treatment {
     this.status = status;
   }
 
+  @Override
   public String toString() {
-    return "Treatment ID: " + treatmentId + "\nConsultation ID: " + consultationId + "\nDoctor ID: " + doctorId + "\nPatient ID: " + patientId + "\nNotes: " + notes + "\nStatus: " + status;
+    StringBuilder sb = new StringBuilder();
+    sb.append("Treatment ID: ").append(treatmentId).append("\n");
+    sb.append("Consultation ID: ").append(consultationId).append("\n");
+    sb.append("Patient ID: ").append(patientId).append("\n");
+    sb.append("Doctor ID: ").append(doctorId).append("\n");
+    
+    // Get consultation details
+    Consultation consultation = new ConsultationDAO().getConsultationById(consultationId);
+    if (consultation != null) {
+        sb.append("Consultation Date: ").append(consultation.getConsultationDate()).append("\n");
+        sb.append("Consultation Time: ").append(consultation.getConsuLocalTime()).append("\n");
+    }
+
+    sb.append("Notes: ").append(notes).append("\n");
+    sb.append("Prescribed Medicines:\n");
+
+    if (medicines == null || medicines.isEmpty()) {
+        sb.append("  None\n");
+    } else {
+        for (int i = 1; i <= medicines.size(); i++) {
+            sb.append("  ").append(i).append(". ").append(medicines.get(i)).append("\n");
+        }
+    }
+
+    return sb.toString();
   }
+
+  
+  
 
   public String toFileString() {
     return treatmentId + "|" + consultationId + "|" + doctorId + "|" + patientId + "|" + notes + "|" + status;

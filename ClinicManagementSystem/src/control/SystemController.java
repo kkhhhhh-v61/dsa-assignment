@@ -5,6 +5,7 @@ import boundary.ConsultationUI;
 import boundary.DoctorUI;
 import boundary.PharmacyUI;
 import boundary.SystemUI;
+import boundary.TreatmentUI;
 import dao.PatientDAO;
 import entity.Patient;
 import utility.MessageUI;
@@ -16,10 +17,11 @@ import utility.Validation;
  */
 public class SystemController {
 
-  SystemUI systemUI = new SystemUI();
   ConsultationUI consultationUI = new ConsultationUI();
   DoctorUI doctorUI = new DoctorUI();
   PharmacyUI pharmacyUI = new PharmacyUI();
+  TreatmentUI treatmentUI = new TreatmentUI();
+  SystemUI systemUI = new SystemUI();
   
   AppointmentController appointmentController = new AppointmentController();
   ConsultationController consultationController = new ConsultationController();
@@ -61,6 +63,7 @@ public class SystemController {
                 consultationUI.runMenu();
                 break;
               case '5':
+                treatmentUI.runMenu();
                 break;
               case '6':
                 pharmacyUI.displayPharmacyMenu();
@@ -132,8 +135,7 @@ public class SystemController {
                 consultationUI.runStudent(patientId);
                 break;
               case '4':
-                consultationController.syncConsultationsWithAppointments();
-                consultationUI.runStudent(patientId);
+                treatmentUI.runStudentMenu(patientId);
                 break;
               case '0':
                 exit = true;

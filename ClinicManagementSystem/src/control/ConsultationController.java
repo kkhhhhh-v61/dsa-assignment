@@ -8,6 +8,7 @@ import entity.Appointment;
 import entity.Consultation;
 import adt.ArrayList;
 import adt.RedBlackTreeMap;
+import java.time.LocalDate;
 import utility.Enum.Status;
 
 public class ConsultationController {
@@ -163,5 +164,79 @@ public class ConsultationController {
     public void saveAllConsultations() {
     consultationDAO.saveAll();
 }
+    
+    public void generateYearlyReport(int year) {
+        ArrayList<Consultation> consultations = consultationDAO.getAllConsultations();
+        int[] monthlyCounts = new int[12];
+
+        for (int i = 1; i <= consultations.size(); i++) {   // 1-based index
+            Consultation c = consultations.get(i);
+            if (c != null) {
+                LocalDate date = c.getConsultationDate();
+                if (date.getYear() == year) {
+                    monthlyCounts[date.getMonthValue() - 1]++;
+                }
+            }
+        }
+
+        String[] months = {
+            "January","February","March","April","May","June",
+            "July","August","September","October","November","December"
+        };
+
+        int total = 0;
+        System.out.println("\n=== Yearly Consultation Report for " + year + " ===");
+        for (int m = 0; m < 12; m++) {
+            System.out.println(months[m] + " = " + monthlyCounts[m]);
+            total += monthlyCounts[m];
+        }
+        System.out.println("Total consultations in " + year + " = " + total);
+    }
+    
+    public void generateYearToYearReport(int startYear, int endYear) {
+        ArrayList<Consultation> consultations = consultationDAO.getAllConsultations();
+
+        // parallel arrays for year and counts
+        ArrayList<Integer> years = new ArrayList<>();
+        ArrayList<Integer> counts = new ArrayList<>();
+
+        // initialize
+        for (int year = startYear; year <= endYear; year++) {
+            years.add(year);
+            counts.add(0);
+        }
+
+        // count consultations by year
+        for (int i = 1; i <= consultations.size(); i++) {
+            Consultation c = consultations.get(i);
+            if (c != null) {
+                LocalDate date = c.getConsultationDate();
+                int year = date.getYear();
+
+                if (year >= startYear && year <= endYear) {
+                    // find index in years list
+                    for (int j = 1; j <= years.size(); j++) {
+                        if (years.get(j).equals(year)) {
+                            counts.add(j, counts.get(j) + 1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // print report
+        System.out.println("\n=== Year-to-Year Consultation Report (" + startYear + " - " + endYear + ") ===");
+        int total = 0;
+        for (int j = 1; j <= years.size(); j++) {
+            int count = counts.get(j);
+            System.out.println(years.get(j) + " = " + count);
+            total += count;
+        }
+        System.out.println("\nTotal consultations between " + startYear + " and " + endYear + " = " + total);
+    }
+
+
+
 
 }

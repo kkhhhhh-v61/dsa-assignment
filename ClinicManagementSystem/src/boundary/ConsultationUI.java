@@ -19,7 +19,6 @@ public class ConsultationUI {
     }
 
     public void runMenu() {
-        
         while (true) {
             System.out.println("\n=== Consultation Management ===");
             System.out.println("1. Create Consultation");
@@ -27,6 +26,8 @@ public class ConsultationUI {
             System.out.println("3. View All Consultations");
             System.out.println("4. Edit Consultation");
             System.out.println("5. Delete Consultation");
+            System.out.println("6. Generate Yearly Consultation Report");
+            System.out.println("7. Generate Year-to-Year Consultation Report");
             System.out.println("0. Back");
             System.out.print("Select option: ");
 
@@ -38,11 +39,14 @@ public class ConsultationUI {
                 case 3: viewAllConsultations(); break;
                 case 4: editConsultation(); break;
                 case 5: deleteConsultation(); break;
+                case 6: generateYearlyConsultationReport(); break;
+                case 7: generateYearToYearConsultationReport(); break;
                 case 0: {controller.saveAllConsultations(); return;}
                 default: System.out.println("Invalid choice.");
             }
         }
     }
+
     
     public void runStudent(String userID) {
         displayConsultationsByUserId(userID);
@@ -219,6 +223,74 @@ public class ConsultationUI {
                 System.out.println("Status: " + c.getStatus());
         }
             System.out.println("-------------------");
+    }
+    
+    private void generateYearlyConsultationReport() {
+        int minYear = 2000;
+        int maxYear = java.time.LocalDate.now().getYear() + 5;
+
+        while (true) {
+            System.out.print("Enter year (" + minYear + "-" + maxYear + ", or 'exit'): ");
+            String input = sc.nextLine().trim();
+            if (input.equalsIgnoreCase("exit")) return;
+
+            try {
+                int year = Integer.parseInt(input);
+                if (year < minYear || year > maxYear) {
+                    System.out.println("Invalid year. Try again.");
+                    continue;
+                }
+                controller.generateYearlyReport(year);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Enter a number.");
+            }
+        }
+    }
+
+    private void generateYearToYearConsultationReport() {
+        int minYear = 2000;
+        int maxYear = java.time.LocalDate.now().getYear() + 5;
+
+        int startYear, endYear;
+        while (true) {
+            System.out.print("Enter start year (" + minYear + "-" + maxYear + ", or 'exit'): ");
+            String input = sc.nextLine().trim();
+            if (input.equalsIgnoreCase("exit")) return;
+
+            try {
+                startYear = Integer.parseInt(input);
+                if (startYear < minYear || startYear > maxYear) {
+                    System.out.println("Invalid year. Try again.");
+                    continue;
+                }
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Enter a number.");
+            }
+        }
+
+        while (true) {
+            System.out.print("Enter end year (" + minYear + "-" + maxYear + ", or 'exit'): ");
+            String input = sc.nextLine().trim();
+            if (input.equalsIgnoreCase("exit")) return;
+
+            try {
+                endYear = Integer.parseInt(input);
+                if (endYear < minYear || endYear > maxYear) {
+                    System.out.println("Invalid year. Try again.");
+                    continue;
+                }
+                if (endYear < startYear) {
+                    System.out.println("End year cannot be earlier than start year.");
+                    continue;
+                }
+                controller.generateYearToYearReport(startYear, endYear);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Enter a number.");
+            }
+        }
     }
 
     // =================== Helper Methods ===================
