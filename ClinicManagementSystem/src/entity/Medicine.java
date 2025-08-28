@@ -8,6 +8,7 @@ import java.io.Serializable;
  * @author Tan Kai Hao
  */
 public class Medicine implements Serializable {
+  private static final long serialVersionUID = 1L;
   private static int lastId = 0;
 
   private String medicineId;
