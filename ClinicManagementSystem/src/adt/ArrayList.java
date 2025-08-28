@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author Tan Kai Hao
  */
 public class ArrayList<T> implements ListInterface<T>, Iterable<T>, Serializable {
-  
+  private static final long serialVersionUID = 1L;
   private static final int DEFAULT_CAPACITY = 10;
   private int numberOfEntries;
   private T[] array;
