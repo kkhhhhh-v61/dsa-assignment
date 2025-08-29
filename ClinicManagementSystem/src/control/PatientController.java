@@ -10,1024 +10,1155 @@ import utility.Enum.BloodType;
 import utility.Enum.Gender;
 import utility.MessageUI;
 import utility.Utilities;
-import utility.Validation;
 
 /**
  *
  * @author Tan Kai Hao
  */
 public class PatientController {
-  
-  PatientUI patientUI = new PatientUI();
+  private static final int ID_LENGTH = 4;
+  private static final int NAME_LENGTH = 35;
+  private static final int EMAIL_LENGTH = 35;
+  private static final int ADDRESS_LENGTH = 45;
 
-  PatientDAO patientDAO = new PatientDAO();
-  PatientInitializer patientInitializer = new PatientInitializer();
-
+  PatientUI patientUI;
+  PatientDAO patientDAO;
+  PatientInitializer patientInitializer;
   private RedBlackTreeMap<String, Patient> patientMap;
 
   public PatientController() {
-    patientMap = new RedBlackTreeMap<>();
-    patientMap = patientDAO.retrieveFromFile();
+    patientUI = new PatientUI();
+    patientDAO = new PatientDAO();
+    patientInitializer = new PatientInitializer();
+    patientMap = patientDAO.readFromFile();
   }
-  
+
   public void runPatientManagement() {
-
-    boolean exit = false;
-    String[] response;
-    char userInput;
-    char[] inputOptions;
-
     do {
-      response = patientUI.runPatientMenu();
-      inputOptions = response[1].toCharArray();
-
-      if (response[0] != "") {
-        if (Validation.isSingleChar(response[0])) {
-          userInput = response[0].charAt(0);
-
-          if (Validation.isValidOption(userInput, inputOptions)) {
-            switch (userInput) {
-              case '1':
-                runPatientRegistration();
-                break;
-              case '2':
-                runPatientList();
-                break;
-              case '3':
-                runPatientSearch();
-                break;
-              case '4':
-                runPatientClearance();
-                break;
-              case '5':
-                runPatientInitialization();
-                break;
-              case '0':
-                exit = true;
-                break;
-            }
-          } else {
-            MessageUI.notValidOption(inputOptions);
-          }
-        } else {
-          MessageUI.notSingleChar();
-        }
-      }
-    } while (!exit);
-  }
-
-  public void runPatientRegistration() {
-    ArrayList<String> keys = patientMap.getKeys();
-    
-    if (!keys.isEmpty()) {
-      String lastKey = keys.get(keys.size());
-      String lastId = lastKey.substring(1);
-      Patient.setLastId(Integer.parseInt(lastId));
-    }
-
-    Patient newPatient = new Patient();
-
-    boolean exit = false;
-    boolean complete = false;
-    String[] response;
-    String[] vResponse;
-
-    do {
-      System.out.println();
-
       Utilities.clearScreen();
-
-      response = patientUI.inputIcNumber();
-      vResponse = PatientValidation.validateIcNumber(patientMap, response[0], response[1].toCharArray());
-
-      if (Boolean.parseBoolean(vResponse[0])) {
-        if (vResponse[1].equals("0")) {
-          exit = true;
-        } else {
-          newPatient.setIcNumber(Utilities.formatIcNumber(vResponse[1]));
-          newPatient.identifyGender();
-          newPatient.identifyBirthDate();
-          newPatient.setAge(newPatient.calculateAge());
-
-          do {
-            response = patientUI.inputPatientName();
-            vResponse = PatientValidation.validateName(response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
-          } while (!Boolean.parseBoolean(vResponse[0]));
-
-          if (Boolean.parseBoolean(vResponse[0])) {
-            if (vResponse[1].equals("0")) {
-              exit = true;
-            } else {
-              newPatient.setName(Utilities.formatName(vResponse[1]));
-
-              do {
-                response = patientUI.inputContactNumber();
-                vResponse = PatientValidation.validateContactNumber(response[0], response[1].toCharArray());
-              } while (!Boolean.parseBoolean(vResponse[0]));
-
-              if (Boolean.parseBoolean(vResponse[0])) {
-                if (vResponse[1].equals("0")) {
-                  exit = true;
-                } else {
-                  newPatient.setContactNumber(Utilities.formatContactNumber(vResponse[1]));
-
-                  do {
-                    response = patientUI.inputEmail();
-                    vResponse = PatientValidation.validateEmail(response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
-                  } while (!Boolean.parseBoolean(vResponse[0]));
-
-                  if (Boolean.parseBoolean(vResponse[0])) {
-                    if (vResponse[1].equals("0")) {
-                      exit = true;
-                    } else {
-                      newPatient.setEmail(vResponse[1]);
-
-                      do {
-                        response = patientUI.inputAddress();
-                        vResponse = PatientValidation.validateAddress(response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
-                      } while (!Boolean.parseBoolean(vResponse[0]));
-
-                      if (Boolean.parseBoolean(vResponse[0])) {
-                        if (vResponse[1].equals("0")) {
-                          exit = true;
-                        } else {
-                          newPatient.setAddress(vResponse[1]);
-
-                          do {
-                            response = patientUI.inputBloodType();
-                            vResponse = PatientValidation.validateBloodType(response[0], response[1].toCharArray());
-                          } while (!Boolean.parseBoolean(vResponse[0]));
-
-                          if (Boolean.parseBoolean(vResponse[0])) {
-                            switch (vResponse[1]) {
-                              case "1":
-                                newPatient.setBloodType(BloodType.A);
-                                break;
-                              case "2":
-                                newPatient.setBloodType(BloodType.B);
-                                break;
-                              case "3":
-                                newPatient.setBloodType(BloodType.AB);
-                                break;
-                              case "4":
-                                newPatient.setBloodType(BloodType.O);
-                                break;
-                              case "0":
-                                exit = true;
-                                break;
-                            }
-                            complete = true;
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+      char[] inputOptions = patientUI.displayPatientManagement();
+      String userInput = patientUI.getGeneralInput();
+      boolean valid = PatientValidation.validateCharInput(userInput, inputOptions);
+      
+      if (valid) {
+        switch (userInput.charAt(0)) {
+          case '1':
+            runPatientList();
+            continue;
+          case '2':
+            runPatientRegistration();
+            continue;
+          case '3':
+            runPatientEdit();
+            continue;
+          case '4':
+            runPatientDelete();
+            continue;
+          case '5':
+            runPatientSearch();
+            continue;
+          case '6':
+            runPatientClearance();
+            continue;
+          case '7':
+            runPatientInitialization();
+            continue;
+          case '0':
+            return;
         }
       }
-
-      if (complete) {
-        boolean exit1 = false;
-
-        do {
-          response = patientUI.confirmRegistration(newPatient);
-          vResponse = PatientValidation.validateConfirmRegistration(response[0], response[1].toCharArray());
-
-          if (Boolean.parseBoolean(vResponse[0])) {
-            switch (vResponse[1]) {
-              case "1":
-                patientMap.put(newPatient.getPatientId(), newPatient);
-                patientDAO.saveToFile(patientMap);
-                System.out.println();
-                System.out.println("Patient registered successfully.");
-                Utilities.pressAnyKey();
-                exit1 = true;
-                exit = true;
-                break;
-              case "2":
-                newPatient = runPatientRegistrationEdit(newPatient);
-                break;
-              case "0":
-                exit1 = true;
-                exit = true;
-                break;
-            }
-          }
-        } while (!exit1);
-      }
-    } while (!exit);
-  }
-  
-  public Patient runPatientRegistrationEdit(Patient patient) {
-
-    boolean exit = false;
-    String[] response;
-    String[] vResponse;
-    String ui = "left";
-
-    do {
-      System.out.println();
-
-      Utilities.clearScreen();
-
-      response = patientUI.runPatientEditMenu(patient, ui);
-      vResponse = PatientValidation.validateRegistrationEdit(response[0], response[1].toCharArray());
-
-      if (Boolean.parseBoolean(vResponse[0])) {
-        switch (vResponse[1]) {
-          case "W":
-            if (ui.equals("left")) {
-              ui = "right";
-            } else {
-              ui = "left";
-            }
-            break;
-          case "1":
-            do {
-              response = patientUI.editIcNumber(patient.getIcNumber());
-              vResponse = PatientValidation.validateEditIcNumber(response[0], response[1].toCharArray(), patient.getIcNumber());
-            } while (!Boolean.parseBoolean(vResponse[0]));
-
-            if (Boolean.parseBoolean(vResponse[0])) {
-              if (vResponse[1].equals("0")) {
-                exit = true;
-              } else {
-                String userInput = Utilities.formatIcNumber(vResponse[1]);
-                do {
-                  response = patientUI.confirmEdit("IC Number", patient.getIcNumber(), userInput);
-                  vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
-                } while (!Boolean.parseBoolean(vResponse[0]));
-
-                if (Boolean.parseBoolean(vResponse[0])) {
-                  switch (vResponse[1]) {
-                    case "1":
-                      patient.setIcNumber(userInput);
-                      patient.identifyGender();
-                      patient.identifyBirthDate();
-                      patient.setAge(patient.calculateAge());
-                      break;
-                    case "0":
-                      break;
-                  }
-                }
-              }
-            }
-            break;
-          case "2":
-            do {
-              response = patientUI.editPatientName(patient.getName());
-              vResponse = PatientValidation.validateEditName(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patient.getName());
-            } while (!Boolean.parseBoolean(vResponse[0]));
-            
-            if (Boolean.parseBoolean(vResponse[0])) {
-              if (vResponse[1].equals("0")) {
-                exit = true;
-              } else {
-                String userInput = Utilities.formatName(vResponse[1]);
-                do {
-                  response = patientUI.confirmEdit("Patient Name", patient.getName(), userInput);
-                  vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
-                } while (!Boolean.parseBoolean(vResponse[0]));
-
-                if (Boolean.parseBoolean(vResponse[0])) {
-                  switch (vResponse[1]) {
-                    case "1":
-                      patient.setName(userInput);
-                      break;
-                    case "0":
-                      break;
-                  }
-                }
-              }
-            }
-            break;
-          case "3":
-            do {
-              response = patientUI.editContactNumber(patient.getContactNumber());
-              vResponse = PatientValidation.validateEditContactNumber(response[0], response[1].toCharArray(), patient.getContactNumber());
-            } while (!Boolean.parseBoolean(vResponse[0]));
-            
-            if (Boolean.parseBoolean(vResponse[0])) {
-              if (vResponse[1].equals("0")) {
-                exit = true;
-              } else {
-                String userInput = Utilities.formatContactNumber(vResponse[1]);
-                do {
-                  response = patientUI.confirmEdit("Contact Number", patient.getContactNumber(), userInput);
-                  vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
-                } while (!Boolean.parseBoolean(vResponse[0]));
-
-                if (Boolean.parseBoolean(vResponse[0])) {
-                  switch (vResponse[1]) {
-                    case "1":
-                      patient.setContactNumber(userInput);
-                      break;
-                    case "0":
-                      break;
-                  }
-                }
-              }
-            }
-            break;
-          case "4":
-            do {
-              response = patientUI.editEmail(patient.getEmail());
-              vResponse = PatientValidation.validateEditEmail(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patient.getEmail());
-            } while (!Boolean.parseBoolean(vResponse[0]));
-            
-            if (Boolean.parseBoolean(vResponse[0])) {
-              if (vResponse[1].equals("0")) {
-                exit = true;
-              } else {
-                String userInput = vResponse[1];
-                do {
-                  response = patientUI.confirmEdit("Email", patient.getEmail(), userInput);
-                  vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
-                } while (!Boolean.parseBoolean(vResponse[0]));
-
-                if (Boolean.parseBoolean(vResponse[0])) {
-                  switch (vResponse[1]) {
-                    case "1":
-                      patient.setEmail(userInput);
-                      break;
-                    case "0":
-                      break;
-                  }
-                }
-              }
-            }
-            break;
-          case "5":
-            do {
-              response = patientUI.editAddress(patient.getAddress());
-              vResponse = PatientValidation.validateEditAddress(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patient.getAddress());
-            } while (!Boolean.parseBoolean(vResponse[0]));
-            
-            if (Boolean.parseBoolean(vResponse[0])) {
-              if (vResponse[1].equals("0")) {
-                exit = true;
-              } else {
-                String userInput = vResponse[1];
-                do {
-                  response = patientUI.confirmEdit("Address", patient.getAddress(), userInput);
-                  vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
-                } while (!Boolean.parseBoolean(vResponse[0]));
-
-                if (Boolean.parseBoolean(vResponse[0])) {
-                  switch (vResponse[1]) {
-                    case "1":
-                      patient.setAddress(userInput);
-                      break;
-                    case "0":
-                      break;
-                  }
-                }
-              }
-            }
-            break;
-          case "6":
-            do {
-              response = patientUI.editBloodType(patient.getBloodType());
-              vResponse = PatientValidation.validateEditBloodType(response[0], response[1].toCharArray(), String.valueOf(patient.getBloodType()));
-            } while (!Boolean.parseBoolean(vResponse[0]));
-
-            if (Boolean.parseBoolean(vResponse[0])) {
-              String userInput = "";
-              switch (vResponse[1]) {
-                case "1":
-                  userInput = "A";
-                  break;
-                case "2":
-                  userInput = "B";
-                  break;
-                case "3":
-                  userInput = "AB";
-                  break;
-                case "4":
-                  userInput = "O";
-                  break;
-              }
-
-              do {
-                response = patientUI.confirmEdit("Blood Type", String.valueOf(patient.getBloodType()), userInput);
-                vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
-              } while (!Boolean.parseBoolean(vResponse[0]));
-
-              if (Boolean.parseBoolean(vResponse[0])) {
-                switch (vResponse[1]) {
-                  case "1":
-                    patient.setBloodType(BloodType.valueOf(userInput));
-                    break;
-                  case "0":
-                    break;
-                }
-              }
-            }
-            break;
-          case "0":
-            exit = true;
-            break;
-          default:
-            break;
-        }
-      }
-    } while (!exit);
-
-    return patient;
+    } while (true);
   }
 
   public void runPatientList() {
-
-    boolean exit = false;
-    String[] response;
-    String[] vResponse;
-    String ui = "left";
-    int page = 1;
-    
+    int part = 1, page = 1;
     do {
-      System.out.println();
-
       Utilities.clearScreen();
-
-      response = patientUI.runPatientListMenu(patientMap, ui, page);
-      vResponse = PatientValidation.validatePatientListMenu(response[0], response[1].toCharArray());
-
-      if (Boolean.parseBoolean(vResponse[0])) {
-        switch (vResponse[1]) {
-          case "Q":
-          if (page > 1) {
-            page--;
-          }
-            break;
-          case "E":
-            if (page < (patientMap.size() + 9) / 10) {
-              page++;
-            }
-            break;
-          case "W":
-            if (ui.equals("left")) {
-              ui = "right";
-            } else {
-              ui = "left";
-            }
-            break;
-          case "1":
-            if (!patientMap.isEmpty()) {
-              runPatientAction("edit");
-            } else {
-              MessageUI.noPatientRecord();
-            }
-            break;
-          case "2":
-            if (!patientMap.isEmpty()) {
-              runPatientAction("delete");
-            } else {
-              MessageUI.noPatientRecord();
-            }
-            break;
-          case "0":
-            exit = true;
-            break;
-          default:
-            break;
+      char[] inputOptions = new char[] {};
+      if (part == 1) {
+        inputOptions = patientUI.displayPatientListPart1(patientMap, page);
+      } else if (part == 2) {
+        inputOptions = patientUI.displayPatientListPart2(patientMap, page);
+      }
+      String userInput = patientUI.getGeneralInput();
+      boolean valid = PatientValidation.validateCharInput(userInput, inputOptions);
+        
+      if (valid) {
+        switch (Character.toUpperCase(userInput.charAt(0))) {
+          case 'Q':
+            page = Math.max(1, page - 1);
+            continue;
+          case 'E':
+            page = Math.min((patientMap.size() > 0) ? (patientMap.size() + 9) / 10 : 1, page + 1);
+            continue;
+          case 'W':
+            part = (part == 1) ? 2 : 1;
+            continue;
+          case '0':
+            return;
         }
       }
-    } while (!exit);
+    } while (true);
   }
 
-  public void runPatientAction(String action) {
+  public void runPatientRegistration() {
+    if (!patientMap.isEmpty()) {
+      ArrayList<String> keys = patientMap.getKeys();
+      String lastKey = keys.get(keys.size());
+      Patient lastPatient = patientMap.get(lastKey);
+      String lastId = lastPatient.getPatientId().substring(1);
+      Patient.setLastId(Integer.parseInt(lastId));
+    } else {
+      Patient.setLastId(0);
+    }
+    
+    Patient patient = new Patient();
 
-    boolean exit = false;
-    String[] response;
-    String[] vResponse;
-
+    String icNumber = null;
     do {
-      System.out.println();
+      icNumber = runIcNumberInput("");
+      if (icNumber != null && icNumber.equals("0")) {
+        return;
+      }
+    } while (icNumber == null);
+    patient.setIcNumber(Utilities.formatIcNumber(icNumber));
+    patient.setGender(patient.identifyGender());
+    patient.setBirthDate(patient.identifyBirthDate());
+    patient.setAge(patient.calculateAge());
 
+    String name = null;
+    do {
+      name = runPatientNameInput("");
+      if (name != null && name.equals("0")) {
+        return;
+      }
+    } while (name == null);
+    patient.setName(Utilities.formatName(name));
+
+    String contactNumber = null;
+    do {
+      contactNumber = runContactNumberInput("");
+      if (contactNumber != null && contactNumber.equals("0")) {
+        return;
+      }
+    } while (contactNumber == null);
+    patient.setContactNumber(Utilities.formatContactNumber(contactNumber));
+
+    String email = null;
+    do {
+      email = runEmailInput("");
+      if (email != null && email.equals("0")) {
+        return;
+      }
+    } while (email == null);
+    patient.setEmail(email);
+
+    String address = null;
+    do {
+      address = runAddressInput("");
+      if (address != null && address.equals("0")) {
+        return;
+      }
+    } while (address == null);
+    patient.setAddress(address);
+
+    String bloodType = null;
+    do {
+      bloodType = runBloodTypeInput("");
+      if (bloodType != null && bloodType.equals("0")) {
+        return;
+      }
+    } while (bloodType == null);
+    switch (bloodType.charAt(0)) {
+      case '1':
+        patient.setBloodType(BloodType.A);
+        break;
+      case '2':
+        patient.setBloodType(BloodType.B);
+        break;
+      case '3':
+        patient.setBloodType(BloodType.AB);
+        break;
+      case '4':
+        patient.setBloodType(BloodType.O);
+        break;
+    }
+
+    patientMap.put(patient.getPatientId(), patient);
+
+    boolean confirm = false;
+    do {
+      String action = runRegistrationConfirmation(patient);
+      if (action != null && action.equals("0")) {
+        patientMap.remove(patient.getPatientId());
+        return;
+      }
+
+      if (action.equals("1")) {
+        patientDAO.writeToFile(patientMap);
+        MessageUI.registrationSuccess();
+        confirm = true;
+      } else if (action.equals("2")) {
+        runRegistrationEdit(patient);
+      }
+    } while (!confirm);
+  }
+
+  public String runPatientIdInput() {
+    Utilities.clearScreen();
+    char[] inputOptions = patientUI.displayPatientIdInput();
+    String userInput = patientUI.getSpecificInput("P");
+    return (PatientValidation.validatePatientIdInput(userInput, inputOptions, ID_LENGTH)) ? userInput : null;
+  }
+
+  public String runIcNumberInput(String icNumber) {
+    Utilities.clearScreen();
+    char[] inputOptions = patientUI.displayIcNumberInput();
+    if (!icNumber.isEmpty()) patientUI.displayCurrentValue("IC Number", icNumber);
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateIcNumberInput(userInput, inputOptions)) ? userInput : null;
+  }
+
+  public String runPatientNameInput(String name) {
+    Utilities.clearScreen();
+    char[] inputOptions = patientUI.displayPatientNameInput();
+    if (!name.isEmpty()) patientUI.displayCurrentValue("Name", name);
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateNameInput(userInput, inputOptions, NAME_LENGTH)) ? userInput : null;
+  }
+
+  public String runGenderInput() {
+    Utilities.clearScreen();
+    char[] inputOptions = patientUI.displayGenderInput();
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateCharInput(userInput, inputOptions)) ? userInput : null;
+  }
+
+  public String runBirthDateInput() {
+    Utilities.clearScreen();
+    char[] inputOptions = patientUI.displayBirthDateInput();
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateBirthDateInput(userInput, inputOptions)) ? userInput : null;
+  }
+
+  public String runAgeInput() {
+    Utilities.clearScreen();
+    char[] inputOptions = patientUI.displayAgeInput();
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateAgeInput(userInput, inputOptions)) ? userInput : null;
+  }
+
+  public String runContactNumberInput(String contactNumber) {
+    Utilities.clearScreen();
+    char[] inputOptions = patientUI.displayContactNumberInput();
+    if (!contactNumber.isEmpty()) patientUI.displayCurrentValue("Contact Number", contactNumber);
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateContactNumberInput(userInput, inputOptions)) ? userInput : null;
+  }
+
+  public String runEmailInput(String email) {
+    Utilities.clearScreen();
+    char[] inputOptions = patientUI.displayEmailInput();
+    if (!email.isEmpty()) patientUI.displayCurrentValue("Email", email);
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateEmailInput(userInput, inputOptions, EMAIL_LENGTH)) ? userInput : null;
+  }
+
+  public String runAddressInput(String address) {
+    Utilities.clearScreen();
+    char[] inputOptions = patientUI.displayAddressInput();
+    if (!address.isEmpty()) patientUI.displayCurrentValue("Address", address);
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateAddressInput(userInput, inputOptions, ADDRESS_LENGTH)) ? userInput : null;
+  }
+
+  public String runRegistrationDateInput() {
+    Utilities.clearScreen();
+    char[] inputOptions = patientUI.displayRegistrationDateInput();
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateDateInput(userInput, inputOptions)) ? userInput : null;
+  }
+
+  public String runBloodTypeInput(String bloodType) {
+    Utilities.clearScreen();
+    char[] inputOptions = patientUI.displayBloodTypeInput();
+    if (!bloodType.isEmpty()) patientUI.displayCurrentValue("Blood Type", bloodType);
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateCharInput(userInput, inputOptions)) ? userInput : null;
+  }
+
+  public String runRegistrationConfirmation(Patient patient) {
+    Utilities.clearScreen();
+    patientUI.displayRegistrationConfirmation(patient);
+    char[] inputOptions = patientUI.displayRegistrationConfirmationMenu();
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateCharInput(userInput, inputOptions)) ? userInput : null;
+  }
+
+  public void runRegistrationEdit(Patient patient) {
+    do {
       Utilities.clearScreen();
-
-      response = patientUI.inputPatientId();
-      vResponse = PatientValidation.validatePatientId(patientMap, response[0], response[1].toCharArray());
-
-      if (Boolean.parseBoolean(vResponse[0])) {
-        if (vResponse[1].equals("0")) {
-          exit = true;
-        } else {
-          if (action.equals("edit")) {
-            runPatientEdit(vResponse[1]);
-            exit = true;
-          } else if (action.equals("delete")) {
-            runPatientDelete(vResponse[1]);
-            exit = true;
-          } else {
-            System.out.println("Invalid action! Please try again.");
-            Utilities.pressAnyKey();
-          }
+      patientUI.displayRegistrationConfirmation(patient);
+      char[] inputOptions = patientUI.displayPatientEditMenu();
+      String userInput = patientUI.getGeneralInput();
+      boolean valid = PatientValidation.validateCharInput(userInput, inputOptions);
+      
+      String patientId = patient.getPatientId();
+      if (valid) {
+        switch (userInput.charAt(0)) {
+          case '1':
+            runIcNumberEdit(patientId);
+            continue;
+          case '2':
+            runNameEdit(patientId);
+            continue;
+          case '3':
+            runContactNumberEdit(patientId);
+            continue;
+          case '4':
+            runEmailEdit(patientId);
+            continue;
+          case '5':
+            runAddressEdit(patientId);
+            continue;
+          case '6':
+            runBloodTypeEdit(patientId);
+            continue;
+          case '0':
+            return;
         }
       }
-    } while (!exit);
+    } while (true);
+  }
+
+  public void runPatientEdit() {
+    if (patientMap.isEmpty()) {
+      System.out.println();
+      System.out.println("Error! Edit can only be performed when there are existing Patient records.");
+      Utilities.pressAnyKey();
+      return;
+    }
+
+    int part = 1, page = 1;
+    do {
+      Utilities.clearScreen();
+      char[] inputOptions = new char[] {};
+      if (part == 1) {
+        inputOptions = patientUI.displayPatientListPart1(patientMap, page);
+      } else if (part == 2) {
+        inputOptions = patientUI.displayPatientListPart2(patientMap, page);
+      }
+      patientUI.displayPatientIdInput();
+      String userInput = patientUI.getSpecificInput("P");
+      boolean valid = PatientValidation.validatePatientIdInput(userInput, inputOptions, ID_LENGTH);
+      
+      if (valid) {
+        switch (userInput.toUpperCase()) {
+          case "Q":
+            page = Math.max(1, page - 1);
+            continue;
+          case "E":
+            page = Math.min((patientMap.size() + 9) / 10, page + 1);
+            continue;
+          case "W":
+            part = (part == 1) ? 2 : 1;
+            continue;
+          case "0":
+            return;
+          default:
+            runPatientEditOptions("P" + userInput);
+            break;
+        }
+        break;
+      }
+    } while (true);
+  }
+
+  public void runPatientEditOptions(String patientId) {
+    Patient patient = patientMap.get(patientId);
+    if (patient == null) {
+      return;
+    }
+
+    int part = 1;
+    do {
+      Utilities.clearScreen();
+      char[] inputOptions1;
+      if (part == 1) {
+        inputOptions1 = patientUI.displaySinglePatientPart1(patient);
+      } else {
+        inputOptions1 = patientUI.displaySinglePatientPart2(patient);
+      }
+      char[] inputOptions2 = patientUI.displayPatientEditMenu();
+      String userInput = patientUI.getGeneralInput();
+      char[] inputOptions = new char[inputOptions1.length + inputOptions2.length];
+      System.arraycopy(inputOptions1, 0, inputOptions, 0, inputOptions1.length);
+      System.arraycopy(inputOptions2, 0, inputOptions, inputOptions1.length, inputOptions2.length);
+      boolean valid = PatientValidation.validateCharInput(userInput, inputOptions);
+      
+      if (valid) {
+        switch (Character.toUpperCase(userInput.charAt(0))) {
+          case 'W':
+            part = (part == 1) ? 2 : 1;
+            continue;
+          case '1':
+            runIcNumberEdit(patientId);
+            break;
+          case '2':
+            runNameEdit(patientId);
+            break;
+          case '3':
+            runContactNumberEdit(patientId);
+            break;
+          case '4':
+            runEmailEdit(patientId);
+            break;
+          case '5':
+            runAddressEdit(patientId);
+            break;
+          case '6':
+            runBloodTypeEdit(patientId);
+            break;
+          case '0':
+            return;
+        }
+      }
+    } while (true);
+  }
+
+  public void runIcNumberEdit(String patientId) {
+    String icNumber = null;
+    do {
+      icNumber = runIcNumberInput(patientMap.get(patientId).getIcNumber());
+      if (icNumber != null && icNumber.equals("0")) {
+        return;
+      }
+    } while (icNumber == null);
+    
+    String confirm = null;
+    do {
+      confirm = runEditConfirmation(patientMap.get(patientId), "IC Number", patientMap.get(patientId).getIcNumber(), Utilities.formatIcNumber(icNumber));
+    } while (confirm == null);
+
+    if (confirm.equals("0")) {
+      return;
+    } else if (confirm.equals("1")) {
+      patientMap.get(patientId).setIcNumber(Utilities.formatIcNumber(icNumber));
+      patientMap.get(patientId).setGender(patientMap.get(patientId).identifyGender());
+      patientMap.get(patientId).setBirthDate(patientMap.get(patientId).identifyBirthDate());
+      patientMap.get(patientId).setAge(patientMap.get(patientId).calculateAge());
+      patientDAO.writeToFile(patientMap);
+      MessageUI.editSuccess();
+    }
+  }
+
+  public void runNameEdit(String patientId) {
+    String name = null;
+    do {
+      name = runPatientNameInput(patientMap.get(patientId).getName());
+      if (name != null && name.equals("0")) {
+        return;
+      }
+    } while (name == null);
+    
+    String confirm = null;
+    do {
+      confirm = runEditConfirmation(patientMap.get(patientId), "Name", patientMap.get(patientId).getName(), Utilities.formatName(name));
+    } while (confirm == null);
+
+    if (confirm.equals("0")) {
+      return;
+    } else if (confirm.equals("1")) {
+      patientMap.get(patientId).setName(Utilities.formatName(name));
+      patientDAO.writeToFile(patientMap);
+      MessageUI.editSuccess();
+    }
+  }
+
+  public void runContactNumberEdit(String patientId) {
+    String contactNumber = null;
+    do {
+      contactNumber = runContactNumberInput(patientMap.get(patientId).getContactNumber());
+      if (contactNumber != null && contactNumber.equals("0")) {
+        return;
+      }
+    } while (contactNumber == null);
+    
+    String confirm = null;
+    do {
+      confirm = runEditConfirmation(patientMap.get(patientId), "Contact Number", patientMap.get(patientId).getContactNumber(), Utilities.formatContactNumber(contactNumber));
+    } while (confirm == null);
+
+    if (confirm.equals("0")) {
+      return;
+    } else if (confirm.equals("1")) {
+      patientMap.get(patientId).setContactNumber(Utilities.formatContactNumber(contactNumber));
+      patientDAO.writeToFile(patientMap);
+      MessageUI.editSuccess();
+    }
+  }
+
+  public void runEmailEdit(String patientId) {
+    String email = null;
+    do {
+      email = runEmailInput(patientMap.get(patientId).getEmail());
+      if (email != null && email.equals("0")) {
+        return;
+      }
+    } while (email == null);
+    
+    String confirm = null;
+    do {
+      confirm = runEditConfirmation(patientMap.get(patientId), "Email", patientMap.get(patientId).getEmail(), email);
+    } while (confirm == null);
+
+    if (confirm.equals("0")) {
+      return;
+    } else if (confirm.equals("1")) {
+      patientMap.get(patientId).setEmail(email);
+      patientDAO.writeToFile(patientMap);
+      MessageUI.editSuccess();
+    }
+  }
+
+  public void runAddressEdit(String patientId) {
+    String address = null;
+    do {
+      address = runAddressInput(patientMap.get(patientId).getAddress());
+      if (address != null && address.equals("0")) {
+        return;
+      }
+    } while (address == null);
+    
+    String confirm = null;
+    do {
+      confirm = runEditConfirmation(patientMap.get(patientId), "Address", patientMap.get(patientId).getAddress(), address);
+    } while (confirm == null);
+
+    if (confirm.equals("0")) {
+      return;
+    } else if (confirm.equals("1")) {
+      patientMap.get(patientId).setAddress(address);
+      patientDAO.writeToFile(patientMap);
+      MessageUI.editSuccess();
+    }
+  }
+
+  public void runBloodTypeEdit(String patientId) {
+    String bloodType = null;
+    do {
+      bloodType = runBloodTypeInput(patientMap.get(patientId).getBloodType().toString());
+      if (bloodType != null && bloodType.equals("0")) {
+        return;
+      }
+    } while (bloodType == null);
+
+    switch (bloodType.charAt(0)) {
+      case '1':
+        bloodType = "A";
+        break;
+      case '2':
+        bloodType = "B";
+        break;
+      case '3':
+        bloodType = "AB";
+        break;
+      case '4':
+        bloodType = "O";
+        break;
+    }
+    
+    String confirm = null;
+    do {
+      confirm = runEditConfirmation(patientMap.get(patientId), "Blood Type", patientMap.get(patientId).getBloodType().toString(), bloodType);
+    } while (confirm == null);
+
+    if (confirm.equals("0")) {
+      return;
+    } else if (confirm.equals("1")) {
+      patientMap.get(patientId).setBloodType(BloodType.valueOf(bloodType));
+      patientDAO.writeToFile(patientMap);
+      MessageUI.editSuccess();
+    }
   }
   
-  public void runPatientEdit(String patientId) {
-
-    boolean exit = false;
-    String[] response;
-    String[] vResponse;
-    String ui = "left";
-
-    do {
-      System.out.println();
-
-      Utilities.clearScreen();
-
-      response = patientUI.runPatientEditMenu(patientMap.get(patientId), ui);
-      vResponse = PatientValidation.validatePatientEditMenu(response[0], response[1].toCharArray());
-
-      if (Boolean.parseBoolean(vResponse[0])) {
-        switch (vResponse[1]) {
-          case "W":
-            if (ui.equals("left")) {
-              ui = "right";
-            } else {
-              ui = "left";
-            }
-            break;
-          case "1":
-            do {
-              response = patientUI.editIcNumber(patientMap.get(patientId).getIcNumber());
-              vResponse = PatientValidation.validateEditIcNumber(response[0], response[1].toCharArray(), patientMap.get(patientId).getIcNumber());
-            } while (!Boolean.parseBoolean(vResponse[0]));
-            
-            if (!vResponse[1].equals("0")) {
-              String userInput = Utilities.formatIcNumber(vResponse[1]);
-              do {
-                response = patientUI.confirmEdit("IC Number", patientMap.get(patientId).getIcNumber(), userInput);
-                vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
-              } while (!Boolean.parseBoolean(vResponse[0]));
-
-              if (Boolean.parseBoolean(vResponse[0])) {
-                switch (vResponse[1]) {
-                  case "1":
-                    patientMap.get(patientId).setIcNumber(userInput);
-                    patientMap.get(patientId).identifyGender();
-                    patientMap.get(patientId).identifyBirthDate();
-                    patientMap.get(patientId).setAge(patientMap.get(patientId).calculateAge());
-                    patientDAO.saveToFile(patientMap);
-                    break;
-                  case "0":
-                    break;
-                }
-              }
-            }
-            break;
-          case "2":
-            do {
-              response = patientUI.editPatientName(patientMap.get(patientId).getName());
-              vResponse = PatientValidation.validateEditName(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patientMap.get(patientId).getName());
-            } while (!Boolean.parseBoolean(vResponse[0]));
-            
-            if (!vResponse[1].equals("0")) {
-              String userInput = Utilities.formatName(vResponse[1]);
-              do {
-                response = patientUI.confirmEdit("Patient Name", patientMap.get(patientId).getName(), userInput);
-                vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
-              } while (!Boolean.parseBoolean(vResponse[0]));
-
-              if (Boolean.parseBoolean(vResponse[0])) {
-                switch (vResponse[1]) {
-                  case "1":
-                    patientMap.get(patientId).setName(userInput);
-                    patientDAO.saveToFile(patientMap);
-                    break;
-                  case "0":
-                    break;
-                }
-              }
-            }
-            break;
-          case "3":
-            do {
-              response = patientUI.editContactNumber(patientMap.get(patientId).getContactNumber());
-              vResponse = PatientValidation.validateEditContactNumber(response[0], response[1].toCharArray(), patientMap.get(patientId).getContactNumber());
-            } while (!Boolean.parseBoolean(vResponse[0]));
-            
-            if (!vResponse[1].equals("0")) {
-              String userInput = Utilities.formatContactNumber(vResponse[1]);
-              do {
-                response = patientUI.confirmEdit("Contact Number", patientMap.get(patientId).getContactNumber(), userInput);
-                vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
-              } while (!Boolean.parseBoolean(vResponse[0]));
-
-              if (Boolean.parseBoolean(vResponse[0])) {
-                switch (vResponse[1]) {
-                  case "1":
-                    patientMap.get(patientId).setContactNumber(userInput);
-                    patientDAO.saveToFile(patientMap);
-                    break;
-                  case "0":
-                    break;
-                }
-              }
-            }
-            break;
-          case "4":
-            do {
-              response = patientUI.editEmail(patientMap.get(patientId).getEmail());
-              vResponse = PatientValidation.validateEditEmail(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patientMap.get(patientId).getEmail());
-            } while (!Boolean.parseBoolean(vResponse[0]));
-            
-            if (!vResponse[1].equals("0")) {
-              String userInput = vResponse[1];
-              do {
-                response = patientUI.confirmEdit("Email", patientMap.get(patientId).getEmail(), userInput);
-                vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
-              } while (!Boolean.parseBoolean(vResponse[0]));
-
-              if (Boolean.parseBoolean(vResponse[0])) {
-                switch (vResponse[1]) {
-                  case "1":
-                    patientMap.get(patientId).setEmail(userInput);
-                    patientDAO.saveToFile(patientMap);
-                    break;
-                  case "0":
-                    break;
-                }
-              }
-            }
-            break;
-          case "5":
-            do {
-              response = patientUI.editAddress(patientMap.get(patientId).getAddress());
-              vResponse = PatientValidation.validateEditAddress(response[0], response[1].toCharArray(), Integer.parseInt(response[2]), patientMap.get(patientId).getAddress());
-            } while (!Boolean.parseBoolean(vResponse[0]));
-            
-            if (!vResponse[1].equals("0")) {
-              String userInput = vResponse[1];
-              do {
-                response = patientUI.confirmEdit("Address", patientMap.get(patientId).getAddress(), userInput);
-                vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
-              } while (!Boolean.parseBoolean(vResponse[0]));
-
-              if (Boolean.parseBoolean(vResponse[0])) {
-                switch (vResponse[1]) {
-                  case "1":
-                    patientMap.get(patientId).setAddress(userInput);
-                    patientDAO.saveToFile(patientMap);
-                    break;
-                  case "0":
-                    break;
-                }
-              }
-            }
-            break;
-          case "6":
-            do {
-              response = patientUI.editBloodType(patientMap.get(patientId).getBloodType());
-              vResponse = PatientValidation.validateEditBloodType(response[0], response[1].toCharArray(), String.valueOf(patientMap.get(patientId).getBloodType()));
-            } while (!Boolean.parseBoolean(vResponse[0]));
-
-            if (!vResponse[1].equals("0")) {
-              String userInput = "";
-              switch (vResponse[1]) {
-                case "1":
-                  userInput = "A";
-                  break;
-                case "2":
-                  userInput = "B";
-                  break;
-                case "3":
-                  userInput = "AB";
-                  break;
-                case "4":
-                  userInput = "O";
-                  break;
-              }
-              do {
-                response = patientUI.confirmEdit("Blood Type", String.valueOf(patientMap.get(patientId).getBloodType()), userInput);
-                vResponse = PatientValidation.validateConfirmEdit(response[0], response[1].toCharArray());
-              } while (!Boolean.parseBoolean(vResponse[0]));
-
-              if (Boolean.parseBoolean(vResponse[0])) {
-                patientMap.get(patientId).setBloodType(BloodType.valueOf(userInput));
-                patientDAO.saveToFile(patientMap);
-              }
-            }
-            break;
-          case "0":
-            exit = true;
-            break;
-          default:
-            break;
-        }
-      }
-    } while (!exit);
+  public String runEditConfirmation(Patient patient, String field, String currentValue, String newValue) {
+    Utilities.clearScreen();
+    char[] inputOptions = patientUI.displayEditConfirmationMenu(field, currentValue, newValue);
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateCharInput(userInput, inputOptions)) ? userInput : null;
   }
 
-  public void runPatientDelete(String patientId) {
-
-    boolean exit = false;
-    String[] response;
-    String[] vResponse;
-    String ui = "left";
-
-    do {
+  public void runPatientDelete() {
+    if (patientMap.isEmpty()) {
       System.out.println();
+      System.out.println("Error! Delete can only be performed when there are existing Patient records.");
+      Utilities.pressAnyKey();
+      return;
+    }
 
+    int part = 1, page = 1;
+    do {
       Utilities.clearScreen();
-
-      response = patientUI.runPatientDeleteMenu(patientMap.get(patientId), ui);
-      vResponse = PatientValidation.validateDeleteMenu(response[0], response[1].toCharArray());
-
-      if (Boolean.parseBoolean(vResponse[0])) {
-        switch (vResponse[1]) {
+      char[] inputOptions = new char[] {};
+      if (part == 1) {
+        inputOptions = patientUI.displayPatientListPart1(patientMap, page);
+      } else {
+        inputOptions = patientUI.displayPatientListPart2(patientMap, page);
+      }
+      patientUI.displayPatientIdInput();
+      String userInput = patientUI.getSpecificInput("P");
+      boolean valid = PatientValidation.validatePatientIdInput(userInput, inputOptions, ID_LENGTH);
+      
+      if (valid) {
+        switch (userInput.toUpperCase()) {
+          case "Q":
+            page = Math.max(1, page - 1);
+            continue;
+          case "E":
+            page = Math.min((patientMap.size() + 9) / 10, page + 1);
+            continue;
           case "W":
-            if (ui.equals("left")) {
-              ui = "right";
-            } else {
-              ui = "left";
-            }
-            break;
-          case "1":
-            patientMap.remove(patientId);
-            patientDAO.saveToFile(patientMap);
-            System.out.println();
-            System.out.println("Patient successfully deleted.");
-            Utilities.pressAnyKey();
-            exit = true;
-            break;
+            part = (part == 1) ? 2 : 1;
+            continue;
           case "0":
-            exit = true;
-            break;
+            return;
           default:
+            runDeleteConfirmation("P" + userInput);
             break;
         }
+        break;
       }
-    } while (!exit);
+    } while (true);
+  }
+
+  public void runDeleteConfirmation(String patientId) {
+    Patient patient = patientMap.get(patientId);
+    if (patient == null) {
+      return;
+    }
+
+    int part = 1;
+    do {
+      Utilities.clearScreen();
+      char[] inputOptions1;
+      if (part == 1) {
+        inputOptions1 = patientUI.displaySinglePatientPart1(patient);
+      } else {
+        inputOptions1 = patientUI.displaySinglePatientPart2(patient);
+      }
+      char[] inputOptions2 = patientUI.displayDeleteConfirmationMenu();
+      String userInput = patientUI.getGeneralInput();
+      char[] inputOptions = new char[inputOptions1.length + inputOptions2.length];
+      System.arraycopy(inputOptions1, 0, inputOptions, 0, inputOptions1.length);
+      System.arraycopy(inputOptions2, 0, inputOptions, inputOptions1.length, inputOptions2.length);
+      boolean valid = PatientValidation.validateCharInput(userInput, inputOptions);
+      
+      if (valid) {
+        switch (Character.toUpperCase(userInput.charAt(0))) {
+          case 'W':
+            part = (part == 1) ? 2 : 1;
+            continue;
+          case '1':
+            patientMap.remove(patientId);
+            patientDAO.writeToFile(patientMap);
+            MessageUI.deleteSuccess();
+            return;
+          case '0':
+            return;
+        }
+      }
+    } while (true);
   }
 
   public void runPatientSearch() {
-
-    String[] response;
-    String[] vResponse;
-
+    if (patientMap.isEmpty()) {
+      System.out.println();
+      System.out.println("Error! Search can only be performed when there are existing Patient records.");
+      Utilities.pressAnyKey();
+      return;
+    }
+    
     do {
-      response = patientUI.inputSearchCategory();
-      vResponse = PatientValidation.validateSearchCategory(response[0], response[1].toCharArray());
-    } while (!Boolean.parseBoolean(vResponse[0]));
+      String searchOption = runSearchOptionInput();
+      if (searchOption == null) {
+        continue;
+      }
+      if (searchOption.equals("0")) {
+        return;
+      }
 
-    if (!vResponse[1].equals("0")) {
-      String userInput = vResponse[1];
-      String searchCategory = "Patient ID";
-      switch (userInput) {
-        case "1":
-          searchCategory = "Patient ID";
+      RedBlackTreeMap<String, Patient> resultsMap = new RedBlackTreeMap<>();
+      switch (Character.toUpperCase(searchOption.charAt(0))) {
+        case '1':
+          String patientId = runPatientIdSearch();
+          if (patientId.equals("0")) {
+            continue;
+          }
+          resultsMap = getPatientIdSearchResult(patientId);
           break;
-        case "2":
-          searchCategory = "IC Number";
+        case '2':
+          String icNumber = runIcNumberSearch();
+          if (icNumber.equals("0")) {
+            continue;
+          }
+          resultsMap = getIcNumberSearchResult(icNumber);
           break;
-        case "3":
-          searchCategory = "Name";
+        case '3':
+          String name = runNameSearch();
+          if (name.equals("0")) {
+            continue;
+          }
+          resultsMap = getNameSearchResult(name);
           break;
-        case "4":
-          searchCategory = "Gender";
+        case '4':
+          String gender = runGenderSearch();
+          if (gender.equals("0")) {
+            continue;
+          }
+          resultsMap = getGenderSearchResult(gender);
           break;
-        case "5":
-          searchCategory = "Birth Date";
+        case '5':
+          String birthDate = runBirthDateSearch();
+          if (birthDate.equals("0")) {
+            continue;
+          }
+          resultsMap = getBirthDateSearchResult(birthDate);
           break;
-        case "6":
-          searchCategory = "Age";
+        case '6':
+          String age = runAgeSearch();
+          if (age.equals("0")) {
+            continue;
+          }
+          resultsMap = getAgeSearchResult(age);
           break;
-        case "7":
-          searchCategory = "Contact Number";
+        case '7':
+          String contactNumber = runContactNumberSearch();
+          if (contactNumber.equals("0")) {
+            continue;
+          }
+          resultsMap = getContactNumberSearchResult(contactNumber);
           break;
-        case "8":
-          searchCategory = "Email";
+        case '8':
+          String email = runEmailSearch();
+          if (email.equals("0")) {
+            continue;
+          }
+          resultsMap = getEmailSearchResult(email);
           break;
-        case "9":
-          searchCategory = "Address";
+        case '9':
+          String address = runAddressSearch();
+          if (address.equals("0")) {
+            continue;
+          }
+          resultsMap = getAddressSearchResult(address);
           break;
-        case "A":
-          searchCategory = "Registration Date";
+        case 'A':
+          String registrationDate = runRegistrationDateSearch();
+          if (registrationDate.equals("0")) {
+            continue;
+          }
+          resultsMap = getRegistrationDateSearchResult(registrationDate);
           break;
-        case "B":
-          searchCategory = "Blood Type";
+        case 'B':
+          String bloodType = runBloodTypeSearch();
+          if (bloodType.equals("0")) {
+            continue;
+          }
+          resultsMap = getBloodTypeSearchResult(bloodType);
           break;
       }
 
-      runSearchBy(searchCategory);
-    }
+      if (resultsMap == null) {
+        MessageUI.noSearchResult();
+        continue;
+      }
+
+      int part = 1, page = 1;
+      do {
+        String action = runSearchResultDisplay(resultsMap, part, page);
+        if (action == null) {
+          continue;
+        }
+
+        switch (Character.toUpperCase(action.charAt(0))) {
+          case 'Q':
+            page = Math.max(1, page - 1);
+            break;
+          case 'E':
+            page = Math.min((resultsMap.size() > 0) ? (resultsMap.size() + 9) / 10 : 1, page + 1);
+            break;
+          case 'W':
+            part = (part == 1) ? 2 : 1;
+            break;
+          case '0':
+            return;
+        }
+      } while (true);
+    } while (true);
   }
 
-  public void runSearchBy(String searchCategory) {
-    
-    boolean exit = false;
-    String[] response;
-    String[] vResponse = new String[] {};
-    String ui = "left";
-    int page = 1;
+  public String runSearchOptionInput() {
+    Utilities.clearScreen();
+    char[] inputOptions = patientUI.displaySearchMenu();
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateCharInput(userInput, inputOptions)) ? userInput : null;
+  }
 
-    do {
-      switch (searchCategory) {
-        case "Patient ID":
-          response = patientUI.inputPatientId();
-          vResponse = PatientValidation.validatePatientIdSearch(patientMap, response[0], response[1].toCharArray());
-          break;
-        case "IC Number":
-          response = patientUI.inputIcNumber();
-          vResponse = PatientValidation.validateIcNumberSearch(patientMap, response[0], response[1].toCharArray());
-          break;
-        case "Name":
-          response = patientUI.inputPatientName();
-          vResponse = PatientValidation.validateNameSearch(patientMap, response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
-          break;
-        case "Gender":
-          response = patientUI.inputGender();
-          vResponse = PatientValidation.validateGenderSearch(patientMap, response[0], response[1].toCharArray());
-          break;
-        case "Birth Date":
-          response = patientUI.inputBirthDate();
-          vResponse = PatientValidation.validateBirthDateSearch(patientMap, response[0], response[1].toCharArray());
-          break;
-        case "Age":
-          response = patientUI.inputAge();
-          vResponse = PatientValidation.validateAgeSearch(patientMap, response[0], response[1].toCharArray());
-          break;
-        case "Contact Number":
-          response = patientUI.inputContactNumber();
-          vResponse = PatientValidation.validateContactNumberSearch(patientMap, response[0], response[1].toCharArray());
-          break;
-        case "Email":
-          response = patientUI.inputEmail();
-          vResponse = PatientValidation.validateEmailSearch(patientMap, response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
-          break;
-        case "Address":
-          response = patientUI.inputAddress();
-          vResponse = PatientValidation.validateAddressSearch(patientMap, response[0], response[1].toCharArray(), Integer.parseInt(response[2]));
-          break;
-        case "Registration Date":
-          response = patientUI.inputRegistrationDate();
-          vResponse = PatientValidation.validateRegistrationDateSearch(patientMap, response[0], response[1].toCharArray());
-          break;
-        case "Blood Type":
-          response = patientUI.inputBloodType();
-          vResponse = PatientValidation.validateBloodTypeSearch(patientMap, response[0], response[1].toCharArray());
-          break;
-      }
-    } while (!Boolean.parseBoolean(vResponse[0]));
-
-    RedBlackTreeMap<String, Patient> filteredPatientMap = new RedBlackTreeMap<>();
-    if (!vResponse[1].equals("0")) {
-      ArrayList<String> keys = patientMap.getKeys();
-      String userInput = vResponse[1];
-      for (int i = 1; i <= keys.size(); i++) {
-        Patient patient = patientMap.get(keys.get(i));
-        switch (searchCategory) {
-          case "Patient ID":
-            if (patient.getPatientId().equals(userInput)) {
-              filteredPatientMap.put(patient.getPatientId(), patient);
-            }
-            break;
-          case "IC Number":
-            if (patient.getIcNumber().equals(userInput)) {
-              filteredPatientMap.put(patient.getPatientId(), patient);
-            }
-            break;
-          case "Name":
-            if (patient.getName().equals(userInput)) {
-              filteredPatientMap.put(patient.getPatientId(), patient);
-            }
-            break;
-          case "Gender":
-            if (patient.getGender().equals(Gender.valueOf(userInput))) {
-              filteredPatientMap.put(patient.getPatientId(), patient);
-            }
-            break;
-          case "Birth Date":
-            if (patient.getBirthDate().toString().equals(userInput)) {
-              filteredPatientMap.put(patient.getPatientId(), patient);
-            }
-            break;
-          case "Age":
-            if (patient.getAge() == Integer.parseInt(userInput)) {
-              filteredPatientMap.put(patient.getPatientId(), patient);
-            }
-            break;
-          case "Contact Number":
-            if (patient.getContactNumber().equals(userInput)) {
-              filteredPatientMap.put(patient.getPatientId(), patient);
-            }
-            break;
-          case "Email":
-            if (patient.getEmail().equals(userInput)) {
-              filteredPatientMap.put(patient.getPatientId(), patient);
-            }
-            break;
-          case "Address":
-            if (patient.getAddress().equals(userInput)) {
-              filteredPatientMap.put(patient.getPatientId(), patient);
-            }
-            break;
-          case "Registration Date":
-            if (patient.getRegistrationDate().toString().equals(userInput)) {
-              filteredPatientMap.put(patient.getPatientId(), patient);
-            }
-            break;
-          case "Blood Type":
-            if (patient.getBloodType().equals(BloodType.valueOf(userInput))) {
-              filteredPatientMap.put(patient.getPatientId(), patient);
-            }
-            break;
-        }
-      }
-
-      do {
-        do {
-          response = patientUI.runPatientListMenu(filteredPatientMap, ui, page);
-          vResponse = PatientValidation.validatePatientListMenu(response[0], response[1].toCharArray());
-        } while (!Boolean.parseBoolean(vResponse[0]));
-
-        if (!vResponse[1].equals("0")) {
-          switch (vResponse[1]) {
-            case "Q":
-              if (page > 1) {
-                page--;
-              }
-              break;
-            case "E":
-              if (page < (filteredPatientMap.size() + 9) / 10) {
-                page++;
-              }
-              break;
-            case "W":
-              if (ui.equals("left")) {
-                ui = "right";
-              } else {
-                ui = "left";
-              }
-              break;
-            case "1":
-              if (!filteredPatientMap.isEmpty()) {
-                runPatientAction("edit");
-              } else {
-                MessageUI.noPatientRecord();
-              }
-              break;
-            case "2":
-              if (!filteredPatientMap.isEmpty()) {
-                runPatientAction("delete");
-              } else {
-                MessageUI.noPatientRecord();
-              }
-              break;
-          }
-        } else {
-          exit = true;
-        }
-      } while (!exit);
+  public String runSearchResultDisplay(RedBlackTreeMap<String, Patient> patientMap, int part, int page) {
+    char[] inputOptions;
+    Utilities.clearScreen();
+    if (part == 1) {
+      inputOptions = patientUI.displayPatientListPart1(patientMap, page);
+    } else {
+      inputOptions = patientUI.displayPatientListPart2(patientMap, page);
     }
+    String userInput = patientUI.getGeneralInput();
+    return (PatientValidation.validateCharInput(userInput, inputOptions)) ? userInput : null;
+  }
+
+  public String runPatientIdSearch() {
+    String patientId = null;
+    do {
+      patientId = runPatientIdInput();
+      if (patientId != null && patientId.equals("0")) {
+        return patientId;
+      }
+    } while (patientId == null);
+
+    return "P" + patientId;
+  }
+
+  public RedBlackTreeMap<String, Patient> getPatientIdSearchResult(String patientId) {
+    RedBlackTreeMap<String, Patient> resultsMap = new RedBlackTreeMap<>();
+    Patient patient = patientMap.get(patientId);
+    if (patient == null) {
+      return null;
+    }
+    resultsMap.put(patient.getPatientId(), patient);
+    return resultsMap;
+  }
+  
+  public String runIcNumberSearch() {
+    String icNumber = null;
+    do {
+      icNumber = runIcNumberInput("");
+      if (icNumber != null && icNumber.equals("0")) {
+        return icNumber;
+      }
+    } while (icNumber == null);
+
+    return Utilities.formatIcNumber(icNumber);
+  }
+
+  public RedBlackTreeMap<String, Patient> getIcNumberSearchResult(String icNumber) {
+    RedBlackTreeMap<String, Patient> resultsMap = new RedBlackTreeMap<>();
+    ArrayList<String> keys = patientMap.getKeys();
+    for (String key : keys) {
+      if (patientMap.get(key).getIcNumber().equals(icNumber)) {
+        resultsMap.put(patientMap.get(key).getPatientId(), patientMap.get(key));
+      }
+    }
+    return resultsMap;
+  }
+
+  public String runNameSearch() {
+    String name = null;
+    do {
+      name = runPatientNameInput("");
+      if (name != null && name.equals("0")) {
+        return name;
+      }
+    } while (name == null);
+
+    return Utilities.formatName(name);
+  }
+
+  public RedBlackTreeMap<String, Patient> getNameSearchResult(String name) {
+    RedBlackTreeMap<String, Patient> resultsMap = new RedBlackTreeMap<>();
+    ArrayList<String> keys = patientMap.getKeys();
+    for (String key : keys) {
+      if (patientMap.get(key).getName().toLowerCase().contains(name.toLowerCase())) {
+        resultsMap.put(patientMap.get(key).getPatientId(), patientMap.get(key));
+      }
+    }
+    return resultsMap;
+  }
+
+  public String runGenderSearch() {
+    String gender = null;
+    do {
+      gender = runGenderInput();
+      if (gender != null && gender.equals("0")) {
+        return gender;
+      }
+    } while (gender == null);
+    
+    switch (gender.charAt(0)) {
+      case '1':
+        gender = "Male";
+        break;
+      case '2':
+        gender = "Female";
+        break;
+    }
+
+    return gender;
+  }
+
+  public RedBlackTreeMap<String, Patient> getGenderSearchResult(String gender) {
+    RedBlackTreeMap<String, Patient> resultsMap = new RedBlackTreeMap<>();
+    ArrayList<String> keys = patientMap.getKeys();
+    for (String key : keys) {
+      if (patientMap.get(key).getGender().equals(Gender.valueOf(gender))) {
+        resultsMap.put(patientMap.get(key).getPatientId(), patientMap.get(key));
+      }
+    }
+    return resultsMap;
+  }
+
+  public String runBirthDateSearch() {
+    String birthDate = null;
+    do {
+      birthDate = runBirthDateInput();
+      if (birthDate != null && birthDate.equals("0")) {
+        return birthDate;
+      }
+    } while (birthDate == null);
+
+    return birthDate;
+  }
+
+  public RedBlackTreeMap<String, Patient> getBirthDateSearchResult(String birthDate) {
+    RedBlackTreeMap<String, Patient> resultsMap = new RedBlackTreeMap<>();
+    ArrayList<String> keys = patientMap.getKeys();
+    for (String key : keys) {
+      if (patientMap.get(key).getBirthDate().equals(Utilities.formatDate(birthDate))) {
+        resultsMap.put(patientMap.get(key).getPatientId(), patientMap.get(key));
+      }
+    }
+    return resultsMap;
+  }
+
+  public String runAgeSearch() {
+    String age = null;
+    do {
+      age = runAgeInput();
+      if (age != null && age.equals("0")) {
+        return age;
+      }
+    } while (age == null);
+
+    return age;
+  }
+
+  public RedBlackTreeMap<String, Patient> getAgeSearchResult(String age) {
+    RedBlackTreeMap<String, Patient> resultsMap = new RedBlackTreeMap<>();
+    ArrayList<String> keys = patientMap.getKeys();
+    for (String key : keys) {
+      if (patientMap.get(key).getAge() == Integer.parseInt(age)) {
+        resultsMap.put(patientMap.get(key).getPatientId(), patientMap.get(key));
+      }
+    }
+    return resultsMap;
+  }
+
+  public String runContactNumberSearch() {
+    String contactNumber = null;
+    do {
+      contactNumber = runContactNumberInput("");
+      if (contactNumber != null && contactNumber.equals("0")) {
+        return contactNumber;
+      }
+    } while (contactNumber == null);
+
+    return Utilities.formatContactNumber(contactNumber);
+  }
+
+  public RedBlackTreeMap<String, Patient> getContactNumberSearchResult(String contactNumber) {
+    RedBlackTreeMap<String, Patient> resultsMap = new RedBlackTreeMap<>();
+    ArrayList<String> keys = patientMap.getKeys();
+    for (String key : keys) {
+      if (patientMap.get(key).getContactNumber().equals(contactNumber)) {
+        resultsMap.put(patientMap.get(key).getPatientId(), patientMap.get(key));
+      }
+    }
+    return resultsMap;
+  }
+
+  public String runEmailSearch() {
+    String email = null;
+    do {
+      email = runEmailInput("");
+      if (email != null && email.equals("0")) {
+        return email;
+      }
+    } while (email == null);
+
+    return email;
+  }
+
+  public RedBlackTreeMap<String, Patient> getEmailSearchResult(String email) {
+    RedBlackTreeMap<String, Patient> resultsMap = new RedBlackTreeMap<>();
+    ArrayList<String> keys = patientMap.getKeys();
+    for (String key : keys) {
+      if (patientMap.get(key).getEmail().equals(email)) {
+        resultsMap.put(patientMap.get(key).getPatientId(), patientMap.get(key));
+      }
+    }
+    return resultsMap;
+  }
+
+  public String runAddressSearch() {
+    String address = null;
+    do {
+      address = runAddressInput("");
+      if (address != null && address.equals("0")) {
+        return address;
+      }
+    } while (address == null);
+
+    return address;
+  }
+
+  public RedBlackTreeMap<String, Patient> getAddressSearchResult(String address) {
+    RedBlackTreeMap<String, Patient> resultsMap = new RedBlackTreeMap<>();
+    ArrayList<String> keys = patientMap.getKeys();
+    for (String key : keys) {
+      if (patientMap.get(key).getAddress().toLowerCase().contains(address.toLowerCase())) {
+        resultsMap.put(patientMap.get(key).getPatientId(), patientMap.get(key));
+      }
+    }
+    return resultsMap;
+  }
+
+  public String runRegistrationDateSearch() {
+    String registrationDate = null;
+    do {
+      registrationDate = runRegistrationDateInput();
+      if (registrationDate != null && registrationDate.equals("0")) {
+        return registrationDate;
+      }
+    } while (registrationDate == null);
+
+    return registrationDate;
+  }
+
+  public RedBlackTreeMap<String, Patient> getRegistrationDateSearchResult(String registrationDate) {
+    RedBlackTreeMap<String, Patient> resultsMap = new RedBlackTreeMap<>();
+    ArrayList<String> keys = patientMap.getKeys();
+    for (String key : keys) {
+      if (patientMap.get(key).getRegistrationDate().equals(Utilities.formatDate(registrationDate))) {
+        resultsMap.put(patientMap.get(key).getPatientId(), patientMap.get(key));
+      }
+    }
+    return resultsMap;
+  }
+
+  public String runBloodTypeSearch() {
+    String bloodType = null;
+    do {
+      bloodType = runBloodTypeInput("");
+      if (bloodType != null && bloodType.equals("0")) {
+        return bloodType;
+      }
+    } while (bloodType == null);
+
+    switch (bloodType.charAt(0)) {
+      case '1':
+        bloodType = "A";
+        break;
+      case '2':
+        bloodType = "B";
+        break;
+      case '3':
+        bloodType = "AB";
+        break;
+      case '4':
+        bloodType = "O";
+        break;
+    }
+
+    return bloodType;
+  }
+
+  public RedBlackTreeMap<String, Patient> getBloodTypeSearchResult(String bloodType) {
+    RedBlackTreeMap<String, Patient> resultsMap = new RedBlackTreeMap<>();
+    ArrayList<String> keys = patientMap.getKeys();
+    for (String key : keys) {
+      if (patientMap.get(key).getBloodType().equals(BloodType.valueOf(bloodType))) {
+        resultsMap.put(patientMap.get(key).getPatientId(), patientMap.get(key));
+      }
+    }
+    return resultsMap;
   }
 
   public void runPatientClearance() {
-
-    String[] response;
-    String[] vResponse;
-    
-    if (!patientMap.isEmpty()) {
-      response = patientUI.runPatientClearanceMenu();
-      vResponse = PatientValidation.validatePatientClearance(response[0], response[1].toCharArray());
-      if (Boolean.parseBoolean(vResponse[0])) {
-        if (vResponse[1].equals("1")) {
-          patientMap.clear();
-          patientDAO.clearFile();
-          patientDAO.saveToFile(patientMap);
-          Patient.setLastId(0);
-          System.out.println("Patient records cleared.");
-          Utilities.pressAnyKey();
-        }
-      }
-    } else {
+    if (patientMap.isEmpty()) {
+      System.out.println();
       System.out.println("Error! Clearance can only be performed when there are existing Patient records.");
       Utilities.pressAnyKey();
+      return;
     }
+
+    String action = null;
+    do {
+      Utilities.clearScreen();
+      char[] inputOptions = patientUI.displayRecordClearanceMenu();
+      String userInput = patientUI.getGeneralInput();
+      action = (PatientValidation.validateCharInput(userInput, inputOptions)) ? userInput : null;
+    } while (action == null);
+
+    if (action.equals("0")) {
+      return;
+    }
+
+    System.out.println();
+    patientMap.clear();
+    patientDAO.clearFile();
+    patientDAO.writeToFile(patientMap);
+    Patient.setLastId(0);
+    System.out.println("Patient Record Clearance DONE!");
+    Utilities.pressAnyKey();
   }
-  
+
   public void runPatientInitialization() {
-    if (patientMap.isEmpty()) {
-      int sampleSize = patientUI.inputSampleSize();
-      if (sampleSize > 0) {
-        System.out.println("Initializing new sample Patient records...");
-        Utilities.wait(1000);
-        patientMap = patientInitializer.initializeSamplePatients(sampleSize);
-        patientDAO.saveToFile(patientMap);
-        System.out.println("Initialization done.");
-        Utilities.pressAnyKey();
-      }
-    } else {
+    if (!patientMap.isEmpty()) {
+      System.out.println();
       System.out.println("Error! Initialization can only be performed when there are no existing Patient records.");
       Utilities.pressAnyKey();
+      return;
     }
+
+    String action = null;
+    do {
+      Utilities.clearScreen();
+      char[] inputOptions = patientUI.displayInitializationSizeInput();
+      String userInput = patientUI.getGeneralInput();
+      action = (PatientValidation.validateInitializationSizeInput(userInput, inputOptions)) ? userInput : null;
+    } while (action == null);
+
+    if (action.equals("0")) {
+      return;
+    }
+
+    String confirm = null;
+    do {
+      Utilities.clearScreen();
+      char[] inputOptions = patientUI.displayInitializationConfirmationMenu();
+      String userInput = patientUI.getGeneralInput();
+      confirm = (PatientValidation.validateCharInput(userInput, inputOptions)) ? userInput : null;
+    } while (confirm == null);
+
+    if (confirm.equals("0")) {
+      return;
+    }
+
+    System.out.println();
+    System.out.println("Initiating Patient Initialization...");
+    patientMap = patientInitializer.initializeSamplePatients(Integer.parseInt(action));
+    patientDAO.writeToFile(patientMap);
+    System.out.println("Patient Initialization DONE!");
+    Utilities.pressAnyKey();
   }
 }

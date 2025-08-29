@@ -1,8 +1,9 @@
 package utility;
 
-import adt.ListInterface;
-import adt.RedBlackTreeMap;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -11,42 +12,77 @@ import java.util.Scanner;
  * @author Tan Kai Hao
  */
 public class Validation {
-  
-  public static boolean isSingleChar(String input) {
+  public static boolean isChar(String input) {
     return input.length() == 1;
   }
 
-  public static boolean isValidOption(char input, char[] options) {
-    for (char option : options) {
-      if (input == option) {
+  public static boolean isNumeric(String input) {
+    return input.matches("\\d+");
+  }
+
+  public static boolean withinLength(String input, int length) {
+    return input.length() <= length;
+  }
+
+  public static boolean withinRange(int input, int min, int max) {
+    return input >= min && input <= max;
+  }
+
+  public static boolean isValidDate(String input) {
+    try {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+      LocalDate date = LocalDate.parse(input, formatter);
+      if (date == null) {
+        return false;
+      }
+      return true;
+    } catch (DateTimeParseException e) {
+      return false;
+    }
+  }
+
+  public static boolean isFutureDate(String input) {
+    try {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+      LocalDate date = LocalDate.parse(input, formatter);
+      return date.isAfter(LocalDate.now());
+    } catch (DateTimeParseException e) {
+      return false;
+    }
+  }
+
+  public static boolean isWithinOneYear(String input) {
+    try {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+      LocalDate date = LocalDate.parse(input, formatter);
+      LocalDate today = LocalDate.now();
+      LocalDate dateOneYearLater = today.plusYears(1);
+      return date.isAfter(today) && date.isBefore(dateOneYearLater);
+    } catch (DateTimeParseException e) {
+      return false;
+    }
+  }
+
+  public static boolean isValidTime(String input) {
+    try {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HHmm");
+      LocalTime time = LocalTime.parse(input, formatter);
+      if (time == null) {
+        return false;
+      }
+      return true;
+    } catch (DateTimeParseException e) {
+      return false;
+    }
+  }
+
+  public static boolean isValidOption(char input, char[] inputOptions) {
+    for (char option : inputOptions) {
+      if (option == input) {
         return true;
       }
     }
     return false;
-  }
-
-  public static boolean isUniqueIcNumber(RedBlackTreeMap<String, ?> map, String input) {
-    if (!map.containsValue(input)) {
-      return true;
-    }
-    return false;
-  }
-
-  public static boolean isValidId(RedBlackTreeMap<String, ?> map, String input) {
-    return map.containsKey(input);
-  }
-
-  public static boolean isValidId(ListInterface<?> list, String input) {
-    return list.contains(input);
-  }
-
-  public static boolean isIcNumberFormat(String input) {
-    input = input.replaceAll("[\\s-]", "");
-    return input.matches("^\\d{12}$");
-  }
-
-  public static boolean isNumeric(String input) {
-    return input.matches("^\\d+$");
   }
 
   public static boolean isValidIcBirthDate(String input) {
@@ -70,60 +106,48 @@ public class Validation {
     return true;
   }
 
-  public static boolean isExceedLength(String input, int maxLength) {
-    return input.length() <= maxLength;
+  public static boolean isValidIcNumber(String input) {
+    if (!input.matches("^\\d{6}-\\d{2}-\\d{4}$")) {
+      MessageUI.invalidIcNumber();
+      return false;
+    }
+
+    if (!isValidIcBirthDate(input.substring(0, 6))) {
+      MessageUI.invalidIcBirthDate();
+      return false;
+    }
+
+    return true;
   }
-  
+
   public static boolean isValidName(String input) {
     return input.matches("^[a-zA-Z ]+$");
   }
 
-  public static boolean isContactNumberFormat(String input) {
-    input = input.replaceAll("[\\s-]", "");
-    return input.matches("^01\\d{8,9}$");
+  public static boolean isValidBirthDate(String input) {
+    try {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+      LocalDate date = LocalDate.parse(input, formatter);
+      if (date.isAfter(LocalDate.now())) {
+        return false;
+      }
+      return true;
+    } catch (DateTimeParseException e) {
+      return false;
+    }
   }
 
-  public static boolean isEmailFormat(String input) {
+  public static boolean isValidContactNumber(String input) {
+    return input.matches("^01\\d-\\d{3} \\d{4}$|^01\\d-\\d{4} \\d{4}$");
+  }
+
+  public static boolean isValidEmail(String input) {
     return input.matches("^[\\w-\\+]+(\\.[\\w]+)*@([\\w-]+\\.)+[\\w-]{2,4}$");
   }
 
-  public static boolean isEqualsLength(String input, int length) {
-    return input.length() == length;
-  }
+  
 
-  public static boolean isValidDate(String input) {
-    int year = Integer.parseInt(input.substring(0, 4));
-    int month = Integer.parseInt(input.substring(4, 6));
-    int day = Integer.parseInt(input.substring(6, 8));
-
-    int currentYear = LocalDate.now().getYear();
-    int century = (currentYear / 100) * 100;
-    year = year > (currentYear % 100) ? century - 100 + year : century + year;
-
-    if (month < 1 || month > 12) {
-      return false;
-    }
-
-    int daysInMonth = LocalDate.of(year, month, 1).lengthOfMonth();
-    if (day < 1 || day > daysInMonth) {
-      return false;
-    }
-
-    return true;
-  }
-
-  public static boolean isValidTime(String input) {
-    int hour = Integer.parseInt(input.substring(0, 2));
-    int minute = Integer.parseInt(input.substring(2, 4));
-    if (hour < 0 || hour > 23) {
-      return false;
-    }
-    if (minute < 0 || minute > 59) {
-      return false;
-    }
-    return true;
-  }
-
+  // Chee Kit
   public static int getValidIntegerInput(Scanner scanner, String prompt) {
     int input = -1;
     boolean isValid = false;

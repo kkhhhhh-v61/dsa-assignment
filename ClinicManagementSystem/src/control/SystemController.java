@@ -8,14 +8,14 @@ import boundary.SystemUI;
 import boundary.TreatmentUI;
 import dao.PatientDAO;
 import entity.Patient;
-import utility.MessageUI;
-import utility.Validation;
+import utility.Utilities;
 
 /**
  *
  * @author Tan Kai Hao
  */
 public class SystemController {
+  private final static int ID_LENGTH = 4;
 
   ConsultationUI consultationUI = new ConsultationUI();
   DoctorUI doctorUI = new DoctorUI();
@@ -30,124 +30,106 @@ public class SystemController {
 
   PatientDAO patientDAO = new PatientDAO();
 
-  RedBlackTreeMap<String, Patient> patientMap = new RedBlackTreeMap<>();
+  RedBlackTreeMap<String, Patient> patientMap;
+
+  public SystemController() {
+    patientMap = patientDAO.readFromFile();
+  }
   
   public void runClinicStaffPortal() {
-
     boolean exit = false;
-    String[] response;
-    char userInput;
-    char[] inputOptions;
-
     do {
-      response = systemUI.runClinicStaffMenu();
-      inputOptions = response[1].toCharArray();
+      Utilities.clearScreen();
+      char[] inputOptions = systemUI.displayClinicStaffPortalMenu();
+      String userInput = systemUI.getGeneralInput();
+      boolean valid = SystemValidation.validateCharInput(userInput, inputOptions);
 
-      if (response[0] != "") {
-        if (Validation.isSingleChar(response[0])) {
-          userInput = response[0].charAt(0);
-
-          if (Validation.isValidOption(userInput, inputOptions)) {
-            switch (userInput) {
-              case '1':
-                patientController.runPatientManagement();
-                break;
-              case '2':
-                doctorUI.showDoctorMenu();
-                break;
-              case '3':
-                appointmentController.runAppointmentManagement();
-                break;
-              case '4':
-                consultationController.syncConsultationsWithAppointments();
-                consultationUI.runMenu();
-                break;
-              case '5':
-                treatmentUI.runMenu();
-                break;
-              case '6':
-                pharmacyUI.displayPharmacyMenu();
-                break;
-              case '7':
-                break;
-              case '0':
-                exit = true;
-                break;
-            }
-          } else {
-            MessageUI.notValidOption(inputOptions);
-          }
-        } else {
-          MessageUI.notSingleChar();
+      if (valid) {
+        switch (userInput.charAt(0)) {
+          case '1':
+            patientController.runPatientManagement();
+            break;
+          case '2':
+            doctorUI.showDoctorMenu();
+            break;
+          case '3':
+            appointmentController.runAppointmentManagement();
+            break;
+          case '4':
+            consultationController.syncConsultationsWithAppointments();
+            consultationUI.runMenu();
+            break;
+          case '5':
+            treatmentUI.runMenu();
+            break;
+          case '6':
+            pharmacyUI.displayPharmacyMenu();
+            break;
+          case '7':
+            break;
+          case '0':
+            exit = true;
+            break;
         }
       }
     } while (!exit);
   }
   
   public void runStudentPortal() {
+    String[] response = runPatientIdLogin();
+    String patientId = response[1];
     
-    patientMap = patientDAO.retrieveFromFile();
-    String patientId = "";
-    
-    boolean exit = false;
-    String[] response;
-    String[] vResponse;
-    char userInput;
-    char[] inputOptions;
-
-    do {
-      response = systemUI.inputPatientId();
-      vResponse = AppointmentValidation.validatePatientIdExistence(patientMap, response[0], response[1].toCharArray());
-
-      if (Boolean.parseBoolean(vResponse[0])) {
-        if (!vResponse[1].equals("0")) {
-          patientId = vResponse[1];
-        }
-        exit = true;
-      }
-    } while (!exit);
-
-    if (vResponse[1].equals("0")) {
+    if (!Boolean.parseBoolean(response[0])) {
       return;
-    } else {
-      systemUI.loginSuccess(patientMap.get(vResponse[1]));
     }
 
+    boolean exit = false;
     do {
-      exit = false;
-      
-      response = systemUI.runStudentMenu();
-      inputOptions = response[1].toCharArray();
+      Utilities.clearScreen();
+      char[] inputOptions = systemUI.displayStudentPortalMenu();
+      String userInput = systemUI.getGeneralInput();
+      boolean valid = SystemValidation.validateCharInput(userInput, inputOptions);
 
-      if (response[0] != "") {
-        if (Validation.isSingleChar(response[0])) {
-          userInput = response[0].charAt(0);
-
-          if (Validation.isValidOption(userInput, inputOptions)) {
-            switch (userInput) {
-              case '1':
-                queueController.runStudentQueue(patientId);
-                break;
-              case '2':
-                appointmentController.runStudentAppointment(patientId);
-                break;
-              case '3':
-                consultationUI.runStudent(patientId);
-                break;
-              case '4':
-                treatmentUI.runStudentMenu(patientId);
-                break;
-              case '0':
-                exit = true;
-                break;
-            }
-          } else {
-            MessageUI.notValidOption(inputOptions);
-          }
-        } else {
-          MessageUI.notSingleChar();
+      if (valid) {
+        patientId = "P" + response[1];
+        switch (userInput.charAt(0)) {
+          case '1':
+            // queueController.runStudentQueue(patientId);
+            break;
+          case '2':
+            appointmentController.runStudentAppointment(patientId);
+            break;
+          case '3':
+            consultationUI.runStudent(patientId);
+            break;
+          case '4':
+            treatmentUI.runStudentMenu(patientId);
+            break;
+          case '0':
+            exit = true;
+            break;
         }
       }
     } while (!exit);
+  }
+
+  public String[] runPatientIdLogin() {
+    boolean valid = false;
+    String userInput;
+    do {
+      Utilities.clearScreen();
+      char[] inputOptions = systemUI.displayPatientIdLoginInput();
+      userInput = systemUI.getSpecificInput("P");
+      valid = SystemValidation.validatePatientIdLogin(userInput, inputOptions, ID_LENGTH);
+    } while (!valid);
+
+    if (userInput.equals("0")) {
+      return new String[] { "false", userInput };
+    }
+
+    Utilities.clearScreen();
+    systemUI.displayLoginSuccess(patientMap.get("P" + userInput));
+    Utilities.pressAnyKey();
+    return new String[] { "true", userInput };
   }
 }

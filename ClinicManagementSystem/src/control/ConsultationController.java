@@ -22,7 +22,7 @@ public class ConsultationController {
 
     public void syncConsultationsWithAppointments() {
     // Load all appointments from file
-    RedBlackTreeMap<String, Appointment> apptMap = appointmentDAO.retrieveFromFile();
+    RedBlackTreeMap<String, Appointment> apptMap = appointmentDAO.readFromFile();
     ArrayList<String> keys = apptMap.getKeys(); // your adt.ArrayList (1-based)
 
     for (int i = 1; i <= keys.size(); i++) {

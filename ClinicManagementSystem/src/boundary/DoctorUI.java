@@ -489,7 +489,7 @@ public class DoctorUI {
         System.out.println(header);
         System.out.println(topBorder);
 
-        for (int i = 1; i < schedules.size(); i++) {
+        for (int i = 1; i <= schedules.size(); i++) {
             Schedule s = schedules.get(i);
             String status = s.getIsAvailable() ? "Available" : "Booked";
             System.out.printf("| %-10s | %-9s | %-11s | %-9s | %-11s |\n",

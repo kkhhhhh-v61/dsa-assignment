@@ -8,15 +8,32 @@ import utility.Utilities;
  * @author Tan Kai Hao
  */
 public class SystemUI {
-
-  public String[] runMainMenu() {
-
-    final char[] INPUT_OPTIONS = { '1', '2', '0' };
-
+  public String getGeneralInput() {
     System.out.println();
+    System.out.print("> ");
+    return Utilities.getUserInput().nextLine().trim();
+  }
 
-    Utilities.clearScreen();
+  public String getSpecificInput(String prefix) {
+    System.out.println();
+    System.out.print("> " + prefix);
+    return Utilities.getUserInput().nextLine().trim();
+  }
 
+  public void displayFormatInfo(String format) {
+    System.out.println();
+    System.out.println("[FORMAT] " + format);
+  }
+
+  public void displayOptionsInfo(String[] options) {
+    System.out.println();
+    for (String option : options) {
+      System.out.println(option);
+    }
+  }
+
+  public void displayTitle() {
+    System.out.println();
     System.out.println("+==================================================================================================+");
     System.out.println("|                 ##   ##  ##   ##  #######     #######   #####   ######   #######                 |");
     System.out.println("|                 ##   ##  ###  ##    ###       ##       ##   ##  ##   ##  ##                      |");
@@ -28,29 +45,21 @@ public class SystemUI {
     System.out.println("+==================================================================================================+");
     System.out.println("|                                     CLINIC MANAGEMENT SYSTEM                                     |");
     System.out.println("+==================================================================================================+");
+  }
 
+  public char[] displayMainMenu() {
     System.out.println();
-
     System.out.println("+-------------------------+");
     System.out.println("| [1] Clinic Staff Portal |");
     System.out.println("| [2] Student Portal      |");
     System.out.println("| [0] Exit                |");
     System.out.println("+-------------------------+");
 
-    System.out.println();
-
-    System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
+    return new char[] { '1', '2', '0' };
   }
   
-  public String[] runClinicStaffMenu() {
-
-    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '5', '6', '7', '0' };
-
+  public char[] displayClinicStaffPortalMenu() {
     System.out.println();
-
-    Utilities.clearScreen();
-
     System.out.println("+-----------------------------+");
     System.out.println("|     CLINIC STAFF PORTAL     |");
     System.out.println("+-----------------------------+");
@@ -64,62 +73,33 @@ public class SystemUI {
     System.out.println("| [0] Return                  |");
     System.out.println("+-----------------------------+");
 
-    System.out.println();
-
-    System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
+    return new char[] { '1', '2', '3', '4', '5', '6', '7', '0' };
   }
 
-  public String[] inputPatientId() {
-
-    final char[] INPUT_OPTIONS = { '0' };
-
+  public char[] displayPatientIdLoginInput() {
     System.out.println();
-
-    Utilities.clearScreen();
-
     System.out.println("+------------------------+");
     System.out.println("| LOG IN WITH PATIENT ID |");
     System.out.println("+------------------------+");
 
-    System.out.println();
+    displayFormatInfo("PXXXX");
+    displayOptionsInfo(new String[] { "[0] Cancel" });
 
-    System.out.println("[FORMAT] PXXXX");
-
-    System.out.println();
-    
-    System.out.println("[0] Exit");
-
-    System.out.println();
-
-    System.out.print("> P");
-    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
+    return new char[] { '0' };
   }
 
-  public void loginSuccess(Patient patient) {
-
+  public void displayLoginSuccess(Patient patient) {
     System.out.println();
-
-    Utilities.clearScreen();
-
     System.out.println("+------------------+ ");
     System.out.println("| LOGIN SUCCESSFUL | ");
     System.out.println("+------------------+ ");
 
     System.out.println();
-
-    System.out.println("Welcome " + patient.getPatientId() + " : " + patient.getName());
-    Utilities.pressAnyKey();
+    System.out.println("WELCOME [" + patient.getPatientId() + "] " + patient.getName() + "!");
   }
   
-  public String[] runStudentMenu() {
-
-    final char[] INPUT_OPTIONS = { '1', '2', '3', '4', '0' };
-
+  public char[] displayStudentPortalMenu() {
     System.out.println();
-
-    Utilities.clearScreen();
-
     System.out.println("+------------------------+");
     System.out.println("|     STUDENT PORTAL     |");
     System.out.println("+------------------------+");
@@ -130,9 +110,6 @@ public class SystemUI {
     System.out.println("| [0] Return             |");
     System.out.println("+------------------------+");
 
-    System.out.println();
-
-    System.out.print("> ");
-    return new String[] { Utilities.getUserInput().nextLine().trim(), String.valueOf(INPUT_OPTIONS) };
+    return new char[] { '1', '2', '3', '4', '0' };
   }
 }

@@ -1,6 +1,5 @@
 package adt;
 
-import entity.Patient;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.io.Serializable;
@@ -441,37 +440,6 @@ public class RedBlackTreeMap<K extends Comparable<K>, V> implements MapInterface
     if (node != null) {
       node.color = BLACK;
     }
-  }
-  
-  // try to find replacement code for this
-  public boolean containsUniqueValue(String attribute, String value) {
-    if (root == null) {
-      return false;
-    }
-
-    LinkedQueue<Node<K, V>> queue = new LinkedQueue<>();
-    queue.offer(root);
-
-    while (!queue.isEmpty()) {
-      Node<K, V> current = queue.poll();
-
-      if (current.value instanceof Patient) {
-        Patient patient = (Patient) current.value;
-        if (attribute.equals("icNumber")) {
-          if (patient.getIcNumber().equals(value)) {
-            return true;
-          }
-        }
-      }
-
-      if (current.left != null) {
-          queue.offer(current.left);
-      }
-      if (current.right != null) {
-          queue.offer(current.right);
-      }
-    }
-    return false;
   }
   
   @Override

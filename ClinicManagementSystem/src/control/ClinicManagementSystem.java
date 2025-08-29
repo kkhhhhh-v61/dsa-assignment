@@ -12,8 +12,7 @@
 package control;
 
 import boundary.SystemUI;
-import utility.MessageUI;
-import utility.Validation;
+import utility.Utilities;
 
 /**
  *
@@ -26,37 +25,25 @@ public class ClinicManagementSystem {
   private static SystemController systemController = new SystemController();
   
   public static void main(String[] args) {
-
     boolean exit = false;
-    String[] response;
-    char userInput;
-    char[] inputOptions;
-    
     do {
-      response = systemUI.runMainMenu();
-      inputOptions = response[1].toCharArray();
+      Utilities.clearScreen();
+      systemUI.displayTitle();
+      char[] inputOptions = systemUI.displayMainMenu();
+      String userInput = systemUI.getGeneralInput();
+      boolean valid = SystemValidation.validateCharInput(userInput, inputOptions);
 
-      if (response[0] != "") {
-        if (Validation.isSingleChar(response[0])) {
-          userInput = response[0].charAt(0);
-
-          if (Validation.isValidOption(userInput, inputOptions)) {
-            switch (userInput) {
-              case '1':
-                systemController.runClinicStaffPortal();
-                break;
-              case '2':
-                systemController.runStudentPortal();
-                break;
-              case '0':
-                exit = true;
-                break;
-            }
-          } else {
-            MessageUI.notValidOption(inputOptions);
-          }
-        } else {
-          MessageUI.notSingleChar();
+      if (valid) {
+        switch (userInput.charAt(0)) {
+          case '1':
+            systemController.runClinicStaffPortal();
+            break;
+          case '2':
+            systemController.runStudentPortal();
+            break;
+          case '0':
+            exit = true;
+            break;
         }
       }
     } while (!exit);

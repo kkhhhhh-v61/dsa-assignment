@@ -12,7 +12,6 @@ import java.time.LocalTime;
  * @author Tan Kai Hao
  */
 public class Utilities {
-
   public static void wait(int milliseconds) {
     try {
       Thread.sleep(milliseconds);

@@ -6,7 +6,7 @@ import entity.Schedule;
 import utility.Enum.DayOfWeek;
 import utility.Enum.Specialization;
 // import utility.MessageUI;
-import utility.Utilities;
+// import utility.Utilities;
 import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
@@ -14,17 +14,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-/** This class is specifically created for the Appointment module because I like to use my own code and
- *  can't be bothered to understand the Doctor module. :)
- * 
- *  PS: The actual reason is that I was frustrated because when I was initially trying to retrieve the
- *  required data using the Doctor DAO, but it kept giving the wrong result. I suspected there's probably a bug in the Doctor
- *  module, but I don't have the time to fix it + it's not my assigned module. :)
- * 
- *  If anyone sees this and wants to fix it, please do so. Although I will still be using this even if
- *  the Doctor module is fixed. :)
- * 
- *  TL;DR: I'm lazy.
+/** 
  *
  * @author Tan Kai Hao
  */
@@ -36,21 +26,21 @@ public class DoctorScheduleDAO {
   public DoctorScheduleDAO() {
     try {
       if (!dataFileDoctor.exists()) {
-        System.out.println("File: 'doctors.txt' doesn't exist. Creating it now...");
+        // System.out.println("File: 'doctors.txt' doesn't exist. Creating it now...");
         dataFileDoctor.getParentFile().mkdirs();
         dataFileDoctor.createNewFile();
-        System.out.println("File: 'doctors.txt' created successfully.");
-        Utilities.wait(1000);
+        // System.out.println("File: 'doctors.txt' created successfully.");
+        // Utilities.wait(1000);
       }
     } catch (IOException e) {
-      System.out.println("File: 'doctors.txt' creation failed.");
-      Utilities.wait(1000);
-      // e.printStackTrace();
+      // System.out.println("File: 'doctors.txt' creation failed.");
+      // Utilities.wait(1000);
+      e.printStackTrace();
       // MessageUI.pressAnyKey();
     }
   }
 
-  public ArrayList<?> retrieveFromFile(String retrieveType) {
+  public ArrayList<?> readFromFile(String retrieveType) {
 
     if (retrieveType.equals("doctor")) {
 
@@ -81,9 +71,9 @@ public class DoctorScheduleDAO {
         fileReader.close();
         
       } catch (Exception e) {
-        System.out.println("File: 'doctors.txt' reading failed.");
-        Utilities.wait(1000);
-        // e.printStackTrace();
+        // System.out.println("File: 'doctors.txt' reading failed.");
+        // Utilities.wait(1000);
+        e.printStackTrace();
         // MessageUI.pressAnyKey();
       }
       
@@ -110,9 +100,9 @@ public class DoctorScheduleDAO {
         bufferedReader.close();
         fileReader.close();
       } catch (Exception e) {
-        System.out.println("File: 'schedules.txt' reading failed.");
-        Utilities.wait(1000);
-        // e.printStackTrace();
+        // System.out.println("File: 'schedules.txt' reading failed.");
+        // Utilities.wait(1000);
+        e.printStackTrace();
         // MessageUI.pressAnyKey();
       }
       

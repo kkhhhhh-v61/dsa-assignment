@@ -3,7 +3,7 @@ package dao;
 import adt.RedBlackTreeMap;
 import entity.Appointment;
 // import utility.MessageUI;
-import utility.Utilities;
+// import utility.Utilities;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,41 +23,41 @@ public class AppointmentDAO {
   public AppointmentDAO() {
     try {
       if (!dataFile.exists()) {
-        System.out.println("File: 'appointment.dat' doesn't exist. Creating it now...");
+        // System.out.println("File: 'appointment.dat' doesn't exist. Creating it now...");
         dataFile.getParentFile().mkdirs();
         dataFile.createNewFile();
-        System.out.println("File: 'appointment.dat' created successfully.");
-        Utilities.wait(1000);
+        // System.out.println("File: 'appointment.dat' created successfully.");
+        // Utilities.wait(1000);
       }
     } catch (IOException e) {
-      System.out.println("File: 'appointment.dat' creation failed.");
-      Utilities.wait(1000);
-      // e.printStackTrace();
+      // System.out.println("File: 'appointment.dat' creation failed.");
+      // Utilities.wait(1000);
+      e.printStackTrace();
       // MessageUI.pressAnyKey();
     }
   }
 
 
-  public void saveToFile(RedBlackTreeMap<String, Appointment> appointmentMap) {
+  public void writeToFile(RedBlackTreeMap<String, Appointment> appointmentMap) {
     try {
       ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dataFile));
       oos.writeObject(appointmentMap);
       oos.close();
     } catch (FileNotFoundException e) {
-      System.out.println("File: 'appointment.dat' not found.");
-      Utilities.wait(1000);
-      // e.printStackTrace();
+      // System.out.println("File: 'appointment.dat' not found.");
+      // Utilities.wait(1000);
+      e.printStackTrace();
       // MessageUI.pressAnyKey();
     } catch (IOException e) {
-      System.out.println("File: 'appointment.dat' writing failed.");
-      Utilities.wait(1000);
-      // e.printStackTrace();
+      // System.out.println("File: 'appointment.dat' writing failed.");
+      // Utilities.wait(1000);
+      e.printStackTrace();
       // MessageUI.pressAnyKey();
     }
   }
 
   @SuppressWarnings("unchecked")
-  public RedBlackTreeMap<String, Appointment> retrieveFromFile() {
+  public RedBlackTreeMap<String, Appointment> readFromFile() {
 
     RedBlackTreeMap<String, Appointment> appointmentMap = new RedBlackTreeMap<>();
 
@@ -66,19 +66,19 @@ public class AppointmentDAO {
       appointmentMap = (RedBlackTreeMap<String, Appointment>) ois.readObject();
       ois.close();
     } catch (FileNotFoundException e) {
-      System.out.println("File: 'appointment.dat' not found.");
-      Utilities.wait(1000);
-      // e.printStackTrace();
+      // System.out.println("File: 'appointment.dat' not found.");
+      // Utilities.wait(1000);
+      e.printStackTrace();
       // MessageUI.pressAnyKey();
     } catch (IOException e) {
-      System.out.println("File: 'appointment.dat' reading failed.");
-      Utilities.wait(1000);
-      // e.printStackTrace();
+      // System.out.println("File: 'appointment.dat' reading failed.");
+      // Utilities.wait(1000);
+      e.printStackTrace();
       // MessageUI.pressAnyKey();
     } catch (ClassNotFoundException e) {
-      System.out.println("File: 'appointment.dat' reading failed.");
-      Utilities.wait(1000);
-      // e.printStackTrace();
+      // System.out.println("File: 'appointment.dat' reading failed.");
+      // Utilities.wait(1000);
+      e.printStackTrace();
       // MessageUI.pressAnyKey();
     }
     return appointmentMap;
@@ -89,12 +89,12 @@ public class AppointmentDAO {
       dataFile.delete();
       dataFile.getParentFile().mkdirs();
       dataFile.createNewFile();
-      System.out.println("File: 'appointment.dat' cleared successfully.");
-      Utilities.wait(1000);
+      // System.out.println("File: 'appointment.dat' cleared successfully.");
+      // Utilities.wait(1000);
     } catch (Exception e) {
-      System.out.println("File: 'appointment.dat' clearing failed.");
-      Utilities.wait(1000);
-      // e.printStackTrace();
+      // System.out.println("File: 'appointment.dat' clearing failed.");
+      // Utilities.wait(1000);
+      e.printStackTrace();
       // MessageUI.pressAnyKey();
     }
   }
