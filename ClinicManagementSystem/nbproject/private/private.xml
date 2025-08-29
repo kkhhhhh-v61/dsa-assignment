@@ -5,6 +5,7 @@
         <group>
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             <file>file:/C:/Users/brian/OneDrive/Documents/NetBeansProjects/dsa-assignment/ClinicManagementSystem/src/entity/Doctor.java</file>
 =======
             <file>file:/C:/Users/brian/OneDrive/Documents/NetBeansProjects/dsa-assignment/ClinicManagementSystem/src/boundary/DoctorUI.java</file>
@@ -17,6 +18,11 @@
             <file>file:/C:/Users/brian/OneDrive/Documents/NetBeansProjects/dsa-assignment/ClinicManagementSystem/src/entity/Patient.java</file>
             <file>file:/C:/Users/brian/OneDrive/Documents/NetBeansProjects/dsa-assignment/ClinicManagementSystem/src/utility/Validation.java</file>
             <file>file:/C:/Users/brian/OneDrive/Documents/NetBeansProjects/dsa-assignment/ClinicManagementSystem/src/utility/DoctorValidator.java</file>
+>>>>>>> Stashed changes
+=======
+            <file>file:/C:/Users/brian/OneDrive/Documents/NetBeansProjects/dsa-assignment/ClinicManagementSystem/src/boundary/DoctorUI.java</file>
+            <file>file:/C:/Users/brian/OneDrive/Documents/NetBeansProjects/dsa-assignment/ClinicManagementSystem/src/control/DoctorController.java</file>
+            <file>file:/C:/Users/brian/OneDrive/Documents/NetBeansProjects/dsa-assignment/ClinicManagementSystem/src/control/ClinicManagementSystem.java</file>
 >>>>>>> Stashed changes
 =======
             <file>file:/C:/Users/brian/OneDrive/Documents/NetBeansProjects/dsa-assignment/ClinicManagementSystem/src/boundary/DoctorUI.java</file>
