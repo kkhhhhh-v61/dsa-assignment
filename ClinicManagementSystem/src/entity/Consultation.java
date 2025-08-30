@@ -132,7 +132,7 @@ public class Consultation implements Serializable{
   }
 
   public String toString() {
-    return "Consultation ID: " + consultationId + "\nAppointment ID: " + appointmentId + "\nPatient ID: " + doctorId + "\nDoctor ID: " + patientId + "\nConsultation Date: " + consultationDate + "\nConsultation Time: " + consultationTime + "\nSymptoms: " + formatList(symptoms) + "\nDiagnosis: " + formatList(diagnosis) + "\nNotes: " + notes + "\nStatus: " + status;
+    return "Consultation ID: " + consultationId + "\nAppointment ID: " + appointmentId + "\nPatient ID: " + patientId + "\nDoctor ID: " + doctorId + "\nConsultation Date: " + consultationDate + "\nConsultation Time: " + consultationTime + "\nSymptoms: " + formatList(symptoms) + "\nDiagnosis: " + formatList(diagnosis) + "\nNotes: " + notes + "\nStatus: " + status;
   }
 
   public String toFileString() {
