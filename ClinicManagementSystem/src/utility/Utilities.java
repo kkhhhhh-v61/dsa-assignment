@@ -21,6 +21,7 @@ public class Utilities {
   }
 
   public static void pressAnyKey() {
+    System.out.println();
     System.out.print("Press any key to continue...");
     getUserInput().nextLine();
   }

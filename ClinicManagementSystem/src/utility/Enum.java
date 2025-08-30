@@ -27,6 +27,6 @@ public class Enum {
   }
 
   public enum Status {
-    Pending, Approved, Rejected, Completed, Cancelled, Waiting, InConsultation, Unknown
+    Pending, Approved, Rejected, Completed, Cancelled, Waiting, Serving, InConsultation, Unknown
   }
 }

@@ -283,13 +283,13 @@ public class PharmacyUI {
             return;
         }
 
-        System.out.printf("%-10s %-25s %-20s %-10s %-10s %-15s %-15s\n",
+        System.out.printf("%-10s %-25s %-20s %-10s %-10s %-15s %-70s\n",
                 "ID", "Name", "Category", "Price", "Stock", "Reorder Level", "Description");
-        System.out.println("-----------------------------------------------------------------------------------------------------------------");
+        System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------");
 
         for (int i = 0; i < medicines.size(); i++) {
             Medicine medicine = medicines.get(i + 1);
-            System.out.printf("%-10s %-25s %-20s %-10.2f %-10d %-15d %-15s\n",
+            System.out.printf("%-10s %-25s %-20s %-10.2f %-10d %-15d %-70s\n",
                     medicine.getMedicineId(),
                     medicine.getName(),
                     medicine.getCategory(),

@@ -1,5 +1,6 @@
 package adt;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -7,7 +8,8 @@ import java.util.NoSuchElementException;
  * 
  * @author Tan Kai Hao
  */
-public class Queue<T> implements QueueInterface<T>, Iterable<T> {
+public class Queue<T> implements QueueInterface<T>, Iterable<T>, Serializable {
+  private static final long serialVersionUID = 1L;
   private Node<T> firstNode;
   private Node<T> lastNode;
   private int size;
@@ -18,7 +20,7 @@ public class Queue<T> implements QueueInterface<T>, Iterable<T> {
     size = 0;
   }
 
-  private static class Node<T> {
+  private static class Node<T> implements Serializable {
     private T data;
     private Node<T> next;
 
@@ -91,6 +93,10 @@ public class Queue<T> implements QueueInterface<T>, Iterable<T> {
   @Override
   public T peek() {
     return (firstNode == null) ? null : firstNode.data;
+  }
+
+  public T peekLast() {
+    return (lastNode == null) ? null : lastNode.data;
   }
 
   @Override

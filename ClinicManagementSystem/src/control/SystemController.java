@@ -37,7 +37,6 @@ public class SystemController {
   }
   
   public void runClinicStaffPortal() {
-    boolean exit = false;
     do {
       Utilities.clearScreen();
       char[] inputOptions = systemUI.displayClinicStaffPortalMenu();
@@ -48,31 +47,30 @@ public class SystemController {
         switch (userInput.charAt(0)) {
           case '1':
             patientController.runPatientManagement();
-            break;
+            continue;
           case '2':
             doctorUI.showDoctorMenu();
-            break;
+            continue;
           case '3':
             appointmentController.runAppointmentManagement();
-            break;
+            continue;
           case '4':
             consultationController.syncConsultationsWithAppointments();
             consultationUI.runMenu();
-            break;
+            continue;
           case '5':
             treatmentUI.runMenu();
-            break;
+            continue;
           case '6':
             pharmacyUI.displayPharmacyMenu();
-            break;
+            continue;
           case '7':
-            break;
+            continue;
           case '0':
-            exit = true;
-            break;
+            return;
         }
       }
-    } while (!exit);
+    } while (true);
   }
   
   public void runStudentPortal() {
@@ -83,7 +81,6 @@ public class SystemController {
       return;
     }
 
-    boolean exit = false;
     do {
       Utilities.clearScreen();
       char[] inputOptions = systemUI.displayStudentPortalMenu();
@@ -94,23 +91,22 @@ public class SystemController {
         patientId = "P" + response[1];
         switch (userInput.charAt(0)) {
           case '1':
-            // queueController.runStudentQueue(patientId);
-            break;
+            queueController.runQueueManagement(patientId);
+            continue;
           case '2':
             appointmentController.runStudentAppointment(patientId);
-            break;
+            continue;
           case '3':
             consultationUI.runStudent(patientId);
-            break;
+            continue;
           case '4':
             treatmentUI.runStudentMenu(patientId);
-            break;
+            continue;
           case '0':
-            exit = true;
-            break;
+            return;
         }
       }
-    } while (!exit);
+    } while (true);
   }
 
   public String[] runPatientIdLogin() {

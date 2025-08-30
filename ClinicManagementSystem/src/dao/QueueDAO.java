@@ -1,8 +1,7 @@
 package dao;
 
 import adt.Queue;
-import adt.QueueInterface;
-import utility.MessageUI;
+// import utility.MessageUI;
 // import utility.Utilities;
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +32,7 @@ public class QueueDAO {
       // System.out.println("File: 'queue.dat' creation failed.");
       // Utilities.wait(1000);
       e.printStackTrace();
-      MessageUI.pressAnyKey();
+      // MessageUI.pressAnyKey();
     }
   }
 
@@ -47,39 +46,39 @@ public class QueueDAO {
       // System.out.println("File: 'queue.dat' not found.");
       // Utilities.wait(1000);
       e.printStackTrace();
-      MessageUI.pressAnyKey();
+      // MessageUI.pressAnyKey();
     } catch (IOException e) {
       // System.out.println("File: 'queue.dat' writing failed.");
       // Utilities.wait(1000);
       e.printStackTrace();
-      MessageUI.pressAnyKey();
+      // MessageUI.pressAnyKey();
     }
   }
 
   @SuppressWarnings("unchecked")
-  public QueueInterface<String[]> readFromFile() {
+  public Queue<String[]> readFromFile() {
 
-    QueueInterface<String[]> queue = new Queue<>();
+    Queue<String[]> queue = new Queue<>();
 
     try {
       ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dataFile));
-      queue = (QueueInterface<String[]>) ois.readObject();
+      queue = (Queue<String[]>) ois.readObject();
       ois.close();
     } catch (FileNotFoundException e) {
       // System.out.println("File: 'queue.dat' not found.");
       // Utilities.wait(1000);
       e.printStackTrace();
-      MessageUI.pressAnyKey();
+      // MessageUI.pressAnyKey();
     } catch (IOException e) {
       // System.out.println("File: 'queue.dat' reading failed.");
       // Utilities.wait(1000);
       e.printStackTrace();
-      MessageUI.pressAnyKey();
+      // MessageUI.pressAnyKey();
     } catch (ClassNotFoundException e) {
       // System.out.println("File: 'queue.dat' reading failed.");
       // Utilities.wait(1000);
       e.printStackTrace();
-      MessageUI.pressAnyKey();
+      // MessageUI.pressAnyKey();
     }
     return queue;
   }
@@ -95,7 +94,7 @@ public class QueueDAO {
       // System.out.println("File: 'queue.dat' clearing failed.");
       // Utilities.wait(1000);
       e.printStackTrace();
-      MessageUI.pressAnyKey();
+      // MessageUI.pressAnyKey();
     }
   }
 }

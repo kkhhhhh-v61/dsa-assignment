@@ -187,6 +187,11 @@ public class MessageUI {
     pressAnyKey();
   }
 
+  public static void emptyQueue() {
+    System.out.println();
+    System.out.println("Error! Waiting Queue is empty.");
+    pressAnyKey();
+  }
 
 
   // Chee Kit

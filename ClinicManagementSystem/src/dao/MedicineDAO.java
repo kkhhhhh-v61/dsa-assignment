@@ -46,7 +46,7 @@ public class MedicineDAO implements Serializable {
     public Medicine getMedicineById(String medicineId) {
         for (int i = 0; i < medicineList.size(); i++) {
             Medicine medicine = medicineList.get(i + 1);
-            if (medicine.getMedicineId().equals(medicineId)) {
+            if (medicine.getMedicineId().equalsIgnoreCase(medicineId)) {
                 return medicine;
             }
         }
@@ -65,7 +65,7 @@ public class MedicineDAO implements Serializable {
     public boolean updateMedicine(Medicine updatedMedicine) {
         for (int i = 0; i < medicineList.size(); i++) {
             Medicine medicine = medicineList.get(i + 1);
-            if (medicine.getMedicineId().equals(updatedMedicine.getMedicineId())) {
+            if (medicine.getMedicineId().equalsIgnoreCase(updatedMedicine.getMedicineId())) {
                 medicineList.replace(i + 1, updatedMedicine);
                 saveMedicines();
                 return true;
@@ -77,7 +77,7 @@ public class MedicineDAO implements Serializable {
     public boolean deleteMedicine(String medicineId) {
         for (int i = 0; i < medicineList.size(); i++) {
             Medicine medicine = medicineList.get(i + 1);
-            if (medicine.getMedicineId().equals(medicineId)) {
+            if (medicine.getMedicineId().equalsIgnoreCase(medicineId)) {
                 medicineList.remove(i + 1);
                 saveMedicines();
                 return true;

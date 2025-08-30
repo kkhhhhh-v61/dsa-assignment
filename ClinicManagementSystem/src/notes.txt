@@ -1,6 +1,4 @@
 [TODO]
-- refactor patient module code structure (DONE, IN TESTING)
-- refactor appointment module code structure
 - student view upcoming appointment (LOW PRIORITY)
 - appointment initialization
 - student queue registration (IN PROGRESS)

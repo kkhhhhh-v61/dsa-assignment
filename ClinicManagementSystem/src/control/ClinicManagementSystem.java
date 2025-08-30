@@ -25,7 +25,6 @@ public class ClinicManagementSystem {
   private static SystemController systemController = new SystemController();
   
   public static void main(String[] args) {
-    boolean exit = false;
     do {
       Utilities.clearScreen();
       systemUI.displayTitle();
@@ -37,15 +36,14 @@ public class ClinicManagementSystem {
         switch (userInput.charAt(0)) {
           case '1':
             systemController.runClinicStaffPortal();
-            break;
+            continue;
           case '2':
             systemController.runStudentPortal();
-            break;
+            continue;
           case '0':
-            exit = true;
-            break;
+            return;
         }
       }
-    } while (!exit);
+    } while (true);
   }
 }

@@ -199,14 +199,14 @@ public class AppointmentController {
       boolean valid = AppointmentValidation.validateIdInput('A', userInput, inputOptions, ID_LENGTH);
 
       if (valid) {
-        switch (Character.toUpperCase(userInput.charAt(0))) {
-          case 'Q':
+        switch (userInput.toUpperCase()) {
+          case "Q":
             page = Math.max(1, page - 1);
             continue;
-          case 'E':
+          case "E":
             page = Math.min((appointmentMap.size() > 0) ? (appointmentMap.size() + 9) / 10 : 1, page + 1);
             continue;
-          case '0':
+          case "0":
             return;
           default:
             runStatusEdit("A" + userInput);
@@ -404,6 +404,7 @@ public class AppointmentController {
 
     String status = null;
     do {
+      Utilities.clearScreen();
       status = runStatusInput(appointment.getStatus().toString());
       if (status != null && status.equals("0")) {
         return;

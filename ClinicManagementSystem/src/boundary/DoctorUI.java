@@ -466,7 +466,7 @@ public class DoctorUI {
             System.out.println("Schedule added successfully!");
         } else {
             System.out.println("Error adding schedule:");
-            for (int i = 0; i < errors.size(); i++) {
+            for (int i = 1; i <= errors.size(); i++) {
                 System.out.println("- " + errors.get(i));
             }
         }
