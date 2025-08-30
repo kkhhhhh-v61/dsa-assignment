@@ -46,25 +46,26 @@ public class SystemController {
       if (valid) {
         switch (userInput.charAt(0)) {
           case '1':
-            patientController.runPatientManagement();
+            queueController.runQueueManagement();
             continue;
           case '2':
-            doctorUI.showDoctorMenu();
+            patientController.runPatientManagement();
             continue;
           case '3':
-            appointmentController.runAppointmentManagement();
+            doctorUI.showDoctorMenu();
             continue;
           case '4':
+            appointmentController.runAppointmentManagement();
+            continue;
+          case '5':
             consultationController.syncConsultationsWithAppointments();
             consultationUI.runMenu();
             continue;
-          case '5':
+          case '6':
             treatmentUI.runMenu();
             continue;
-          case '6':
-            pharmacyUI.displayPharmacyMenu();
-            continue;
           case '7':
+            pharmacyUI.displayPharmacyMenu();
             continue;
           case '0':
             return;
@@ -91,7 +92,7 @@ public class SystemController {
         patientId = "P" + response[1];
         switch (userInput.charAt(0)) {
           case '1':
-            queueController.runQueueManagement(patientId);
+            queueController.runStudentQueue(patientId);
             continue;
           case '2':
             appointmentController.runStudentAppointment(patientId);

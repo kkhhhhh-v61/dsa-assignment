@@ -56,10 +56,11 @@ public class PatientUI {
     System.out.println("| [5] Search Patient           |");
     System.out.println("| [6] Clear Patient List       |");
     System.out.println("| [7] Initialize Patient List  |");
+    System.out.println("| [8] Report Generation        |");
     System.out.println("| [0] Return                   |");
     System.out.println("+------------------------------+");
 
-    return new char[] { '1', '2', '3', '4', '5', '6', '7', '0' };
+    return new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '0' };
   }
   
   public char[] displayPatientIdInput() {
@@ -416,5 +417,18 @@ public class PatientUI {
     displayOptionsInfo(new String[] { "[1] Confirm", "[0] Cancel" });
 
     return new char[] { '1', '0' };
+  }
+
+  public char[] displayReportGenerationMenu() {
+    System.out.println();
+    System.out.println("+---------------------------------+");
+    System.out.println("|        REPORT GENERATION        |");
+    System.out.println("+---------------------------------+");
+    System.out.println("| [1] Patient Demographic Summary |");
+    System.out.println("| [2] Patient Appointment Summary |");
+    System.out.println("| [0] Cancel                      |");
+    System.out.println("+---------------------------------+");
+
+    return new char[] { '1', '2', '0' };
   }
 }

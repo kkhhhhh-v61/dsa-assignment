@@ -63,13 +63,13 @@ public class SystemUI {
     System.out.println("+-----------------------------+");
     System.out.println("|     CLINIC STAFF PORTAL     |");
     System.out.println("+-----------------------------+");
-    System.out.println("| [1] Patient Management      |");
-    System.out.println("| [2] Doctor Management       |");
-    System.out.println("| [3] Appointment Management  |");
-    System.out.println("| [4] Consultation Management |");
-    System.out.println("| [5] Treatment Management    |");
-    System.out.println("| [6] Pharmacy Management     |");
-    System.out.println("| [7] Report and Analytics    |");
+    System.out.println("| [1] Queue Management        |");
+    System.out.println("| [2] Patient Management      |");
+    System.out.println("| [3] Doctor Management       |");
+    System.out.println("| [4] Appointment Management  |");
+    System.out.println("| [5] Consultation Management |");
+    System.out.println("| [6] Treatment Management    |");
+    System.out.println("| [7] Pharmacy Management     |");
     System.out.println("| [0] Return                  |");
     System.out.println("+-----------------------------+");
 

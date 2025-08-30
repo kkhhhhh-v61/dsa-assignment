@@ -31,9 +31,10 @@ public class PatientDAO {
         // Utilities.wait(1000);
       }
     } catch (IOException e) {
+      /* Disabled for better presentation, enable only for debugging */
       // System.out.println("File: 'patient.dat' creation failed.");
       // Utilities.wait(1000);
-      e.printStackTrace();
+      // e.printStackTrace();
       // MessageUI.pressAnyKey();
     }
   }
@@ -45,14 +46,16 @@ public class PatientDAO {
       oos.writeObject(patientMap);
       oos.close();
     } catch (FileNotFoundException e) {
+      /* Disabled for better presentation, enable only for debugging */
       // System.out.println("File: 'patient.dat' not found.");
       // Utilities.wait(1000);
-      e.printStackTrace();
+      // e.printStackTrace();
       // MessageUI.pressAnyKey();
     } catch (IOException e) {
+      /* Disabled for better presentation, enable only for debugging */
       // System.out.println("File: 'patient.dat' writing failed.");
       // Utilities.wait(1000);
-      e.printStackTrace();
+      // e.printStackTrace();
       // MessageUI.pressAnyKey();
     }
   }
@@ -67,19 +70,22 @@ public class PatientDAO {
       patientMap = (RedBlackTreeMap<String, Patient>) ois.readObject();
       ois.close();
     } catch (FileNotFoundException e) {
+      /* Disabled for better presentation, enable only for debugging */
       // System.out.println("File: 'patient.dat' not found.");
       // Utilities.wait(1000);
-      e.printStackTrace();
+      // e.printStackTrace();
       // MessageUI.pressAnyKey();
     } catch (IOException e) {
+      /* Disabled for better presentation, enable only for debugging */
       // System.out.println("File: 'patient.dat' reading failed.");
       // Utilities.wait(1000);
-      e.printStackTrace();
+      // e.printStackTrace();
       // MessageUI.pressAnyKey();
     } catch (ClassNotFoundException e) {
+      /* Disabled for better presentation, enable only for debugging */
       // System.out.println("File: 'patient.dat' reading failed.");
       // Utilities.wait(1000);
-      e.printStackTrace();
+      // e.printStackTrace();
       // MessageUI.pressAnyKey();
     }
     return patientMap;
@@ -93,9 +99,10 @@ public class PatientDAO {
       // System.out.println("File: 'patient.dat' cleared successfully.");
       // Utilities.wait(1000);
     } catch (Exception e) {
+      /* Disabled for better presentation, enable only for debugging */
       // System.out.println("File: 'patient.dat' clearing failed.");
       // Utilities.wait(1000);
-      e.printStackTrace();
+      // e.printStackTrace();
       // MessageUI.pressAnyKey();
     }
   }

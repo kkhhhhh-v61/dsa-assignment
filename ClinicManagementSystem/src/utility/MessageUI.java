@@ -193,6 +193,12 @@ public class MessageUI {
     pressAnyKey();
   }
 
+  public static void patientCalled(String[] patient) {
+    System.out.println();
+    System.out.println(String.format("Patient %s (Q%04d) has been called.", patient[1], Integer.parseInt(patient[0])));
+    pressAnyKey();
+  }
+
 
   // Chee Kit
   public static void displayMessage(String message) {

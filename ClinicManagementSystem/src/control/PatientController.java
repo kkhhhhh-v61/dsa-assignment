@@ -63,6 +63,9 @@ public class PatientController {
           case '7':
             runPatientInitialization();
             continue;
+          case '8':
+            runReportGeneration();
+            continue;
           case '0':
             return;
         }

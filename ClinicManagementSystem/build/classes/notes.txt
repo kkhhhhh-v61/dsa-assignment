@@ -3,6 +3,9 @@
 - appointment initialization
 - student queue registration (IN PROGRESS)
 
+- staff queue management
+  - refine message ui
+
 - patient module reporting
   - report 1
     - patient demographic summary (categorized by age group and gender)
