@@ -27,28 +27,28 @@ public class Utilities {
   }
 
   // Clear screen using escape sequence (for VS Code)
-  public static void clearScreen() {
-    System.out.print("\033[H\033[2J");
-    System.out.flush();
-  }
+  // public static void clearScreen() {
+  //   System.out.print("\033[H\033[2J");
+  //   System.out.flush();
+  // }
 
   // Clear screen using Robot class to handle key press (for NetBeans console)
-  // public static void clearScreen() {
-  //   try {
-  //     Robot rob = new Robot();
-  //     try {
-  //       rob.keyPress(KeyEvent.VK_CONTROL);    // press "CTRL"
-  //       rob.keyPress(KeyEvent.VK_L);          // press "L"
-  //       rob.keyRelease(KeyEvent.VK_L);        // unpress "L"
-  //       rob.keyRelease(KeyEvent.VK_CONTROL);  // unpress "CTRL"
-  //       Thread.sleep(100);             // add delay to prevent system from automatically stopping after clear
-  //     } catch (InterruptedException e) {
-  //       e.printStackTrace();
-  //     }
-  //   } catch (AWTException e) {
-  //     e.printStackTrace();
-  //   }
-  // }
+  public static void clearScreen() {
+    try {
+      Robot rob = new Robot();
+      try {
+        rob.keyPress(KeyEvent.VK_CONTROL);    // press "CTRL"
+        rob.keyPress(KeyEvent.VK_L);          // press "L"
+        rob.keyRelease(KeyEvent.VK_L);        // unpress "L"
+        rob.keyRelease(KeyEvent.VK_CONTROL);  // unpress "CTRL"
+        Thread.sleep(100);             // add delay to prevent system from automatically stopping after clear
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    } catch (AWTException e) {
+      e.printStackTrace();
+    }
+  }
 
   public static Scanner getUserInput() {
     return new Scanner(System.in);
