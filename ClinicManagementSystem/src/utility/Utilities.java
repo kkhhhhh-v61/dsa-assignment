@@ -1,8 +1,8 @@
 package utility;
 
-// import java.awt.AWTException;
-// import java.awt.Robot;
-// import java.awt.event.KeyEvent;
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -26,7 +26,7 @@ public class Utilities {
     getUserInput().nextLine();
   }
 
-  // Clear screen using escape sequence (for full system consoles)
+  // Clear screen using escape sequence (for VS Code)
   public static void clearScreen() {
     System.out.print("\033[H\033[2J");
     System.out.flush();
@@ -37,11 +37,11 @@ public class Utilities {
   //   try {
   //     Robot rob = new Robot();
   //     try {
-  //       rob.keyPress(KeyEvent.VK_CONTROL); // press "CTRL"
-  //       rob.keyPress(KeyEvent.VK_L); // press "L"
-  //       rob.keyRelease(KeyEvent.VK_L); // unpress "L"
-  //       rob.keyRelease(KeyEvent.VK_CONTROL); // unpress "CTRL"
-  //       Thread.sleep(100); // add delay to prevent system from automatically stopping after clear
+  //       rob.keyPress(KeyEvent.VK_CONTROL);    // press "CTRL"
+  //       rob.keyPress(KeyEvent.VK_L);          // press "L"
+  //       rob.keyRelease(KeyEvent.VK_L);        // unpress "L"
+  //       rob.keyRelease(KeyEvent.VK_CONTROL);  // unpress "CTRL"
+  //       Thread.sleep(100);             // add delay to prevent system from automatically stopping after clear
   //     } catch (InterruptedException e) {
   //       e.printStackTrace();
   //     }

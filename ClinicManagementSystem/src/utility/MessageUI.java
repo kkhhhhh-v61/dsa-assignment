@@ -199,8 +199,18 @@ public class MessageUI {
     pressAnyKey();
   }
 
+  public static void noAvailableDoctor() {
+    System.out.println();
+    System.out.println("Error! No available doctor for the current time.");
+    System.out.println("The system will randomly assign a doctor.");
+    pressAnyKey();
+  }
 
-  // Chee Kit
+  /**
+   *
+   * @author Lai Chee Kit
+   */
+
   public static void displayMessage(String message) {
     System.out.println(message);
   }

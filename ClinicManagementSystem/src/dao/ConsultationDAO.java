@@ -47,6 +47,7 @@ public class ConsultationDAO {
         for (int i = 1; i <= consultations.size(); i++) {
             if (consultations.get(i).getConsultationId().equalsIgnoreCase(id)) {
                 consultations.remove(i);
+                saveAll();
                 break;
             }
         }

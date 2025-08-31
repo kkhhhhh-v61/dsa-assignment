@@ -496,6 +496,7 @@ public class AppointmentController {
 
     do {
       Utilities.clearScreen();
+      appointmentUI.displaySingleAppointment(appointment);
       char[] inputOptions = appointmentUI.displayDeleteConfirmationMenu();
       String userInput = appointmentUI.getGeneralInput();
       boolean valid = AppointmentValidation.validateCharInput(userInput, inputOptions);
@@ -930,11 +931,6 @@ public class AppointmentController {
         MessageUI.bookingSuccess();
         return;
       }
-      /* REMOVED BUGGED FEATURE THAT I DON'T HAVE TIME TO FIX :) */
-      // else if (action.equals("2")) {
-      //   runBookingEdit(appointment, startTime, endTime);
-      //   continue;
-      // }
     } while (true);
   }
 
@@ -945,37 +941,6 @@ public class AppointmentController {
     String userInput = appointmentUI.getGeneralInput();
     return (AppointmentValidation.validateCharInput(userInput, inputOptions)) ? userInput : null;
   }
-
-  /* REMOVED BUGGED FEATURE THAT I DON'T HAVE TIME TO FIX :) */
-  // public void runBookingEdit(Appointment appointment, String startTime, String endTime) {
-  //   do {
-  //     Utilities.clearScreen();
-  //     appointmentUI.displayAppointmentConfirmation(appointment);
-  //     char[] inputOptions = appointmentUI.displayAppointmentEditMenu();
-  //     String userInput = appointmentUI.getGeneralInput();
-  //     boolean valid = AppointmentValidation.validateCharInput(userInput, inputOptions);
-      
-  //     String appointmentId = appointment.getAppointmentId();
-  //     if (valid) {
-  //       switch (userInput.charAt(0)) {
-  //         case '1':
-  //           runDoctorIdInput(appointmentMap.get(appointmentId).getDoctorId());
-  //           continue;
-  //         case '2':
-  //           runAppointmentDateInput(appointmentMap.get(appointmentId).getAppointmentDate().toString());
-  //           continue;
-  //         case '3':
-  //           runAppointmentTimeInput(appointmentMap.get(appointmentId).getAppointmentTime().toString(), startTime, endTime);
-  //           continue;
-  //         case '4':
-  //           runReasonInput(appointmentMap.get(appointmentId).getReason());
-  //           continue;
-  //         case '0':
-  //           return;
-  //       }
-  //     }
-  //   } while (true);
-  // }
 
   public void runStudentAppointmentCancellation(String patientId) {
     RedBlackTreeMap<String, Appointment> filteredMap = new RedBlackTreeMap<>();

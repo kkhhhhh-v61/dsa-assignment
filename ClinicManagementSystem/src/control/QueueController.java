@@ -5,8 +5,10 @@ import adt.Queue;
 import adt.RedBlackTreeMap;
 import boundary.QueueUI;
 import dao.AppointmentDAO;
+import dao.DoctorScheduleDAO;
 import dao.QueueDAO;
 import entity.Appointment;
+import entity.Schedule;
 import utility.Enum.Status;
 import utility.MessageUI;
 import utility.Utilities;
@@ -19,16 +21,19 @@ import java.time.LocalTime;
  */
 public class QueueController {
   AppointmentDAO appointmentDAO = new AppointmentDAO();
+  DoctorScheduleDAO doctorScheduleDAO = new DoctorScheduleDAO();
   QueueDAO queueDAO = new QueueDAO();
   QueueUI queueUI = new QueueUI();
 
   RedBlackTreeMap<String, Appointment> appointmentMap;
   Queue<String[]> patientQueue;
+  ArrayList<Schedule> scheduleList;
 
   public QueueController() {
     loadAllData();
   }
   
+  @SuppressWarnings("unchecked")
   public void loadAllData() {
     appointmentMap = appointmentDAO.readFromFile();
     if (appointmentMap == null) appointmentMap = new RedBlackTreeMap<>();
@@ -44,6 +49,9 @@ public class QueueController {
 
     patientQueue = queueDAO.readFromFile();
     if (patientQueue == null) patientQueue = new Queue<>();
+
+    scheduleList = (ArrayList<Schedule>) doctorScheduleDAO.readFromFile("schedule");
+    if (scheduleList == null) scheduleList = new ArrayList<>();
   }
 
   public void runQueueManagement() {
@@ -134,6 +142,25 @@ public class QueueController {
 
       time = Utilities.formatTime(String.format("%02d%02d", time.getHour(), time.getMinute()));
       appointment.setAppointmentTime(time);
+
+      ArrayList<String> availableDoctorIds = new ArrayList<>();
+      ArrayList<String> allDoctorIds = new ArrayList<>();
+      for (Schedule schedule : scheduleList) {
+        allDoctorIds.add(schedule.getDoctorId());
+        if (schedule.getDay().toString().equalsIgnoreCase(appointment.getAppointmentDate().getDayOfWeek().toString())
+            && schedule.getStartTime().isBefore(time) && schedule.getEndTime().isAfter(time)
+            && schedule.getIsAvailable()) {
+          availableDoctorIds.add(schedule.getDoctorId());
+        }
+      }
+
+      if (availableDoctorIds.isEmpty()) {
+        MessageUI.noAvailableDoctor();
+        appointment.setDoctorId(allDoctorIds.get((int) (Math.random() * allDoctorIds.size())));
+      } else {
+        appointment.setDoctorId(availableDoctorIds.get((int) (Math.random() * availableDoctorIds.size())));
+      }
+
       appointment.setStatus(Status.Approved);
       appointmentMap.put(appointment.getAppointmentId(), appointment);
       appointmentDAO.writeToFile(appointmentMap);
@@ -141,14 +168,6 @@ public class QueueController {
 
     Utilities.clearScreen();
     MessageUI.patientCalled(patientQueue.peek());
-  }
-
-  public void runAddEntry() {
-    
-  }
-
-  public void runRemoveEntry() {
-    
   }
 
   public void runClearQueue() {
@@ -168,7 +187,6 @@ public class QueueController {
         case '1':
           patientQueue.clear();
           queueDAO.writeToFile(patientQueue);
-          Utilities.clearScreen();
           System.out.println();
           System.out.println("Waiting Queue has been cleared.");
           Utilities.pressAnyKey();
@@ -220,6 +238,7 @@ public class QueueController {
             }
             String[] newEntry = new String[] { String.valueOf(queueNumber + 1), patientId, Status.Waiting.toString() };
             patientQueue.add(newEntry);
+            Utilities.clearScreen();
             queueUI.displayQueueNumber(queueNumber + 1);
             queueDAO.writeToFile(patientQueue);
             Utilities.pressAnyKey();

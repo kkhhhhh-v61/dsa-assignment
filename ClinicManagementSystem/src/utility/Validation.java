@@ -145,9 +145,10 @@ public class Validation {
     return input.matches("^[\\w-\\+]+(\\.[\\w]+)*@([\\w-]+\\.)+[\\w-]{2,4}$");
   }
 
-  
-
-  // Chee Kit
+  /**
+   *
+   * @author Lai Chee Kit
+   */
   public static int getValidIntegerInput(Scanner scanner, String prompt) {
     int input = -1;
     boolean isValid = false;

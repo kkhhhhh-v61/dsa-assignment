@@ -112,4 +112,11 @@ public class SystemUI {
 
     return new char[] { '1', '2', '3', '4', '0' };
   }
+
+  public void displayExitScreen() {
+    System.out.println();
+    System.out.println("+----------------------------------+");
+    System.out.println("| THANK YOU FOR CHOOSING UNI CARE! |");
+    System.out.println("+----------------------------------+");
+  }
 }

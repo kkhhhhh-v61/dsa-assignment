@@ -21,7 +21,6 @@ S0020|D0003|Saturday|13:00|15:00|true
 S0021|D0003|Sunday|13:00|17:00|true
 S0022|D0004|Monday|09:00|18:00|true
 S0023|D0004|Tuesday|09:00|17:00|true
-S0024|D0004|Wednesday|09:00|15:00|true
 S0025|D0004|Thursday|09:00|17:00|true
 S0026|D0004|Friday|09:00|18:00|true
 S0027|D0004|Saturday|09:00|20:00|true

@@ -41,6 +41,11 @@ public class ClinicManagementSystem {
             systemController.runStudentPortal();
             continue;
           case '0':
+            Utilities.clearScreen();
+            systemUI.displayTitle();
+            systemUI.displayExitScreen();
+            Utilities.pressAnyKey();
+            System.out.println();
             return;
         }
       }

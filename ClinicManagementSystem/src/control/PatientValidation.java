@@ -327,6 +327,10 @@ public class PatientValidation {
       return true;
     }
 
+    if (Integer.parseInt(input) > 0 && Integer.parseInt(input) < 10) {
+      return true;
+    }
+
     if (!Validation.isValidOption(Character.toUpperCase(input.charAt(0)), inputOptions)) {
       MessageUI.invalidOption(inputOptions);
       return false;
