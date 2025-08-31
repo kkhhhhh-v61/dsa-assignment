@@ -30,6 +30,10 @@ public class PatientController {
     patientUI = new PatientUI();
     patientDAO = new PatientDAO();
     patientInitializer = new PatientInitializer();
+    loadAllData();
+  }
+
+  public void loadAllData() {
     patientMap = patientDAO.readFromFile();
   }
 
@@ -1163,5 +1167,86 @@ public class PatientController {
     patientDAO.writeToFile(patientMap);
     System.out.println("Patient Initialization DONE!");
     Utilities.pressAnyKey();
+  }
+
+  public void runReportGeneration() {
+    do {
+      Utilities.clearScreen();
+      char[] inputOptions = patientUI.displayReportGenerationMenu();
+      String userInput = patientUI.getGeneralInput();
+      boolean valid = PatientValidation.validateCharInput(userInput, inputOptions);
+
+      if (valid) {
+        switch (Character.toUpperCase(userInput.charAt(0))) {
+          case '1':
+            runReport1();
+            continue;
+          case '2':
+            runReport2();
+            continue;
+          case '0':
+            return;
+        }
+      }
+    } while (true);
+  }
+
+  public void runReport1() {
+    loadAllData();
+    if (patientMap.isEmpty()) {
+      System.out.println();
+      System.out.println("Error! Report can only be generated when there are existing Patient records.");
+      Utilities.pressAnyKey();
+      return;
+    }
+
+    Utilities.clearScreen();
+    RedBlackTreeMap<String, int[]> ageGroupMap = calculateTotalPatientByAgeGroup();
+    patientUI.displayReport1(ageGroupMap);
+    Utilities.pressAnyKey();
+  }
+  
+  public RedBlackTreeMap<String, int[]> calculateTotalPatientByAgeGroup() {
+    RedBlackTreeMap<String, int[]> ageGroupMap = new RedBlackTreeMap<>();
+    ArrayList<String> keys = patientMap.getKeys();
+    // [0] male, [1] female
+    int childCount[] = { 0, 0 };
+    int teenagerCount[] = { 0, 0 };
+    int youngAdultCount[] = { 0, 0 };
+    int adultCount[] = { 0, 0 };
+    int middleAdultCount[] = { 0, 0 };
+    int seniorCount[] = { 0, 0 };
+    int elderlyCount[] = { 0, 0 };
+    for (String key : keys) {
+      Patient patient = patientMap.get(key);
+      int age = patient.getAge();
+      if (age >= 0 && age <= 10) {
+        childCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+      } else if (age > 10 && age <= 20) {
+        teenagerCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+      } else if (age > 20 && age <= 30) {
+        youngAdultCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+      } else if (age > 30 && age <= 40) {
+        adultCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+      } else if (age > 40 && age <= 50) {
+        middleAdultCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+      } else if (age > 50 && age <= 60) {
+        seniorCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+      } else if (age > 60) {
+        elderlyCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+      }
+    }
+    ageGroupMap.put("Infant/Child", childCount);
+    ageGroupMap.put("Teenager", teenagerCount);
+    ageGroupMap.put("Young Adult", youngAdultCount);
+    ageGroupMap.put("Adult", adultCount);
+    ageGroupMap.put("Middle-Aged Adult", middleAdultCount);
+    ageGroupMap.put("Senior", seniorCount);
+    ageGroupMap.put("Elderly", elderlyCount);
+    return ageGroupMap;
+  }
+
+  public void runReport2() {
+    
   }
 }

@@ -1,5 +1,6 @@
 package boundary;
 
+import adt.ArrayList;
 import adt.ListInterface;
 import adt.RedBlackTreeMap;
 import entity.Patient;
@@ -430,5 +431,28 @@ public class PatientUI {
     System.out.println("+---------------------------------+");
 
     return new char[] { '1', '2', '0' };
+  }
+
+  public void displayReport1(RedBlackTreeMap<String, int[]> report1) {
+    System.out.println();
+    System.out.println("+======================================================+");
+    System.out.println("|    PATIENT COUNT DEMOGRAPHIC SUMMARY BY AGE GROUP    |");
+    System.out.println("+======================================================+");
+    System.out.println("|     AGE GROUP     |   MALE   |  FEMALE  |  SUBTOTAL  |");
+    System.out.println("+======================================================+");
+    ArrayList<String> keys = report1.getKeys();
+    int total = 0;
+    int maleTotal = 0;
+    int femaleTotal = 0;
+    for (String key : keys) {
+      int[] values = report1.get(key);
+      total += values[0] + values[1];
+      maleTotal += values[0];
+      femaleTotal += values[1];
+      System.out.println(String.format("| %-17s |   %4d   |   %4d   |    %4d    |", key, values[0], values[1], values[0] + values[1]));
+    }
+    System.out.println("+======================================================+");
+    System.out.println(String.format("|             TOTAL |   %4d   |   %4d   |    %4d    |", maleTotal, femaleTotal, total));
+    System.out.println("+======================================================+");
   }
 }

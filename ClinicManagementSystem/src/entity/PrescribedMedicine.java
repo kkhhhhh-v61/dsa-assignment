@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author Tan Kai Hao, modified by Lai Chee Kit
+ * @author Lai Chee Kit
  */
 public class PrescribedMedicine implements Serializable {
   private static final long serialVersionUID = 1L;

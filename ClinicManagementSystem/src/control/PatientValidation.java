@@ -319,8 +319,8 @@ public class PatientValidation {
         return false;
       }
 
-      if (!Validation.withinRange(Integer.parseInt(input), 1, 981)) {
-        MessageUI.invalidRange(1, 981);
+      if (!Validation.withinRange(Integer.parseInt(input), 1, 990)) {
+        MessageUI.invalidRange(1, 990);
         return false;
       }
 

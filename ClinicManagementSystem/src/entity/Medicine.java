@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author Tan Kai Hao
+ * @author Lai Chee Kit
  */
 public class Medicine implements Serializable {
   private static final long serialVersionUID = 1L;

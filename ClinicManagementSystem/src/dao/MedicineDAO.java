@@ -7,6 +7,11 @@ import utility.DataManager;
 import java.io.Serializable;
 import utility.Enum.MedicineCategory; // Import MedicineCategory
 
+/**
+ *
+ * @author Lai Chee Kit
+ */
+
 public class MedicineDAO implements Serializable {
     private ListInterface<Medicine> medicineList;
     private static final String FILE_PATH = "data/medicines.dat";

@@ -7,11 +7,14 @@ import entity.PrescribedMedicine;
 import utility.Enum.MedicineCategory;
 import utility.MessageUI;
 import utility.Validation;
-
 import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ *
+ * @author Lai Chee Kit
+ */
 public class PharmacyUI {
     private PharmacyController pharmacyController;
     private Scanner scanner;

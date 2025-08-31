@@ -6,11 +6,14 @@ import entity.Medicine;
 import entity.PrescribedMedicine;
 import utility.Enum.MedicineCategory;
 import utility.MessageUI;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ * @author Lai Chee Kit
+ */
 public class PharmacyController implements Serializable {
     private MedicineDAO medicineDAO;
 
