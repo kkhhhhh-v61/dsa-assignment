@@ -43,6 +43,7 @@ public class ConsultationDAO {
     }
 
     public void deleteConsultation(String id) {
+        id = id.trim();
         for (int i = 1; i <= consultations.size(); i++) {
             if (consultations.get(i).getConsultationId().equalsIgnoreCase(id)) {
                 consultations.remove(i);
