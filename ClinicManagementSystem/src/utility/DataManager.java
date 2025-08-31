@@ -2,6 +2,11 @@ package utility;
 
 import java.io.*;
 
+/**
+ *
+ * @author Brian Ooi Shu Yi
+ */
+
 public class DataManager {
 
     public static void saveToFile(Serializable object, String filePath) {

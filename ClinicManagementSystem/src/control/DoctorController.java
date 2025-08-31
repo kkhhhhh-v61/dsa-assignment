@@ -14,6 +14,11 @@ import utility.Enum.Gender;
 import utility.Enum.Specialization;
 import utility.DoctorValidator;
 
+/**
+ *
+ * @author Brian Ooi Shu Yi
+ */
+
 public class DoctorController {
 
     private static final String DOCTORS_FILE = "doctors.txt";

@@ -15,7 +15,7 @@ import utility.Enum.Gender;
 
 /**
  *
- * @author brian
+ * @author Brian Ooi Shu Yi
  */
 public class DoctorValidator {
 
