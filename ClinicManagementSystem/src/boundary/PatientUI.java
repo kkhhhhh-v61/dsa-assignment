@@ -436,7 +436,7 @@ public class PatientUI {
   public void displayReport1(RedBlackTreeMap<String, int[]> report1) {
     System.out.println();
     System.out.println("+======================================================+");
-    System.out.println("|    PATIENT COUNT DEMOGRAPHIC SUMMARY BY AGE GROUP    |");
+    System.out.println("| PATIENT DEMOGRAPHIC SUMMARY BY AGE GROUP WITH GENDER |");
     System.out.println("+======================================================+");
     System.out.println("|     AGE GROUP     |   MALE   |  FEMALE  |  SUBTOTAL  |");
     System.out.println("+======================================================+");
