@@ -4,10 +4,12 @@ package control;
 import dao.TreatmentDAO;
 import dao.ConsultationDAO;
 import dao.MedicineDAO;
+import dao.DispenseRecordDAO; // Import DispenseRecordDAO
 import entity.Treatment;
 import entity.Consultation;
 import entity.PrescribedMedicine;
 import entity.Medicine;
+import entity.DispenseRecord; // Import DispenseRecord
 import adt.ArrayList;
 import utility.Enum.Status;
 
@@ -17,11 +19,13 @@ public class TreatmentController {
     private TreatmentDAO treatmentDAO;
     private ConsultationDAO consultationDAO;
     private MedicineDAO medicineDAO;
+    private DispenseRecordDAO dispenseRecordDAO; // Add DispenseRecordDAO
 
     public TreatmentController() {
         this.treatmentDAO = new TreatmentDAO();
         this.consultationDAO = new ConsultationDAO();
         this.medicineDAO = new MedicineDAO();
+        this.dispenseRecordDAO = new DispenseRecordDAO(); // Initialize DispenseRecordDAO
     }
 
     // ===== CRUD =====
@@ -41,17 +45,15 @@ public class TreatmentController {
                 return false;
             }
 
-            if (pm.getQuantity() > med.getStockQuantity()) {
-                System.out.println("Not enough stock for " + med.getName() + ". Available: " + med.getStockQuantity());
+            if (pm.getQuantity() <= med.getStockQuantity()) {
+		med.setStockQuantity(med.getStockQuantity() - pm.getQuantity());
+            	medicineDAO.updateMedicine(med);
+            	// Update the medicine object in PrescribedMedicine to ensure it's the latest
+            	pm.setMedicine(med); 
+            } else {
+		System.out.println("Not enough stock for " + med.getName() + ". Available: " + med.getStockQuantity());
                 return false;
-            }
-        }
-
-        for (int i = 1; i <= meds.size(); i++) {
-            PrescribedMedicine pm = meds.get(i);
-            Medicine med = medicineDAO.getMedicineById(pm.getMedicine().getMedicineId());
-            med.setStockQuantity(med.getStockQuantity() - pm.getQuantity());
-            medicineDAO.updateMedicine(med);
+	    }
         }
 
         int lastId = treatmentDAO.getLastId();
@@ -61,6 +63,16 @@ public class TreatmentController {
         t.setTreatmentId(newId);
 
         treatmentDAO.addTreatment(t);
+        
+        // Create dispense records for each prescribed medicine using the updated Medicine object
+        for (int i = 1; i <= meds.size(); i++) {
+            PrescribedMedicine pm = meds.get(i);
+            // Fetch the latest medicine object from DAO after stock update
+            Medicine latestMed = medicineDAO.getMedicineById(pm.getMedicine().getMedicineId()); 
+            DispenseRecord dr = new DispenseRecord(latestMed, pm.getQuantity(), newId, c.getPatientId(), c.getDoctorId());
+            dispenseRecordDAO.addDispenseRecord(dr);
+        }
+        
         treatmentDAO.saveAll();
         return true;
     }
@@ -83,6 +95,7 @@ public class TreatmentController {
     public boolean editTreatment(Treatment treatment) {
         Treatment old = treatmentDAO.getTreatmentById(treatment.getTreatmentId());
         if (old != null) {
+            // Return old medicines to stock and delete old dispense records
             ArrayList<PrescribedMedicine> oldMeds = old.getMedicines();
             for (int i = 1; i <= oldMeds.size(); i++) {
                 PrescribedMedicine pm = oldMeds.get(i);
@@ -92,15 +105,32 @@ public class TreatmentController {
                     medicineDAO.updateMedicine(med);
                 }
             }
+            // Delete associated dispense records
+            ArrayList<DispenseRecord> oldDispenseRecords = (ArrayList<DispenseRecord>) dispenseRecordDAO.getDispenseRecordsByTreatmentId(old.getTreatmentId());
+            for (int i = 1; i <= oldDispenseRecords.size(); i++) {
+                dispenseRecordDAO.deleteDispenseRecord(oldDispenseRecords.get(i).getDispenseId());
+            }
         }
 
+        // Validate and dispense new medicines
         ArrayList<PrescribedMedicine> newMeds = treatment.getMedicines();
+        Consultation c = consultationDAO.getConsultationById(treatment.getConsultationId());
+        if (c == null) {
+            System.out.println("Consultation not found for treatment " + treatment.getTreatmentId());
+            return false;
+        }
+
         for (int i = 1; i <= newMeds.size(); i++) {
             PrescribedMedicine pm = newMeds.get(i);
             Medicine med = medicineDAO.getMedicineById(pm.getMedicine().getMedicineId());
 
-            if (med == null || pm.getQuantity() > med.getStockQuantity()) {
-                System.out.println("Stock validation failed for medicine " + pm.getMedicine().getMedicineId());
+            if (med == null) {
+                System.out.println("Medicine " + pm.getMedicine().getMedicineId() + " not found.");
+                return false;
+            }
+
+            if (pm.getQuantity() > med.getStockQuantity()) {
+                System.out.println("Not enough stock for " + med.getName() + ". Available: " + med.getStockQuantity());
                 return false;
             }
         }
@@ -110,6 +140,13 @@ public class TreatmentController {
             Medicine med = medicineDAO.getMedicineById(pm.getMedicine().getMedicineId());
             med.setStockQuantity(med.getStockQuantity() - pm.getQuantity());
             medicineDAO.updateMedicine(med);
+            // Update the medicine object in PrescribedMedicine to ensure it's the latest
+            pm.setMedicine(med);
+            
+            // Create new dispense record using the updated Medicine object
+            Medicine latestMed = medicineDAO.getMedicineById(pm.getMedicine().getMedicineId());
+            DispenseRecord dr = new DispenseRecord(latestMed, pm.getQuantity(), treatment.getTreatmentId(), c.getPatientId(), c.getDoctorId());
+            dispenseRecordDAO.addDispenseRecord(dr);
         }
 
         treatmentDAO.updateTreatment(treatment);
@@ -128,6 +165,11 @@ public class TreatmentController {
                     med.setStockQuantity(med.getStockQuantity() + pm.getQuantity());
                     medicineDAO.updateMedicine(med);
                 }
+            }
+            // Delete associated dispense records
+            ArrayList<DispenseRecord> dispenseRecordsToDelete = (ArrayList<DispenseRecord>) dispenseRecordDAO.getDispenseRecordsByTreatmentId(id);
+            for (int i = 1; i <= dispenseRecordsToDelete.size(); i++) {
+                dispenseRecordDAO.deleteDispenseRecord(dispenseRecordsToDelete.get(i).getDispenseId());
             }
             treatmentDAO.deleteTreatment(id);
             treatmentDAO.saveAll();

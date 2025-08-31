@@ -2,10 +2,10 @@ package control;
 
 import adt.ListInterface;
 import dao.MedicineDAO;
+import dao.DispenseRecordDAO; // Import DispenseRecordDAO
 import entity.Medicine;
-import entity.PrescribedMedicine;
+import entity.DispenseRecord; // Import DispenseRecord
 import utility.Enum.MedicineCategory;
-import utility.MessageUI;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,12 +16,15 @@ import java.util.Map;
  */
 public class PharmacyController implements Serializable {
     private MedicineDAO medicineDAO;
+    private DispenseRecordDAO dispenseRecordDAO; // Add DispenseRecordDAO
 
     public PharmacyController() {
         medicineDAO = new MedicineDAO();
+        dispenseRecordDAO = new DispenseRecordDAO(); // Initialize DispenseRecordDAO
     }
 
     public ListInterface<Medicine> getAllMedicines() {
+        medicineDAO.reload(); // Ensure latest data is loaded
         return medicineDAO.getAllMedicines();
     }
 
@@ -41,21 +44,9 @@ public class PharmacyController implements Serializable {
         return medicineDAO.deleteMedicine(medicineId);
     }
 
-    public boolean dispenseMedicines(ListInterface<PrescribedMedicine> prescribedMedicines) {
-        boolean success = true;
-        for (int i = 0; i < prescribedMedicines.size(); i++) {
-            PrescribedMedicine pm = prescribedMedicines.get(i + 1);
-            Medicine medicine = medicineDAO.getMedicineById(pm.getMedicine().getMedicineId());
-
-            if (medicine != null && medicine.getStockQuantity() >= pm.getQuantity()) {
-                medicine.setStockQuantity(medicine.getStockQuantity() - pm.getQuantity());
-                medicineDAO.updateMedicine(medicine);
-            } else {
-                success = false;
-                MessageUI.displayErrorMessage("Failed to dispense " + pm.getMedicine().getName() + ". Insufficient stock or medicine not found.");
-            }
-        }
-        return success;
+    public ListInterface<DispenseRecord> getAllDispenseRecords() {
+        dispenseRecordDAO.reload(); // Ensure latest data is loaded
+        return dispenseRecordDAO.getAllDispenseRecords();
     }
 
     public ListInterface<Medicine> generateLowStockReport() {

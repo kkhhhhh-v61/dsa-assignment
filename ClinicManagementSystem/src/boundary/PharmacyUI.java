@@ -3,7 +3,7 @@ package boundary;
 import adt.ListInterface;
 import control.PharmacyController;
 import entity.Medicine;
-import entity.PrescribedMedicine;
+import entity.DispenseRecord; // Import DispenseRecord
 import utility.Enum.MedicineCategory;
 import utility.MessageUI;
 import utility.Validation;
@@ -32,7 +32,7 @@ public class PharmacyUI {
             System.out.println("2. Update Medicine Details");
             System.out.println("3. Delete Medicine");
             System.out.println("4. View All Medicines");
-            System.out.println("5. Dispense Medicines");
+            System.out.println("5. View Dispense Records"); // Changed from Dispense Medicines
             System.out.println("6. Generate Low Stock Report");
             System.out.println("7. Generate Medicine by Category Report");
             System.out.println("0. Back to Main Menu");
@@ -55,7 +55,7 @@ public class PharmacyUI {
                         viewAllMedicines();
                         break;
                     case 5:
-                        dispenseMedicines();
+                        viewDispenseRecords(); // Changed from dispenseMedicines()
                         break;
                     case 6:
                         generateLowStockReport();
@@ -75,6 +75,38 @@ public class PharmacyUI {
                 choice = -1; // Set to an invalid choice to continue the loop
             }
         } while (choice != 0);
+    }
+
+    public void viewDispenseRecords() {
+        System.out.println("\n--- All Dispensed Medicines ---");
+        System.out.println("Enter '0' to return to Pharmacy Menu.");
+        ListInterface<DispenseRecord> dispensedRecords = pharmacyController.getAllDispenseRecords();
+
+        if (dispensedRecords.isEmpty()) {
+            MessageUI.displayMessage("No dispensed medicine records available.");
+            System.out.print("Press Enter to return to Pharmacy Menu...");
+            scanner.nextLine(); // Wait for user to acknowledge
+            return;
+        }
+
+        System.out.printf("%-10s %-10s %-25s %-15s %-15s %-15s %-15s %-15s\n",
+                "Disp ID", "Med ID", "Medicine Name", "Quantity", "Dispense Date", "Treatment ID", "Patient ID", "Doctor ID");
+        System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+        for (int i = 0; i < dispensedRecords.size(); i++) {
+            DispenseRecord dr = dispensedRecords.get(i + 1);
+            System.out.printf("%-10s %-10s %-25s %-15d %-15s %-15s %-15s %-15s\n",
+                    dr.getDispenseId(),
+                    dr.getMedicine().getMedicineId(),
+                    dr.getMedicine().getName(),
+                    dr.getDispensedQuantity(),
+                    dr.getDispenseDate(),
+                    dr.getTreatmentId(),
+                    dr.getPatientId(),
+                    dr.getDoctorId());
+        }
+        System.out.print("Press Enter to return to Pharmacy Menu...");
+        scanner.nextLine(); // Wait for user to acknowledge
     }
 
     public void addNewMedicine() {
@@ -216,63 +248,6 @@ public class PharmacyUI {
         }
     }
 
-    public void dispenseMedicines() {
-        System.out.println("\n--- Dispense Medicines ---");
-        System.out.println("Enter '0' to return to Pharmacy Menu at any prompt.");
-        ListInterface<PrescribedMedicine> prescribedMedicines = new adt.ArrayList<>();
-        String continueDispensing;
-
-        do {
-            System.out.print("Enter Medicine ID to dispense: ");
-            String medicineId = scanner.nextLine();
-            if (medicineId.equals("0")) return;
-
-            Medicine medicine = pharmacyController.getMedicineById(medicineId);
-
-            if (medicine == null) {
-                MessageUI.displayErrorMessage("Medicine with ID " + medicineId + " not found.");
-            } else {
-                System.out.println("Medicine found: " + medicine.getName() + " (Stock: " + medicine.getStockQuantity() + ")");
-                int quantity = Validation.getValidIntegerInput(scanner, "Enter quantity to dispense (0 to exit): ");
-                if (quantity == 0) return;
-
-                if (quantity > 0 && medicine.getStockQuantity() >= quantity) {
-                    System.out.print("Enter Dosage (0 to exit): ");
-                    String dosage = scanner.nextLine();
-                    if (dosage.equals("0")) return;
-
-                    int timesPerDay = Validation.getValidIntegerInput(scanner, "Enter Times Per Day (0 to exit): ");
-                    if (timesPerDay == 0) return;
-
-                    int duration = Validation.getValidIntegerInput(scanner, "Enter Duration (days, 0 to exit): ");
-                    if (duration == 0) return;
-
-                    System.out.print("Enter Remarks (0 to exit): ");
-                    String remarks = scanner.nextLine();
-                    if (remarks.equals("0")) return;
-
-                    prescribedMedicines.add(new PrescribedMedicine(medicine, quantity, dosage, timesPerDay, duration, remarks));
-                    MessageUI.displaySuccessMessage("Medicine added to dispense list.");
-                } else {
-                    MessageUI.displayErrorMessage("Invalid quantity or insufficient stock for " + medicine.getName() + ".");
-                }
-            }
-
-            System.out.print("Dispense another medicine? (y/n, or '0' to exit): ");
-            continueDispensing = scanner.nextLine();
-            if (continueDispensing.equals("0")) return;
-        } while (continueDispensing.equalsIgnoreCase("y"));
-
-        if (!prescribedMedicines.isEmpty()) {
-            if (pharmacyController.dispenseMedicines(prescribedMedicines)) {
-                MessageUI.displaySuccessMessage("All prescribed medicines dispensed successfully!");
-            } else {
-                MessageUI.displayErrorMessage("Some medicines could not be dispensed. Check error messages above.");
-            }
-        } else {
-            MessageUI.displayMessage("No medicines selected for dispensing.");
-        }
-    }
 
     public void viewAllMedicines() {
         System.out.println("\n--- All Medicines ---");

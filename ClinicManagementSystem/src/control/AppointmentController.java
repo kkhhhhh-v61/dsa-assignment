@@ -409,22 +409,26 @@ public class AppointmentController {
       if (status != null && status.equals("0")) {
         return;
       }
+      
+      if (status == null) {
+        continue;
+      }
 
-      switch (Character.toUpperCase(status.charAt(0))) {
-        case '1':
+      switch (status) {
+        case "1":
           status = "Approved";
           break;
-        case '2':
+        case "2":
           status = "Rejected";
           break;
-        case '3':
+        case "3":
           status = "Pending";
           break;
-        case '4':
+        case "4":
           status = "Cancelled";
           break;
         default:
-          break;
+          continue;
       }
     } while (status == null);
     
@@ -798,6 +802,12 @@ public class AppointmentController {
         filteredMap.put(appointmentMap.get(key).getAppointmentId(), appointmentMap.get(key));
       }
     }
+    if (filteredMap.isEmpty()) {
+      System.out.println();
+      System.out.println("Error! No Appointment records found.");
+      Utilities.pressAnyKey();
+      return;
+    }
     runAppointmentList(filteredMap);
   }
 
@@ -968,7 +978,6 @@ public class AppointmentController {
   // }
 
   public void runStudentAppointmentCancellation(String patientId) {
-    Appointment appointment = appointmentMap.get(patientId);
     RedBlackTreeMap<String, Appointment> filteredMap = new RedBlackTreeMap<>();
     ArrayList<String> keys = appointmentMap.getKeys();
     for (String key : keys) {
@@ -993,23 +1002,23 @@ public class AppointmentController {
           case "E":
             page = Math.min((filteredMap.size() > 0) ? (filteredMap.size() + 9) / 10 : 1, page + 1);
             break;
-          case "1":
-            appointment.setStatus(Status.Cancelled);
-            appointmentMap.put(appointment.getAppointmentId(), appointment);
-            appointmentDAO.writeToFile(appointmentMap);
-            MessageUI.cancellationSuccess();
-            return;
           case "0":
             return;
           default:
-            runAppointmentCancellationConirmation("A" + userInput);
+            if (filteredMap.get("A" + userInput).getStatus() != Status.Pending) {
+              System.out.println();
+              System.out.println("Cancellation Failed! You cannot cancel an appointment that is not in Pending Status.");
+              Utilities.pressAnyKey();
+              continue;
+            }
+            runAppointmentCancellationConfirmation("A" + userInput);
             break;
         }
       }
     } while (true);
   }
   
-  public void runAppointmentCancellationConirmation(String appointmentId) {
+  public void runAppointmentCancellationConfirmation(String appointmentId) {
     Appointment appointment = appointmentMap.get(appointmentId);
     Utilities.clearScreen();
     appointmentUI.displaySingleAppointment(appointment);

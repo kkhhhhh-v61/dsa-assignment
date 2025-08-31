@@ -433,26 +433,53 @@ public class PatientUI {
     return new char[] { '1', '2', '0' };
   }
 
-  public void displayReport1(RedBlackTreeMap<String, int[]> report1) {
+  public void displayReport1(RedBlackTreeMap<String, String[]> report1, int totalPatients) {
     System.out.println();
-    System.out.println("+======================================================+");
-    System.out.println("| PATIENT DEMOGRAPHIC SUMMARY BY AGE GROUP WITH GENDER |");
-    System.out.println("+======================================================+");
-    System.out.println("|     AGE GROUP     |   MALE   |  FEMALE  |  SUBTOTAL  |");
-    System.out.println("+======================================================+");
+    System.out.println("+==============================================================+");
+    System.out.println("|  PATIENT DEMOGRAPHIC COUNT SUMMARY BY AGE GROUP WITH GENDER  |");
+    System.out.println("+==============================================================+");
+    System.out.println("| AGE GROUP |      MALE      |     FEMALE     |    SUBTOTAL    |");
     ArrayList<String> keys = report1.getKeys();
-    int total = 0;
-    int maleTotal = 0;
-    int femaleTotal = 0;
+    int total = 0, maleTotal = 0, femaleTotal = 0;
+    double malePercentage = 0.00, femalePercentage = 0.00;
     for (String key : keys) {
-      int[] values = report1.get(key);
-      total += values[0] + values[1];
-      maleTotal += values[0];
-      femaleTotal += values[1];
-      System.out.println(String.format("| %-17s |   %4d   |   %4d   |    %4d    |", key, values[0], values[1], values[0] + values[1]));
+      String[] values = report1.get(key);
+      total += Integer.parseInt(values[0]) + Integer.parseInt(values[2]);
+      maleTotal += Integer.parseInt(values[0]);
+      femaleTotal += Integer.parseInt(values[2]);
+      System.out.println("+-----------+----------------+----------------+----------------+");
+      System.out.printf("| %-9s | %4d (%6.2f%%) | %4d (%6.2f%%) | %4d (%6.2f%%) |\n",
+        key, Integer.parseInt(values[0]), Double.parseDouble(values[1]), Integer.parseInt(values[2]),
+        Double.parseDouble(values[3]), Integer.parseInt(values[0]) + Integer.parseInt(values[2]), 
+        Double.parseDouble(String.valueOf((((double) (Integer.parseInt(values[0]) + Integer.parseInt(values[2])) / totalPatients) * 100.00))));
     }
-    System.out.println("+======================================================+");
-    System.out.println(String.format("|             TOTAL |   %4d   |   %4d   |    %4d    |", maleTotal, femaleTotal, total));
-    System.out.println("+======================================================+");
+    malePercentage = ((double) maleTotal / totalPatients) * 100;
+    femalePercentage = ((double) femaleTotal / totalPatients) * 100;
+    System.out.println("+==============================================================+");
+    System.out.printf("|   TOTAL   | %4d (%6.2f%%) | %4d (%6.2f%%) | %4d (100.00%%) |\n", maleTotal, malePercentage, femaleTotal, femalePercentage, total);
+    System.out.println("+==============================================================+");
+  }
+  
+  public void displayReport2(RedBlackTreeMap<String, String[]> report2) {
+    System.out.println();
+    System.out.println("+================================================================================================+");
+    System.out.println("|                                   PATIENT APPOINTMENT SUMMARY                                  |");
+    System.out.println("+================================================================================================+");
+    System.out.println("| DOCTOR ID |    APPROVED    |    REJECTED    |     PENDING    |    CANCELLED   |    SUBTOTAL    |");
+    ArrayList<String> keys = report2.getKeys();
+    for (String key : keys) {
+      if (key.equals("Total")) continue;
+      String[] values = report2.get(key);
+      System.out.println("+-----------+----------------+----------------+----------------+----------------+----------------+");
+      System.out.printf("|   %5s   | %4s (%6.2f%%) | %4s (%6.2f%%) | %4s (%6.2f%%) | %4s (%6.2f%%) | %4s (%6.2f%%) |\n", key, 
+        values[0], Double.parseDouble(values[1]), values[2], Double.parseDouble(values[3]), values[4], Double.parseDouble(values[5]), 
+        values[6], Double.parseDouble(values[7]), values[8], Double.parseDouble(values[9]));
+    }
+    System.out.println("+================================================================================================+");
+    System.out.printf("|   TOTAL   | %4s (%6.2f%%) | %4s (%6.2f%%) | %4s (%6.2f%%) | %4s (%6.2f%%) | %4s (%6.2f%%) |\n", 
+      report2.get("Total")[0], Double.parseDouble(report2.get("Total")[1]), report2.get("Total")[2], Double.parseDouble(report2.get("Total")[3]), 
+      report2.get("Total")[4], Double.parseDouble(report2.get("Total")[5]), report2.get("Total")[6], Double.parseDouble(report2.get("Total")[7]), 
+      report2.get("Total")[8], Double.parseDouble(report2.get("Total")[9]));
+    System.out.println("+================================================================================================+");
   }
 }

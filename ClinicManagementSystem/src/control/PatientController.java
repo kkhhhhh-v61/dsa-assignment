@@ -3,8 +3,10 @@ package control;
 import adt.ArrayList;
 import adt.RedBlackTreeMap;
 import boundary.PatientUI;
+import dao.AppointmentDAO;
 import dao.PatientDAO;
 import dao.PatientInitializer;
+import entity.Appointment;
 import entity.Patient;
 import utility.Enum.BloodType;
 import utility.Enum.Gender;
@@ -22,18 +24,22 @@ public class PatientController {
   private static final int ADDRESS_LENGTH = 45;
 
   PatientUI patientUI;
+  AppointmentDAO appointmentDAO;
   PatientDAO patientDAO;
   PatientInitializer patientInitializer;
+  private RedBlackTreeMap<String, Appointment> appointmentMap;
   private RedBlackTreeMap<String, Patient> patientMap;
 
   public PatientController() {
     patientUI = new PatientUI();
+    appointmentDAO = new AppointmentDAO();
     patientDAO = new PatientDAO();
     patientInitializer = new PatientInitializer();
     loadAllData();
   }
 
   public void loadAllData() {
+    appointmentMap = appointmentDAO.readFromFile();
     patientMap = patientDAO.readFromFile();
   }
 
@@ -1201,52 +1207,173 @@ public class PatientController {
     }
 
     Utilities.clearScreen();
-    RedBlackTreeMap<String, int[]> ageGroupMap = calculateTotalPatientByAgeGroup();
-    patientUI.displayReport1(ageGroupMap);
+    patientUI.displayReport1(calculatePatientSummary(), patientMap.size());
     Utilities.pressAnyKey();
   }
   
-  public RedBlackTreeMap<String, int[]> calculateTotalPatientByAgeGroup() {
-    RedBlackTreeMap<String, int[]> ageGroupMap = new RedBlackTreeMap<>();
+  public RedBlackTreeMap<String, String[]> calculatePatientSummary() {
+    RedBlackTreeMap<String, String[]> patientSummaryMap = new RedBlackTreeMap<>();
     ArrayList<String> keys = patientMap.getKeys();
-    // [0] male, [1] female
-    int childCount[] = { 0, 0 };
-    int teenagerCount[] = { 0, 0 };
-    int youngAdultCount[] = { 0, 0 };
-    int adultCount[] = { 0, 0 };
-    int middleAdultCount[] = { 0, 0 };
-    int seniorCount[] = { 0, 0 };
-    int elderlyCount[] = { 0, 0 };
+    // [0] maleCount, [1] malePercentage, [2] femaleCount, [3] femalePercentage
+    double childCount[]        = { 0.00, 0.00, 0.00, 0.00 };
+    double teenagerCount[]     = { 0.00, 0.00, 0.00, 0.00 };
+    double youngAdultCount[]   = { 0.00, 0.00, 0.00, 0.00 };
+    double adultCount[]        = { 0.00, 0.00, 0.00, 0.00 };
+    double middleAdultCount[]  = { 0.00, 0.00, 0.00, 0.00 };
+    double seniorCount[]       = { 0.00, 0.00, 0.00, 0.00 };
+    double elderlyCount[]      = { 0.00, 0.00, 0.00, 0.00 };
     for (String key : keys) {
       Patient patient = patientMap.get(key);
       int age = patient.getAge();
       if (age >= 0 && age <= 10) {
-        childCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+        childCount[patient.getGender().equals(Gender.Male) ? 0 : 2]++;
       } else if (age > 10 && age <= 20) {
-        teenagerCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+        teenagerCount[patient.getGender().equals(Gender.Male) ? 0 : 2]++;
       } else if (age > 20 && age <= 30) {
-        youngAdultCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+        youngAdultCount[patient.getGender().equals(Gender.Male) ? 0 : 2]++;
       } else if (age > 30 && age <= 40) {
-        adultCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+        adultCount[patient.getGender().equals(Gender.Male) ? 0 : 2]++;
       } else if (age > 40 && age <= 50) {
-        middleAdultCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+        middleAdultCount[patient.getGender().equals(Gender.Male) ? 0 : 2]++;
       } else if (age > 50 && age <= 60) {
-        seniorCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+        seniorCount[patient.getGender().equals(Gender.Male) ? 0 : 2]++;
       } else if (age > 60) {
-        elderlyCount[patient.getGender().equals(Gender.Male) ? 0 : 1]++;
+        elderlyCount[patient.getGender().equals(Gender.Male) ? 0 : 2]++;
       }
     }
-    ageGroupMap.put("Infant/Child", childCount);
-    ageGroupMap.put("Teenager", teenagerCount);
-    ageGroupMap.put("Young Adult", youngAdultCount);
-    ageGroupMap.put("Adult", adultCount);
-    ageGroupMap.put("Middle-Aged Adult", middleAdultCount);
-    ageGroupMap.put("Senior", seniorCount);
-    ageGroupMap.put("Elderly", elderlyCount);
-    return ageGroupMap;
+    childCount[1]       = ((double) (childCount[0] / (childCount[0] + childCount[2])) * 100);
+    childCount[3]       = ((double) (childCount[2] / (childCount[0] + childCount[2])) * 100);
+    teenagerCount[1]    = ((double) (teenagerCount[0] / (teenagerCount[0] + teenagerCount[2])) * 100);
+    teenagerCount[3]    = ((double) (teenagerCount[2] / (teenagerCount[0] + teenagerCount[2])) * 100);
+    youngAdultCount[1]  = ((double) (youngAdultCount[0] / (youngAdultCount[0] + youngAdultCount[2])) * 100);
+    youngAdultCount[3]  = ((double) (youngAdultCount[2] / (youngAdultCount[0] + youngAdultCount[2])) * 100);
+    adultCount[1]       = ((double) (adultCount[0] / (adultCount[0] + adultCount[2])) * 100);
+    adultCount[3]       = ((double) (adultCount[2] / (adultCount[0] + adultCount[2])) * 100);
+    middleAdultCount[1] = ((double) (middleAdultCount[0] / (middleAdultCount[0] + middleAdultCount[2])) * 100);
+    middleAdultCount[3] = ((double) (middleAdultCount[2] / (middleAdultCount[0] + middleAdultCount[2])) * 100);
+    seniorCount[1]      = ((double) (seniorCount[0] / (seniorCount[0] + seniorCount[2])) * 100);
+    seniorCount[3]      = ((double) (seniorCount[2] / (seniorCount[0] + seniorCount[2])) * 100);
+    elderlyCount[1]     = ((double) (elderlyCount[0] / (elderlyCount[0] + elderlyCount[2])) * 100);
+    elderlyCount[3]     = ((double) (elderlyCount[2] / (elderlyCount[0] + elderlyCount[2])) * 100);
+
+    calculatePatientPercentages(childCount);
+    calculatePatientPercentages(teenagerCount);
+    calculatePatientPercentages(youngAdultCount);
+    calculatePatientPercentages(adultCount);
+    calculatePatientPercentages(middleAdultCount);
+    calculatePatientPercentages(seniorCount);
+    calculatePatientPercentages(elderlyCount);
+
+    patientSummaryMap.put("0-10", new String[] { String.valueOf((int) childCount[0]), String.valueOf(childCount[1]), String.valueOf((int) childCount[2]), String.valueOf(childCount[3]) });
+    patientSummaryMap.put("11-20", new String[] { String.valueOf((int) teenagerCount[0]), String.valueOf(teenagerCount[1]), String.valueOf((int) teenagerCount[2]), String.valueOf(teenagerCount[3]) });
+    patientSummaryMap.put("21-30", new String[] { String.valueOf((int) youngAdultCount[0]), String.valueOf(youngAdultCount[1]), String.valueOf((int) youngAdultCount[2]), String.valueOf(youngAdultCount[3]) });
+    patientSummaryMap.put("31-40", new String[] { String.valueOf((int) adultCount[0]), String.valueOf(adultCount[1]), String.valueOf((int) adultCount[2]), String.valueOf(adultCount[3]) });
+    patientSummaryMap.put("41-50", new String[] { String.valueOf((int) middleAdultCount[0]), String.valueOf(middleAdultCount[1]), String.valueOf((int) middleAdultCount[2]), String.valueOf(middleAdultCount[3]) });
+    patientSummaryMap.put("51-60", new String[] { String.valueOf((int) seniorCount[0]), String.valueOf(seniorCount[1]), String.valueOf((int) seniorCount[2]), String.valueOf(seniorCount[3]) });
+    patientSummaryMap.put("61+", new String[] { String.valueOf((int) elderlyCount[0]), String.valueOf(elderlyCount[1]), String.valueOf((int) elderlyCount[2]), String.valueOf(elderlyCount[3]) });
+    return patientSummaryMap;
+  }
+
+  private void calculatePatientPercentages(double[] counts) {
+    double total = counts[0] + counts[2];
+    if (total > 0) {
+        counts[1] = (counts[0] / total) * 100;
+        counts[3] = (counts[2] / total) * 100;
+    } else {
+        counts[1] = 0;
+        counts[3] = 0;
+    }
   }
 
   public void runReport2() {
+    loadAllData();
+    if (appointmentMap.isEmpty()) {
+      System.out.println();
+      System.out.println("Error! Report can only be generated when there are existing Appointment records.");
+      Utilities.pressAnyKey();
+      return;
+    }
+
+    Utilities.clearScreen();
+    patientUI.displayReport2(calculateAppointmentSummary());
+    Utilities.pressAnyKey();
+  }
+
+  public RedBlackTreeMap<String, String[]> calculateAppointmentSummary() {
+    RedBlackTreeMap<String, int[]> doctorData = new RedBlackTreeMap<>();
     
+    int totalAppointments = 0, totalApproved = 0, totalRejected = 0, totalPending = 0, totalCancelled = 0;
+    
+    ArrayList<String> keys = appointmentMap.getKeys();
+    for (String key : keys) {
+      Appointment appointment = appointmentMap.get(key);
+      String doctorId = appointment.getDoctorId();
+      
+      if (!doctorData.containsKey(doctorId)) {
+        // [0] approved, [1] rejected, [2] pending, [3] cancelled, [4] total
+        doctorData.put(doctorId, new int[5]);
+      }
+
+      int[] doctorEntry = doctorData.get(doctorId);
+      doctorEntry[4]++;
+      totalAppointments++;
+
+      switch (appointment.getStatus()) {
+        case Approved:
+          doctorEntry[0]++;
+          totalApproved++;
+          break;
+        case Rejected:
+          doctorEntry[1]++;
+          totalRejected++;
+          break;
+        case Pending:
+          doctorEntry[2]++;
+          totalPending++;
+          break;
+        case Cancelled:
+          doctorEntry[3]++;
+          totalCancelled++;
+          break;
+        default:
+          break;
+      }
+    }
+
+    RedBlackTreeMap<String, String[]> appointmentSummaryMap = new RedBlackTreeMap<>();
+
+    double approvedPercentages = totalAppointments > 0 ? ((double) totalApproved / totalAppointments) * 100 : 0.00;
+    double rejectedPercentages = totalAppointments > 0 ? ((double) totalRejected / totalAppointments) * 100 : 0.00;
+    double pendingPercentages  = totalAppointments > 0 ? ((double) totalPending / totalAppointments) * 100 : 0.00;
+    double cancelledPercentages = totalAppointments > 0 ? ((double) totalCancelled / totalAppointments) * 100 : 0.00;
+
+    appointmentSummaryMap.put("Total", new String[] {
+      String.valueOf(totalApproved), String.format("%.2f", approvedPercentages),
+      String.valueOf(totalRejected), String.format("%.2f", rejectedPercentages),
+      String.valueOf(totalPending), String.format("%.2f", pendingPercentages),
+      String.valueOf(totalCancelled), String.format("%.2f", cancelledPercentages),
+      String.valueOf(totalAppointments), "100.00"
+    });
+
+    for (String doctorId : doctorData.getKeys()) {
+        int[] counts = doctorData.get(doctorId);
+        int doctorTotal = counts[4];
+
+        double approvedPerc = doctorTotal > 0 ? (double) counts[0] / doctorTotal * 100 : 0.00;
+        double rejectedPerc = doctorTotal > 0 ? (double) counts[1] / doctorTotal * 100 : 0.00;
+        double pendingPerc = doctorTotal > 0 ? (double) counts[2] / doctorTotal * 100 : 0.00;
+        double cancelledPerc = doctorTotal > 0 ? (double) counts[3] / doctorTotal * 100 : 0.00;
+        double totalPerc = doctorTotal > 0 ? (double) doctorTotal / totalAppointments * 100 : 0.00;
+
+        appointmentSummaryMap.put(doctorId, new String[] {
+            String.valueOf(counts[0]), String.format("%.2f", approvedPerc),
+            String.valueOf(counts[1]), String.format("%.2f", rejectedPerc),
+            String.valueOf(counts[2]), String.format("%.2f", pendingPerc),
+            String.valueOf(counts[3]), String.format("%.2f", cancelledPerc),
+            String.valueOf(doctorTotal), String.format("%.2f", totalPerc)
+        });
+    }
+    
+    return appointmentSummaryMap;
   }
 }

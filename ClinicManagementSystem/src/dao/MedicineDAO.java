@@ -99,4 +99,8 @@ public class MedicineDAO implements Serializable {
     private ListInterface<Medicine> loadMedicines() {
         return (ListInterface<Medicine>) DataManager.readFromFile(FILE_PATH);
     }
+    
+    public void reload() {
+        medicineList = loadMedicines();
+    }
 }
