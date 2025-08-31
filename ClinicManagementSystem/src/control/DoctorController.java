@@ -14,6 +14,11 @@ import utility.Enum.Specialization;
 import utility.FileHandler;
 import utility.DoctorValidator;
 
+/**
+ *
+ * @author Brian Ooi Shu Yi
+ */
+
 public class DoctorController {
 
     private static final String DOCTORS_FILE = "doctors.txt";
@@ -116,7 +121,7 @@ public class DoctorController {
     }
 
     // ==================================================================
-    // Schedule CRUD and Availability Tracking (with saveData calls)
+    // Schedule CRUD Operations (with saveData calls)
     // ==================================================================
     public ListInterface<String> addSchedule(Schedule newSchedule) {
         ListInterface<Schedule> existingSchedules = getSchedulesForDoctor(newSchedule.doctorId());
@@ -174,7 +179,7 @@ public class DoctorController {
     }
 
     // ==================================================================
-    // Reporting (No changes needed here)
+    // Reporting 
     // ==================================================================
     public void generateDoctorSpecializationReport() {
         System.out.println("\n--- Doctor Specialization Report ---");
