@@ -14,7 +14,6 @@ import utility.Enum.Status;
 import utility.MessageUI;
 import utility.Utilities;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 /**
  *
@@ -234,14 +233,14 @@ public class AppointmentController {
       boolean valid = AppointmentValidation.validateIdInput('A', userInput, inputOptions, ID_LENGTH);
 
       if (valid) {
-        switch (Character.toUpperCase(userInput.charAt(0))) {
-          case 'Q':
+        switch (userInput.toUpperCase()) {
+          case "Q":
             page = Math.max(1, page - 1);
             continue;
-          case 'E':
+          case "E":
             page = Math.min((appointmentMap.size() > 0) ? (appointmentMap.size() + 9) / 10 : 1, page + 1);
             continue;
-          case '0':
+          case "0":
             return;
           default:
             runAppointmentEditOptions("A" + userInput);
@@ -270,19 +269,19 @@ public class AppointmentController {
           case '1':
             Utilities.clearScreen();
             runDoctorIdEdit(appointmentId);
-            break;
+            return;
           case '2':
             Utilities.clearScreen();
             runAppointmentDateEdit(appointmentId);
-            break;
+            return;
           case '3':
             Utilities.clearScreen();
             runAppointmentTimeEdit(appointmentId);
-            break;
+            return;
           case '4':
             Utilities.clearScreen();
             runStatusEdit(appointmentId);
-            break;
+            return;
           case '0':
             return;
         }
@@ -384,13 +383,13 @@ public class AppointmentController {
     
     String confirm = null;
     do {
-      confirm = runEditConfirmation(appointment, "Time", appointment.getAppointmentTime().toString(), time);
+      confirm = runEditConfirmation(appointment, "Time", appointment.getAppointmentTime().toString(), Utilities.formatTime(time).toString());
     } while (confirm == null);
 
     if (confirm.equals("0")) {
       return;
     } else if (confirm.equals("1")) {
-      appointment.setAppointmentTime(LocalTime.parse(time));
+      appointment.setAppointmentTime(Utilities.formatTime(time));
       appointmentDAO.writeToFile(appointmentMap);
       MessageUI.editSuccess();
     }

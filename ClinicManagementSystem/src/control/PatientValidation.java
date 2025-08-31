@@ -209,12 +209,15 @@ public class PatientValidation {
     }
 
     if (!Validation.isChar(input)) {
+      input = input.replaceAll("[\\s-]", "");
+
       if (!Validation.isNumeric(input)) {
         MessageUI.notNumeric();
         return false;
       }
 
       input = Utilities.formatContactNumber(input.replaceAll("[\\s-]", ""));
+
       if (!Validation.isValidContactNumber(input)) {
         MessageUI.invalidContactNumber();
         return false;
@@ -287,6 +290,7 @@ public class PatientValidation {
 
     if (!Validation.isChar(input)) {
       input = input.replaceAll("\\s-", "");
+      
       if (!Validation.isValidDate(input)) {
         MessageUI.invalidDate();
         return false;

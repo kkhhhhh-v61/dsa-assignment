@@ -33,6 +33,10 @@ public class SystemController {
   RedBlackTreeMap<String, Patient> patientMap;
 
   public SystemController() {
+    loadAllData();
+  }
+
+  public void loadAllData() {
     patientMap = patientDAO.readFromFile();
   }
   
@@ -111,6 +115,7 @@ public class SystemController {
   }
 
   public String[] runPatientIdLogin() {
+    loadAllData();
     boolean valid = false;
     String userInput;
     do {
