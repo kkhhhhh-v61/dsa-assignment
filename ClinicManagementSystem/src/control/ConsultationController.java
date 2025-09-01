@@ -20,10 +20,10 @@ public class ConsultationController {
         this.appointmentDAO = new AppointmentDAO();
     }
 
+    // Sync All Consultations with Appointments
     public void syncConsultationsWithAppointments() {
-    // Load all appointments from file
     RedBlackTreeMap<String, Appointment> apptMap = appointmentDAO.readFromFile();
-    ArrayList<String> keys = apptMap.getKeys(); // your adt.ArrayList (1-based)
+    ArrayList<String> keys = apptMap.getKeys(); 
 
     for (int i = 1; i <= keys.size(); i++) {
         String apptId = keys.get(i);
@@ -31,11 +31,9 @@ public class ConsultationController {
         if (appt == null) continue;
 
         if (appt.getStatus() == Status.Approved) {
-            // Get all consultations
             ArrayList<Consultation> consList = consultationDAO.getAllConsultations();
             Consultation existing = null;
 
-            // Look for consultation linked to this appointment
             for (int j = 1; j <= consList.size(); j++) {
                 Consultation c = consList.get(j);
                 if (c.getAppointmentId().equalsIgnoreCase(appt.getAppointmentId())) {
@@ -45,7 +43,6 @@ public class ConsultationController {
             }
 
             if (existing == null) {
-                // --- No consultation yet → create ---
                 int lastId = consultationDAO.getLastId();
                 String newId = String.format("C%04d", lastId + 1);
 
@@ -71,7 +68,6 @@ public class ConsultationController {
                 System.out.println("✅ Created new Consultation " + newId + " for Appointment " + apptId);
 
             } else {
-                // --- Consultation exists → check and update date/time if needed ---
                 boolean updated = false;
                 if (!existing.getConsultationDate().equals(appt.getAppointmentDate())) {
                     existing.setConsultationDate(appt.getAppointmentDate());
@@ -89,39 +85,43 @@ public class ConsultationController {
             }
         }
     }
-
-    // Persist consultations after sync
     consultationDAO.saveAll();
 }
 
 
 
-
+    // ===== Add Consultations =====
     public void addConsultation(Consultation consultation) {
         consultationDAO.addConsultation(consultation);
     }
 
+    // ===== View Consultations By ID =====
     public Consultation viewConsultationById(String id) {
         return consultationDAO.getConsultationById(id);
     }
 
+    // ===== View All Consultations =====
     public ArrayList<Consultation> viewAllConsultations() {
         consultationDAO.reload();
         return consultationDAO.getAllConsultations();
     }
 
+    // ===== Edit Consultations =====
     public void editConsultation(Consultation consultation) {
         consultationDAO.updateConsultation(consultation);
     }
 
+    // ===== Delete Consultations =====
     public void deleteConsultation(String id) {
         consultationDAO.deleteConsultation(id);
     }
-    
+
+    // ===== View Consultations By User ID =====
     public ArrayList<Consultation> viewConsultationsByUserId(String userId) {
         return consultationDAO.getConsultationsByUserId(userId);
     }
-    
+
+    // ===== Create Consultation by Appointment =====
     public void createConsultationForAppointment(Appointment appt) {
     if (appt.getStatus() == Status.Approved) {
         if (!consultationDAO.existsForAppointment(appt)) {
@@ -134,7 +134,7 @@ public class ConsultationController {
             diagnosis.add("none");
 
             Consultation newC = new Consultation(
-                appt.getAppointmentId(),      // ✅ Link to appointment
+                appt.getAppointmentId(), 
                 appt.getPatientId(),
                 appt.getDoctorId(),
                 appt.getAppointmentDate(),
@@ -150,7 +150,8 @@ public class ConsultationController {
         }
     }
 }
-    
+
+    // Check if Consultation exist for appointments
     public boolean existsForAppointment(Appointment appt) {
         for (int i = 1; i <= consultations.size(); i++) {
             Consultation c = consultations.get(i);
@@ -160,16 +161,18 @@ public class ConsultationController {
         }
         return false;
     }
-    
+
+    // Save all Consultations
     public void saveAllConsultations() {
     consultationDAO.saveAll();
 }
-    
+
+    // Generate Yearly Report
     public void generateYearlyReport(int year) {
         ArrayList<Consultation> consultations = consultationDAO.getAllConsultations();
         int[] monthlyCounts = new int[12];
 
-        for (int i = 1; i <= consultations.size(); i++) {   // 1-based index
+        for (int i = 1; i <= consultations.size(); i++) { 
             Consultation c = consultations.get(i);
             if (c != null) {
                 LocalDate date = c.getConsultationDate();
@@ -179,10 +182,7 @@ public class ConsultationController {
             }
         }
 
-        String[] months = {
-            "January","February","March","April","May","June",
-            "July","August","September","October","November","December"
-        };
+        String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 
         int total = 0;
         System.out.println("\n=== Yearly Consultation Report for " + year + " ===");
@@ -192,21 +192,19 @@ public class ConsultationController {
         }
         System.out.println("Total consultations in " + year + " = " + total);
     }
-    
+
+    // Generate year to year report
     public void generateYearToYearReport(int startYear, int endYear) {
         ArrayList<Consultation> consultations = consultationDAO.getAllConsultations();
 
-        // parallel arrays for year and counts
         ArrayList<Integer> years = new ArrayList<>();
         ArrayList<Integer> counts = new ArrayList<>();
 
-        // initialize
         for (int year = startYear; year <= endYear; year++) {
             years.add(year);
             counts.add(0);
         }
 
-        // count consultations by year
         for (int i = 1; i <= consultations.size(); i++) {
             Consultation c = consultations.get(i);
             if (c != null) {
@@ -214,7 +212,6 @@ public class ConsultationController {
                 int year = date.getYear();
 
                 if (year >= startYear && year <= endYear) {
-                    // find index in years list
                     for (int j = 1; j <= years.size(); j++) {
                         if (years.get(j).equals(year)) {
                             counts.add(j, counts.get(j) + 1);
@@ -224,8 +221,6 @@ public class ConsultationController {
                 }
             }
         }
-
-        // print report
         System.out.println("\n=== Year-to-Year Consultation Report (" + startYear + " - " + endYear + ") ===");
         int total = 0;
         for (int j = 1; j <= years.size(); j++) {
