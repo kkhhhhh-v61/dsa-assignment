@@ -181,8 +181,8 @@ public class DoctorController {
     // ==================================================================
     // Reporting 
     // ==================================================================
-    public void generateDoctorSpecializationReport() {
-        System.out.println("\n--- Doctor Specialization Report ---");
+      public ListInterface<String> generateDoctorSpecializationReport() {
+        ListInterface<String> reportLines = new ArrayList<>();
         MapInterface<Specialization, Integer> specCount = new HashMap<>();
 
         for (Specialization spec : Specialization.values()) {
@@ -190,26 +190,32 @@ public class DoctorController {
                 specCount.put(spec, 0);
             }
         }
+<<<<<<< Updated upstream
 
         for (int i = 0; i < doctorList.size(); i++) {
             Doctor doctor = doctorList.getEntry(i);
+=======
+        
+        for (int i = 1; i <= doctorList.size(); i++) {
+            Doctor doctor = doctorList.get(i);
+>>>>>>> Stashed changes
             Specialization spec = doctor.getSpecialization();
             if (spec != Specialization.Unknown) {
                 Integer count = specCount.get(spec);
                 specCount.put(spec, count + 1);
             }
         }
-
-        System.out.println("Specialization         | Number of Doctors");
-        System.out.println("-------------------------------------------");
+        
         for (Specialization spec : Specialization.values()) {
              if (spec != Specialization.Unknown) {
-                System.out.printf("%-22s | %d\n", spec, specCount.get(spec));
+                String line = String.format("%-22s | %d", spec, specCount.get(spec));
+                reportLines.add(line);
              }
         }
-        System.out.println("-------------------------------------------");
+        return reportLines;
     }
 
+<<<<<<< Updated upstream
     public void generateDoctorAvailabilityReport(DayOfWeek day) {
         System.out.println("\n--- Doctor Availability Report for " + day + " ---");
         System.out.println("----------------------------------------------------------------------");
@@ -219,23 +225,25 @@ public class DoctorController {
         boolean found = false;
         for (int i = 0; i < scheduleList.size(); i++) {
             Schedule schedule = scheduleList.getEntry(i);
+=======
+    public ListInterface<String> generateDoctorAvailabilityReport(DayOfWeek day) {
+        ListInterface<String> reportLines = new ArrayList<>();
+        for (int i = 1; i <= scheduleList.size(); i++) {
+            Schedule schedule = scheduleList.get(i);
+>>>>>>> Stashed changes
             if (schedule.getDay() == day && schedule.getIsAvailable()) {
                 Doctor doctor = getDoctorById(schedule.doctorId());
                 if (doctor != null) {
-                    found = true;
-                    System.out.printf("%-10s | %-20s | %-15s | %s - %s\n",
+                    String line = String.format("%-10s | %-20s | %-15s | %s - %s",
                             doctor.getDoctorId(),
                             doctor.getName(),
                             doctor.getSpecialization(),
                             schedule.getStartTime(),
                             schedule.getEndTime());
+                    reportLines.add(line);
                 }
             }
         }
-
-        if (!found) {
-            System.out.println("No doctors are available on " + day + ".");
-        }
-        System.out.println("----------------------------------------------------------------------");
+        return reportLines;
     }
 }
