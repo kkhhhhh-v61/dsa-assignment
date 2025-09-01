@@ -503,11 +503,31 @@ public class DoctorUI {
     }
 
     private void deleteScheduleUI(String doctorId) {
-        viewSchedulesUI(doctorId);
-        System.out.print("\nEnter Schedule ID to delete: ");
+        viewSchedulesUI(doctorId); // Show the schedules first so the user knows which ID to enter
+        
+        // Check if there are any schedules to delete
+        if (doctorController.getSchedulesForDoctor(doctorId).isEmpty()) {
+            return; // No schedules to delete, so just return to the menu
+        }
+
+        System.out.print("\nEnter Schedule ID to delete (or press Enter to cancel): ");
         String scheduleId = scanner.nextLine();
-        doctorController.deleteSchedule(scheduleId);
-        System.out.println("Schedule deleted successfully (if it existed).");
+        
+        // Allow the user to cancel by pressing enter
+        if (scheduleId.trim().isEmpty()) {
+            System.out.println("Deletion cancelled.");
+            return;
+        }
+
+        // IMPROVED: Added confirmation before deleting
+        System.out.print("Are you sure you want to delete schedule " + scheduleId + " (Y/N)? ");
+        String confirm = scanner.nextLine();
+        if (confirm.equalsIgnoreCase("Y")) {
+            doctorController.deleteSchedule(scheduleId);
+            System.out.println("Schedule " + scheduleId + " deleted successfully.");
+        } else {
+            System.out.println("Deletion cancelled.");
+        }
     }
 
     private void showReportMenu() {
@@ -523,13 +543,24 @@ public class DoctorUI {
             try {
                 choice = Integer.parseInt(input);
                 switch (choice) {
-                    case 1 -> doctorController.generateDoctorSpecializationReport();
-                    case 2 -> {
-                        // IMPROVED: Allow user to select day from a list
+                    case 1: {
+                        ListInterface<String> reportLines = doctorController.generateDoctorSpecializationReport();
+                        System.out.println("\n--- Doctor Specialization Report ---");
+                        System.out.println("Specialization         | Number of Doctors");
+                        System.out.println("-------------------------------------------");
+                        // MODIFIED: Loop using 1-based index and get(i)
+                        for(int i = 1; i <= reportLines.size(); i++){
+                            System.out.println(reportLines.get(i));
+                        }
+                        System.out.println("-------------------------------------------");
+                        break;
+                    }
+                    case 2: {
                         DayOfWeek day;
                         while (true) {
                             System.out.println("\nSelect Day for Availability Report:");
                             DayOfWeek[] days = DayOfWeek.values();
+                            // This is a standard array, so it remains 0-indexed
                             for (int i = 0; i < days.length; i++) {
                                 System.out.printf("%d. %s\n", (i + 1), days[i]);
                             }
@@ -538,18 +569,34 @@ public class DoctorUI {
                                 int dayChoice = Integer.parseInt(scanner.nextLine());
                                 if (dayChoice >= 1 && dayChoice <= days.length) {
                                     day = days[dayChoice - 1];
-                                    doctorController.generateDoctorAvailabilityReport(day);
-                                    break; // Exit the day selection loop
+                                    break; 
                                 } else {
-                                    System.out.println("Error: Invalid choice. Please enter a number between 1 and " + days.length + ".");
+                                    System.out.println("Error: Invalid choice.");
                                 }
                             } catch (NumberFormatException e) {
                                 System.out.println("Error: Please enter a valid number.");
                             }
                         }
+                        
+                        ListInterface<String> reportLines = doctorController.generateDoctorAvailabilityReport(day);
+                        System.out.println("\n--- Doctor Availability Report for " + day + " ---");
+                        System.out.println("----------------------------------------------------------------------");
+                        System.out.printf("%-10s | %-20s | %-15s | %s\n", "Doctor ID", "Doctor Name", "Specialization", "Available Time");
+                        System.out.println("----------------------------------------------------------------------");
+
+                        if(reportLines.isEmpty()){
+                            System.out.println("No doctors are available on " + day + ".");
+                        } else {
+                            // MODIFIED: Loop using 1-based index and get(i)
+                            for(int i = 1; i <= reportLines.size(); i++){
+                                System.out.println(reportLines.get(i));
+                            }
+                        }
+                        System.out.println("----------------------------------------------------------------------");
+                        break;
                     }
-                    case 0 -> System.out.println("Returning to Doctor Menu...");
-                    default -> System.out.println("Invalid choice. Please try again.");
+                    case 0: System.out.println("Returning to Doctor Menu..."); break;
+                    default: System.out.println("Invalid choice. Please try again.");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
@@ -558,3 +605,4 @@ public class DoctorUI {
         } while (choice != 0);
     }
 }
+
