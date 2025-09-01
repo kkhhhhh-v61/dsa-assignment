@@ -1,34 +1,32 @@
-// ======================= TreatmentController.java ==========================
 package control;
-
+// Author - Jason Tye
 import dao.TreatmentDAO;
 import dao.ConsultationDAO;
 import dao.MedicineDAO;
-import dao.DispenseRecordDAO; // Import DispenseRecordDAO
+import dao.DispenseRecordDAO; 
 import entity.Treatment;
 import entity.Consultation;
 import entity.PrescribedMedicine;
 import entity.Medicine;
-import entity.DispenseRecord; // Import DispenseRecord
+import entity.DispenseRecord; 
 import adt.ArrayList;
 import utility.Enum.Status;
-
 import java.time.LocalDate;
 
 public class TreatmentController {
     private TreatmentDAO treatmentDAO;
     private ConsultationDAO consultationDAO;
     private MedicineDAO medicineDAO;
-    private DispenseRecordDAO dispenseRecordDAO; // Add DispenseRecordDAO
+    private DispenseRecordDAO dispenseRecordDAO; 
 
     public TreatmentController() {
         this.treatmentDAO = new TreatmentDAO();
         this.consultationDAO = new ConsultationDAO();
         this.medicineDAO = new MedicineDAO();
-        this.dispenseRecordDAO = new DispenseRecordDAO(); // Initialize DispenseRecordDAO
+        this.dispenseRecordDAO = new DispenseRecordDAO(); 
     }
 
-    // ===== CRUD =====
+    // ===== Add Teratment =====
     public boolean addTreatment(String consultationId, ArrayList<PrescribedMedicine> meds, String notes) {
         Consultation c = consultationDAO.getConsultationById(consultationId);
         if (c == null) {
@@ -48,7 +46,6 @@ public class TreatmentController {
             if (pm.getQuantity() <= med.getStockQuantity()) {
 		med.setStockQuantity(med.getStockQuantity() - pm.getQuantity());
             	medicineDAO.updateMedicine(med);
-            	// Update the medicine object in PrescribedMedicine to ensure it's the latest
             	pm.setMedicine(med); 
             } else {
 		System.out.println("Not enough stock for " + med.getName() + ". Available: " + med.getStockQuantity());
@@ -64,7 +61,6 @@ public class TreatmentController {
 
         treatmentDAO.addTreatment(t);
         
-        // Create dispense records for each prescribed medicine using the updated Medicine object
         for (int i = 1; i <= meds.size(); i++) {
             PrescribedMedicine pm = meds.get(i);
             // Fetch the latest medicine object from DAO after stock update
@@ -77,25 +73,26 @@ public class TreatmentController {
         return true;
     }
 
+	// ===== View Treatment By ID =====
     public Treatment viewTreatmentById(String id) {
         return treatmentDAO.getTreatmentById(id);
     }
-    
+
+	// ===== View Treatment By Patient ID =====
     public ArrayList<Treatment> viewTreatmentsByPatientId(String patientId) {
         return treatmentDAO.getTreatmentsByUserId(patientId);
     }
 
-
-
+	// ===== View All Treatment =====
     public ArrayList<Treatment> viewAllTreatments() {
         treatmentDAO.reload();
         return treatmentDAO.getAllTreatments();
     }
 
+	// ===== Edit Treatment =====
     public boolean editTreatment(Treatment treatment) {
         Treatment old = treatmentDAO.getTreatmentById(treatment.getTreatmentId());
         if (old != null) {
-            // Return old medicines to stock and delete old dispense records
             ArrayList<PrescribedMedicine> oldMeds = old.getMedicines();
             for (int i = 1; i <= oldMeds.size(); i++) {
                 PrescribedMedicine pm = oldMeds.get(i);
@@ -105,14 +102,12 @@ public class TreatmentController {
                     medicineDAO.updateMedicine(med);
                 }
             }
-            // Delete associated dispense records
             ArrayList<DispenseRecord> oldDispenseRecords = (ArrayList<DispenseRecord>) dispenseRecordDAO.getDispenseRecordsByTreatmentId(old.getTreatmentId());
             for (int i = 1; i <= oldDispenseRecords.size(); i++) {
                 dispenseRecordDAO.deleteDispenseRecord(oldDispenseRecords.get(i).getDispenseId());
             }
         }
 
-        // Validate and dispense new medicines
         ArrayList<PrescribedMedicine> newMeds = treatment.getMedicines();
         Consultation c = consultationDAO.getConsultationById(treatment.getConsultationId());
         if (c == null) {
@@ -140,10 +135,8 @@ public class TreatmentController {
             Medicine med = medicineDAO.getMedicineById(pm.getMedicine().getMedicineId());
             med.setStockQuantity(med.getStockQuantity() - pm.getQuantity());
             medicineDAO.updateMedicine(med);
-            // Update the medicine object in PrescribedMedicine to ensure it's the latest
             pm.setMedicine(med);
             
-            // Create new dispense record using the updated Medicine object
             Medicine latestMed = medicineDAO.getMedicineById(pm.getMedicine().getMedicineId());
             DispenseRecord dr = new DispenseRecord(latestMed, pm.getQuantity(), treatment.getTreatmentId(), c.getPatientId(), c.getDoctorId());
             dispenseRecordDAO.addDispenseRecord(dr);
@@ -154,6 +147,7 @@ public class TreatmentController {
         return true;
     }
 
+	// ===== Delete Treatment =====
     public void deleteTreatment(String id) {
         Treatment t = treatmentDAO.getTreatmentById(id);
         if (t != null) {
@@ -166,7 +160,6 @@ public class TreatmentController {
                     medicineDAO.updateMedicine(med);
                 }
             }
-            // Delete associated dispense records
             ArrayList<DispenseRecord> dispenseRecordsToDelete = (ArrayList<DispenseRecord>) dispenseRecordDAO.getDispenseRecordsByTreatmentId(id);
             for (int i = 1; i <= dispenseRecordsToDelete.size(); i++) {
                 dispenseRecordDAO.deleteDispenseRecord(dispenseRecordsToDelete.get(i).getDispenseId());
@@ -189,7 +182,7 @@ public class TreatmentController {
         return true;
     }
 
-    // ===== Reporting =====
+    // ===== Yearly Report =====
     public void generateYearlyReport(int year) {
         ArrayList<Treatment> treatments = treatmentDAO.getAllTreatments();
         int[] monthlyCounts = new int[12];
@@ -218,29 +211,25 @@ public class TreatmentController {
         System.out.println("Total treatments in " + year + " = " + total);
     }
 
-
+	// ===== Year to Year Report =====
     public void generateYearToYearReport(int startYear, int endYear) {
     ArrayList<Treatment> treatments = treatmentDAO.getAllTreatments();
     ArrayList<Consultation> consultations = consultationDAO.getAllConsultations();
 
-    // parallel arrays for year and counts
     ArrayList<Integer> years = new ArrayList<>();
     ArrayList<Integer> counts = new ArrayList<>();
 
-    // initialize
     for (int year = startYear; year <= endYear; year++) {
         years.add(year);
         counts.add(0);
     }
 
-    // count treatments by consultation year
     for (int i = 1; i <= treatments.size(); i++) {
         Treatment t = treatments.get(i);
         if (t != null) {
             String consId = t.getConsultationId();
             Consultation linked = null;
 
-            // find consultation with this ID
             for (int j = 1; j <= consultations.size(); j++) {
                 Consultation c = consultations.get(j);
                 if (c != null && c.getConsultationId().equalsIgnoreCase(consId)) {
@@ -254,7 +243,6 @@ public class TreatmentController {
                 int year = date.getYear();
 
                 if (year >= startYear && year <= endYear) {
-                    // find index in years list
                     for (int j = 1; j <= years.size(); j++) {
                         if (years.get(j) == year) {
                             counts.add(j, counts.get(j) + 1); // ✅ use set, not add
@@ -266,7 +254,6 @@ public class TreatmentController {
         }
     }
 
-    // print report
     System.out.println("\n=== Year-to-Year Treatment Report (" + startYear + " - " + endYear + ") ===");
     int total = 0;
     for (int j = 1; j <= years.size(); j++) {
