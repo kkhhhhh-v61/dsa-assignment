@@ -195,7 +195,7 @@ public class TreatmentUI {
 
         while (true) {
             System.out.print("\nEnter year for yearly report (" + minYear + "-" + maxYear + ", 0 to exit): ");
-            String input = sc.nextLine().trim();   // ✅ reuse field scanner
+            String input = sc.nextLine().trim(); 
 
             if (input.equals("0")) {
                 System.out.println("Exiting yearly report...");
@@ -225,7 +225,7 @@ public class TreatmentUI {
 
         while (true) {
             System.out.print("\nEnter start year (" + minYear + "-" + maxYear + ", 0 to exit): ");
-            String startInput = sc.nextLine().trim();   // ✅ reuse field scanner
+            String startInput = sc.nextLine().trim(); 
 
             if (startInput.equals("0")) {
                 System.out.println("Exiting year-to-year report...");
@@ -289,7 +289,7 @@ public class TreatmentUI {
                 if (quantity > medicine.getStockQuantity()) {
                     System.out.println("Not enough stock for " + medicine.getName() + ". Available: " + medicine.getStockQuantity());
                 } else {
-                    break; // valid quantity
+                    break;
                 }
             }
 
