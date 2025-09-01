@@ -1,6 +1,5 @@
-// ======================= TreatmentUI.java ==========================
 package boundary;
-
+// Author - Jason Tye
 import control.TreatmentController;
 import dao.MedicineDAO;
 import entity.Medicine;
@@ -190,83 +189,81 @@ public class TreatmentUI {
 
     // ===== Reports =====
     public void generateYearlyReport() {
-    Scanner sc = new Scanner(System.in);
-    int currentYear = LocalDate.now().getYear();
-    int minYear = 2000;
-    int maxYear = currentYear + 5;
+        int currentYear = LocalDate.now().getYear();
+        int minYear = 2000;
+        int maxYear = currentYear + 5;
 
-    while (true) {
-        System.out.print("\nEnter year for yearly report (" + minYear + "-" + maxYear + ", 0 to exit): ");
-        String input = sc.nextLine().trim();
-        sc.close();
+        while (true) {
+            System.out.print("\nEnter year for yearly report (" + minYear + "-" + maxYear + ", 0 to exit): ");
+            String input = sc.nextLine().trim(); 
 
-        if (input.equals("0")) {
-            System.out.println("Exiting yearly report...");
-            break;
-        }
-
-        try {
-            int year = Integer.parseInt(input);
-            if (year < minYear || year > maxYear) {
-                System.out.println("Invalid year. Please enter between " + minYear + " and " + maxYear + ".");
-            } else {
-                controller.generateYearlyReport(year);
+            if (input.equals("0")) {
+                System.out.println("Exiting yearly report...");
                 break;
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a valid year.");
+
+            try {
+                int year = Integer.parseInt(input);
+                if (year < minYear || year > maxYear) {
+                    System.out.println("Invalid year. Please enter between " + minYear + " and " + maxYear + ".");
+                } else {
+                    controller.generateYearlyReport(year);
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid year.");
+            }
         }
     }
-}
+
 
 
     public void generateYearToYearReport() {
-    Scanner sc = new Scanner(System.in);
-    int currentYear = LocalDate.now().getYear();
-    int minYear = 2000;
-    int maxYear = currentYear + 5;
+        int currentYear = LocalDate.now().getYear();
+        int minYear = 2000;
+        int maxYear = currentYear + 5;
 
-    while (true) {
-        System.out.print("\nEnter start year (" + minYear + "-" + maxYear + ", 0 to exit): ");
-        String startInput = sc.nextLine().trim();
-        sc.close();
+        while (true) {
+            System.out.print("\nEnter start year (" + minYear + "-" + maxYear + ", 0 to exit): ");
+            String startInput = sc.nextLine().trim(); 
 
-        if (startInput.equals("0")) {
-            System.out.println("Exiting year-to-year report...");
-            break;
-        }
-
-        System.out.print("Enter end year (" + minYear + "-" + maxYear + ", 0 to exit): ");
-        String endInput = sc.nextLine().trim();
-
-        if (endInput.equals("0")) {
-            System.out.println("Exiting year-to-year report...");
-            break;
-        }
-
-        try {
-            int startYear = Integer.parseInt(startInput);
-            int endYear = Integer.parseInt(endInput);
-
-            if (startYear < minYear || startYear > maxYear ||
-                endYear < minYear || endYear > maxYear) {
-                System.out.println("Invalid year(s). Please enter years between " + minYear + " and " + maxYear + ".");
-                continue;
+            if (startInput.equals("0")) {
+                System.out.println("Exiting year-to-year report...");
+                break;
             }
 
-            if (startYear > endYear) {
-                System.out.println("Start year cannot be later than end year. Try again.");
-                continue;
+            System.out.print("Enter end year (" + minYear + "-" + maxYear + ", 0 to exit): ");
+            String endInput = sc.nextLine().trim();
+
+            if (endInput.equals("0")) {
+                System.out.println("Exiting year-to-year report...");
+                break;
             }
 
-            controller.generateYearToYearReport(startYear, endYear);
-            break;
+            try {
+                int startYear = Integer.parseInt(startInput);
+                int endYear = Integer.parseInt(endInput);
 
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter valid years.");
+                if (startYear < minYear || startYear > maxYear ||
+                    endYear < minYear || endYear > maxYear) {
+                    System.out.println("Invalid year(s). Please enter years between " + minYear + " and " + maxYear + ".");
+                    continue;
+                }
+
+                if (startYear > endYear) {
+                    System.out.println("Start year cannot be later than end year. Try again.");
+                    continue;
+                }
+
+                controller.generateYearToYearReport(startYear, endYear);
+                break;
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter valid years.");
+            }
         }
     }
-}
+
 
 
     // ===== helper for medicine entry =====
@@ -285,8 +282,16 @@ public class TreatmentUI {
                 continue;
             }
 
-            System.out.print("Quantity: ");
-            int quantity = readInt("Invalid number: ");
+            int quantity;
+            while (true) {
+                System.out.print("Quantity: ");
+                quantity = readInt("Invalid number: ");
+                if (quantity > medicine.getStockQuantity()) {
+                    System.out.println("Not enough stock for " + medicine.getName() + ". Available: " + medicine.getStockQuantity());
+                } else {
+                    break;
+                }
+            }
 
             System.out.print("Dosage: ");
             String dosage = sc.nextLine().trim();
