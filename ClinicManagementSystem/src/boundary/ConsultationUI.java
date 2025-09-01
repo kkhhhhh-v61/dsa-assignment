@@ -59,8 +59,10 @@ public class ConsultationUI {
     private void viewConsultationById() {
         System.out.print("Enter Consultation ID: ");
         String id = sc.nextLine().trim();
+        System.out.println("\n-------------------------------");
         Consultation c = controller.viewConsultationById(id);
         System.out.println(c != null ? c : "Consultation not found.");
+        System.out.println("-------------------------------");
     }
 
     private void viewAllConsultations() {
