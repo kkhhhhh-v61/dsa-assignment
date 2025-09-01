@@ -207,8 +207,7 @@ public class TreatmentController {
             }
         }
 
-        String[] months = {"January","February","March","April","May","June",
-                           "July","August","September","October","November","December"};
+        String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 
         int total = 0;
         System.out.println("\n=== Yearly Report for " + year + " ===");
@@ -221,47 +220,62 @@ public class TreatmentController {
 
 
     public void generateYearToYearReport(int startYear, int endYear) {
-        ArrayList<Consultation> consultations = consultationDAO.getAllConsultations();
+    ArrayList<Treatment> treatments = treatmentDAO.getAllTreatments();
+    ArrayList<Consultation> consultations = consultationDAO.getAllConsultations();
 
-        // parallel arrays for year and counts
-        ArrayList<Integer> years = new ArrayList<>();
-        ArrayList<Integer> counts = new ArrayList<>();
+    // parallel arrays for year and counts
+    ArrayList<Integer> years = new ArrayList<>();
+    ArrayList<Integer> counts = new ArrayList<>();
 
-        // initialize
-        for (int year = startYear; year <= endYear; year++) {
-            years.add(year);
-            counts.add(0);
-        }
+    // initialize
+    for (int year = startYear; year <= endYear; year++) {
+        years.add(year);
+        counts.add(0);
+    }
 
-        // count consultations by year
-        for (int i = 1; i <= consultations.size(); i++) {
-            Consultation c = consultations.get(i);
-            if (c != null) {
-                LocalDate date = c.getConsultationDate();
+    // count treatments by consultation year
+    for (int i = 1; i <= treatments.size(); i++) {
+        Treatment t = treatments.get(i);
+        if (t != null) {
+            String consId = t.getConsultationId();
+            Consultation linked = null;
+
+            // find consultation with this ID
+            for (int j = 1; j <= consultations.size(); j++) {
+                Consultation c = consultations.get(j);
+                if (c != null && c.getConsultationId().equalsIgnoreCase(consId)) {
+                    linked = c;
+                    break;
+                }
+            }
+
+            if (linked != null) {
+                LocalDate date = linked.getConsultationDate();
                 int year = date.getYear();
 
                 if (year >= startYear && year <= endYear) {
                     // find index in years list
                     for (int j = 1; j <= years.size(); j++) {
                         if (years.get(j) == year) {
-                            counts.add(j, counts.get(j) + 1);
+                            counts.add(j, counts.get(j) + 1); // ✅ use set, not add
                             break;
                         }
                     }
                 }
             }
         }
-
-        // print report
-        System.out.println("\n=== Year-to-Year Consultation Report (" + startYear + " - " + endYear + ") ===");
-        int total = 0;
-        for (int j = 1; j <= years.size(); j++) {
-            int count = counts.get(j);
-            System.out.println(years.get(j) + " = " + count);
-            total += count;
-        }
-        System.out.println("\nTotal treatments between " + startYear + " and " + endYear + " = " + total);
     }
+
+    // print report
+    System.out.println("\n=== Year-to-Year Treatment Report (" + startYear + " - " + endYear + ") ===");
+    int total = 0;
+    for (int j = 1; j <= years.size(); j++) {
+        int count = counts.get(j);
+        System.out.println(years.get(j) + " = " + count);
+        total += count;
+    }
+    System.out.println("\nTotal treatments between " + startYear + " and " + endYear + " = " + total);
+}
 
 
 }
